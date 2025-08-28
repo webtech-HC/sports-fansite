@@ -1,3 +1,7 @@
+// Visible build/version banner (handy to confirm cache-bust in the console)
+window.TENNESSEE_APP_VERSION = '2025-08-28-3';
+console.log('TENNESSEE APP', window.TENNESSEE_APP_VERSION);
+
 // assets/js/app.js — GitHub Pages front-end wiring (safe for TBA dates)
 
 /* ---------- paths to JSON on GitHub Pages ---------- */
@@ -190,7 +194,7 @@ function mountTicker(nextGame) {
   track.innerHTML = `<div class="ticker-row">${chunk()}</div><div class="ticker-row">${chunk()}</div>`;
 }
 
-/* ---------- ICS (only when date is valid) ---------- */
+/* ---------- ICS (now uses element.hidden) ---------- */
 function toICSDate(iso) {
   const d = new Date(iso);
   const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
@@ -226,18 +230,27 @@ function icsBlobForGame(game) {
 }
 function wireAddToCal(game) {
   const links = [$('#addCalHero'), $('#addCalCard')];
+  // TBA or invalid -> hide and neutralize
   if (!game || !isValidISO(game.date)) {
-    links.forEach((a) => a && (a.style.display = 'none'));
+    links.forEach((a) => {
+      if (!a) return;
+      a.hidden = true;
+      a.removeAttribute('href');
+      a.removeAttribute('download');
+      a.setAttribute('aria-hidden', 'true');
+    });
     return;
   }
+  // Valid -> show and wire
   const blob = icsBlobForGame(game);
   const url = URL.createObjectURL(blob);
   const fname = `tennessee-vs-${game.opponent.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.ics`;
   links.forEach((a) => {
     if (!a) return;
-    a.style.display = '';
+    a.hidden = false;
     a.href = url;
     a.download = fname;
+    a.removeAttribute('aria-hidden');
     a.setAttribute('aria-label', `Add ${game.opponent} game to your calendar`);
   });
 }
