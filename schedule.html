@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Schedule • TENNESSEE Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Schedule • Tennessee Gameday Hub (Unofficial)</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -12,7 +12,7 @@
   <header class="topbar">
     <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
     <nav class="nav">
-      <a href="schedule.html">Schedule</a>
+      <a href="schedule.html" class="active">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
@@ -20,37 +20,36 @@
     </nav>
   </header>
 
+  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+
   <main id="main" class="wrap">
     <section class="card">
-      <h1 class="hd">Schedule & Results</h1>
-
-      <div class="card" style="margin-bottom:12px; display:grid; gap:10px;">
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-          <input id="oppoSearch" type="search" placeholder="Search opponent…" style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0d1117; color:var(--ink)">
-          <label><input type="checkbox" id="fHome"> Home only</label>
-          <label><input type="checkbox" id="fAway"> Away only</label>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
+        <h1 class="hd" style="margin:0">Schedule & Results</h1>
+        <div style="display:flex; gap:8px; align-items:center">
+          <a class="btn ghost btn-slim" href="#" data-add-cal hidden>Add to Calendar</a>
         </div>
       </div>
 
-      <div class="table-wrap">
-        <table class="tbl" aria-describedby="note">
+      <div class="table-wrap" style="margin-top:10px">
+        <table class="tbl" aria-describedby="schNote">
           <thead>
             <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
           </thead>
           <tbody id="schBody"></tbody>
         </table>
       </div>
-      <p id="note" class="muted">Times/TV subject to change. Check official sources day-of.</p>
+      <p id="schNote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
+
+      <p class="muted">Data updated — <span data-last-updated>—</span></p>
     </section>
   </main>
 
   <footer class="sitefoot">
-    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
-  <script type="module">
-    import { initSchedulePage } from './assets/js/page.js';
-    document.addEventListener('DOMContentLoaded', initSchedulePage);
-  </script>
+  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
 </body>
 </html>
