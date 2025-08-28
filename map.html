@@ -3,8 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Map • TENNESSEE Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Map • Tennessee Gameday Hub (Unofficial)</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
+  <!-- Leaflet (lightweight; okay on GH Pages) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    #mapbox{height:420px; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+    .leaflet-container{background:#0d1117}
+  </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -14,32 +20,69 @@
     <nav class="nav">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
-      <a href="map.html">Map</a>
+      <a href="map.html" class="active">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small" href="submit.html">Submit</a>
     </nav>
   </header>
 
+  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+
   <main id="main" class="wrap">
-    <section class="card" id="mapCard">
-      <h1 class="hd">Gameday Map</h1>
-      <div class="map-placeholder" style="margin-top:10px">
-        <div class="pin pin-food">Food</div>
-        <div class="pin pin-drink">Drinks</div>
-        <div class="pin pin-watch">Watch</div>
-        <div class="pin pin-parking">Parking</div>
-      </div>
-      <p class="muted">An interactive map (Leaflet + places JSON) will live here. For now: browse <a href="specials.html">Specials</a>.</p>
+    <section class="card">
+      <h1 class="hd">Map</h1>
+      <p class="muted" style="margin-top:-4px">Pins by category; “open now” when available.</p>
+      <div id="mapbox"></div>
+      <p class="muted">Data updated — <span data-last-updated>—</span></p>
     </section>
   </main>
 
   <footer class="sitefoot">
-    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <p><a href="schedule.html">Schedule</a> • <a href="specials.html">Specials</a> • <a href="guide.html">Guide</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script type="module">
-    import { initMapPage } from './assets/js/page.js';
-    document.addEventListener('DOMContentLoaded', initMapPage);
+    // last-updated + ticker come from app.js
+    import './assets/js/app.js?v=2025-08-28-4';
+
+    async function bootMap(){
+      const el = document.getElementById('mapbox');
+      if(!el) return;
+
+      // Knoxville center
+      const map = L.map(el, { zoomControl: true }).setView([35.9606, -83.9207], 12);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; OSM'
+      }).addTo(map);
+
+      try{
+        const res = await fetch('./data/places.json', { cache: 'no-store' });
+        const data = res.ok ? await res.json() : null;
+
+        if(!data || !Array.isArray(data) || data.length === 0){
+          L.marker([35.9606, -83.9207]).addTo(map)
+            .bindPopup('Places coming soon.<br>Use Specials while we add pins.');
+          return;
+        }
+
+        const group = L.featureGroup();
+        data.forEach(p => {
+          if(!p?.lat || !p?.lng) return;
+          const marker = L.marker([p.lat, p.lng]).addTo(map);
+          const cat = (p.category || '').toString();
+          marker.bindPopup(`<strong>${p.name ?? 'Place'}</strong><br>${cat}${p.time ? `<br>${p.time}`:''}`);
+          group.addLayer(marker);
+        });
+        map.fitBounds(group.getBounds().pad(0.2));
+      }catch(e){
+        console.warn(e);
+      }
+    }
+
+    bootMap();
   </script>
 </body>
 </html>
