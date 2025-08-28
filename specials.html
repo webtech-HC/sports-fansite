@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Specials • TENNESSEE Gameday Hub</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
+    <nav class="nav">
+      <a href="schedule.html">Schedule</a>
+      <a href="specials.html">Specials</a>
+      <a href="map.html">Map</a>
+      <a href="guide.html">Guide</a>
+      <a class="btn btn-small" href="submit.html">Submit</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="card">
+      <h1 class="hd">Featured Specials</h1>
+      <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
+      <div id="specialsGrid" class="specials-grid"></div>
+    </section>
+
+    <aside class="card">
+      <h2 class="hd">Want to be listed?</h2>
+      <p>Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
+      <a class="btn" href="submit.html">Submit a Listing</a>
+    </aside>
+  </main>
+
+  <footer class="sitefoot">
+    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+  </footer>
+
+  <script type="module">
+    import { initSpecialsPage } from './assets/js/page.js';
+    document.addEventListener('DOMContentLoaded', initSpecialsPage);
+  </script>
+</body>
+</html>
