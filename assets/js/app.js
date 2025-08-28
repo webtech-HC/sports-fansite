@@ -1,5 +1,3 @@
-<!-- /assets/js/app.js -->
-<script type="module">
 /* ========================================================================
    Tennessee • Gameday Hub — client JS (GitHub Pages friendly)
    ======================================================================== */
@@ -22,7 +20,7 @@ function untilParts(iso) {
 }
 const isValidISO = iso => !Number.isNaN(new Date(iso).getTime());
 
-// Safe setter (don’t bomb if an element is missing)
+// Safe setter
 function setText(sel, txt) {
   const el = qs(sel);
   if (el) el.textContent = txt;
@@ -95,7 +93,6 @@ function paintSpecials(items) {
 }
 
 function paintWeather(wx) {
-  // Expect a structure like: { days:[{label:'Fri', hi:88, lo:70, pop:20}, ...] }
   if (!wx?.days?.length) return;
   const map = { 0:'#wx0', 1:'#wx1', 2:'#wx2' };
   wx.days.slice(0,3).forEach((d, i) => {
@@ -152,17 +149,17 @@ function mountTicker(next) {
     const when = new Date(next.date);
     parts.push(`Kickoff vs ${next.opponent ?? 'TBD'} • ${when.toLocaleDateString()} ${when.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);
   }
-  parts.push('Countdown 00d 00h 00m'); // the live numbers render in the hero/guide; this is a static hint
+  parts.push('Countdown 00d 00h 00m');
   bar.innerHTML = `<div class="ticker-inner">${parts.join(' — ')}</div>`;
 }
 
-// ---------- add-to-calendar (ICS data URI) ----------
+// ---------- add to calendar ----------
 function wireAddToCal(next) {
-  const link = qs('[data-add-cal]');
-  if (!link || !next?.date) return;
+  const links = qsa('[data-add-cal]');
+  if (!links.length || !next?.date) return;
 
   const dtStart = new Date(next.date);
-  const dtEnd   = new Date(dtStart.getTime() + 3 * 3600000); // +3 hours
+  const dtEnd   = new Date(dtStart.getTime() + 3 * 3600000);
   const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
 
   const ics = [
@@ -179,11 +176,11 @@ function wireAddToCal(next) {
     'END:VCALENDAR'
   ].join('\r\n');
 
-  link.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-  link.download = 'tennessee-gameday.ics';
+  const href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  links.forEach(a => { a.href = href; a.download = 'tennessee-gameday.ics'; });
 }
 
-// ---------- helpers to pick next game ----------
+// ---------- helpers ----------
 function pickNextGame(schedule = []) {
   const now = Date.now();
   const future = schedule
@@ -192,11 +189,10 @@ function pickNextGame(schedule = []) {
   return future[0] ?? null;
 }
 
-// ---------- INIT ----------
+// ---------- init ----------
 async function init() {
   console.log('TENNESSEE APP', new Date().toISOString().slice(0,10));
 
-  // Load all site JSON (produced by your GitHub Action)
   const [meta, next, schedule, specials, weather] = await Promise.all([
     fetchJSON('./data/meta.json', null),
     fetchJSON('./data/next.json', null),
@@ -205,22 +201,18 @@ async function init() {
     fetchJSON('./data/weather.json',  null),
   ]);
 
-  // Paint base sections
   paintLastUpdated(meta || {});
   paintSchedule(schedule || []);
   paintSpecials(specials || []);
   if (weather) paintWeather(weather);
 
-  // Decide the next game: prefer /data/next.json, else compute from schedule
   const chosen = (next && next.date) ? next : pickNextGame(schedule || []);
   paintQuick(chosen);
   wireAddToCal(chosen);
   mountTicker(chosen);
 
-  // Start/stop countdown safely
   stopCountdown(true);
   if (chosen?.date && isValidISO(chosen.date)) startCountdown(chosen.date);
 }
 
 document.addEventListener('DOMContentLoaded', init);
-</script>
