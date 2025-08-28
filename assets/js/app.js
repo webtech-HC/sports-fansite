@@ -123,28 +123,47 @@ async function paintLastUpdated(){
   el.textContent = `Data updated — ${dt}`;
 }
 
-/* ---------- countdown / ticker ---------- */
+// -------- countdown / ticker ----------
 let countdownTimer = null;
 
-function startCountdown(iso){
-  if (!iso || !isValidISO(iso)) return;
+function stopCountdown(resetUI = false) {
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+  }
+  if (resetUI) {
+    // Zero out both the mini and full guide counters
+    [['#miniDays','00'],['#miniHours','00'],['#miniMins','00'],
+     ['#cdD','00'],['#cdH','00'],['#cdM','00'],['#cdS','00']].forEach(([sel,val])=>{
+      const el = document.querySelector(sel);
+      if (el) el.textContent = val;
+    });
+  }
+}
+
+function startCountdown(iso) {
+  if (!iso || !isValidISO(iso)) { stopCountdown(true); return; }
+  // ensure only one interval runs
+  stopCountdown();
 
   const tick = () => {
     const { d, h, m, s } = untilParts(iso);
-    // hero mini
-    setText('#miniDays',  pad(d));
-    setText('#miniHours', pad(h));
-    setText('#miniMins',  pad(m));
-    // guide block
-    setText('#cdD', pad(d));
-    setText('#cdH', pad(h));
-    setText('#cdM', pad(m));
-    setText('#cdS', pad(s));
+    const pad2 = n => String(n).padStart(2,'0');
+
+    const set = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+    set('#miniDays', pad2(d));
+    set('#miniHours', pad2(h));
+    set('#miniMins', pad2(m));
+    set('#cdD', pad2(d));
+    set('#cdH', pad2(h));
+    set('#cdM', pad2(m));
+    set('#cdS', pad2(s));
   };
 
   tick();
   countdownTimer = setInterval(tick, 1000);
 }
+
 
 
 /* ---------- ICS helpers (uses element.hidden) ---------- */
