@@ -11,6 +11,8 @@
 html,body{margin:0; background:var(--bg0); color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}
 a{color:var(--tn); text-decoration:none}
 a:hover{filter:brightness(1.06)}
+[hidden]{display:none!important} /* respect element.hidden from JS */
+
 .skip{position:absolute; left:-9999px; top:auto}
 .skip:focus{left:12px; top:12px; background:#000; color:#fff; padding:8px 10px; border-radius:8px}
 
@@ -21,13 +23,11 @@ a:hover{filter:brightness(1.06)}
   gap:12px; padding:12px 16px; border-bottom:1px solid var(--line);
   background:linear-gradient(180deg,var(--bg1),var(--bg2));
 }
-
-.nav a.active{ text-decoration:underline; color:#fff; }
-
 .brand{font-weight:800}
 .brand span{color:var(--muted)}
 .nav{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 .nav a{padding:6px 8px}
+.nav a.active{ text-decoration:underline; color:#fff; }
 
 /* Buttons */
 .btn{background:var(--tn); color:#111; border:0; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer; display:inline-block}
@@ -38,13 +38,13 @@ a:hover{filter:brightness(1.06)}
 
 /* Ticker */
 .ticker{border-bottom:1px solid var(--line); background:linear-gradient(180deg,#0d1117,#0b0e12)}
-.ticker-inner{
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:8px 16px; opacity:.85;
-}
+.ticker-inner{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:8px 16px; opacity:.85}
 
 /* Hero */
 .hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line)}
+.hero-bg{position:absolute; inset:0; background:radial-gradient(100% 60% at 50% 40%, #2a2f37 0, #0b0e12 60%);}
 .hero-inner{
+  position:relative;
   max-width:1100px; margin:0 auto; padding:40px 16px; display:grid; gap:12px; justify-items:start
 }
 .hero-title{font:900 64px/1 system-ui,sans-serif; letter-spacing:2px; margin:0}
@@ -106,7 +106,7 @@ a:hover{filter:brightness(1.06)}
 
 /* Forms */
 .nl{display:flex; gap:10px}
-.nl input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0d1117; color:var(--ink)}
+.nl input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0d1117; color:#fff}
 .nl .btn{flex:0 0 auto}
 
 /* CTA */
