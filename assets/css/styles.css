@@ -24,6 +24,22 @@ a{color:var(--tn)}
 .btn:hover{filter:brightness(1.06)}
 .btn-small{padding:8px 10px; border-radius:10px}
 .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
+.btn.ghost::before{
+  content:""; display:inline-block; width:14px; height:14px;
+  margin-right:8px; vertical-align:-2px; border:2px solid currentColor; border-radius:3px;
+  box-shadow:inset 0 -5px 0 currentColor; opacity:.75;
+}
+
+/* Ticker */
+.ticker{ position:relative; z-index:9; border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#0f141a,#0b0e12); }
+.ticker-inner{max-width:1100px; margin:0 auto; overflow:hidden; padding:8px 0}
+.ticker-track{ display:flex; gap:28px; white-space:nowrap; will-change:transform;
+  animation:ticker 28s linear infinite; font-weight:700; color:var(--ink); }
+.ticker-item{opacity:.92}
+.ticker-bullet{opacity:.5; margin:0 6px}
+@keyframes ticker{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none } }
 
 /* Hero */
 .hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line)}
@@ -34,13 +50,14 @@ a{color:var(--tn)}
 .hero-actions{display:flex; gap:10px; flex-wrap:wrap}
 .mini-countdown{margin-top:6px; color:var(--muted)}
 .mini-countdown strong{color:#fff}
+.data-updated{ color:var(--muted); margin-top:2px; }
 @media (max-width:600px){ .hero-title{font-size:42px} }
 
 /* Containers & cards */
 .wrap{max-width:1100px; margin:24px auto; padding:0 16px; display:grid; gap:var(--gap)}
 .card{background:linear-gradient(180deg,var(--bg1),var(--bg2)); border:1px solid var(--line); border-radius:var(--r); padding:var(--pad)}
 .hd{margin:0 0 10px; font:800 22px/1.2 system-ui,sans-serif}
-.muted{color:var(--muted)}
+.muted{color:var(--muted)} .sm{ font-size:12px }
 .big{font-size:20px; margin:0 0 6px}
 .sub{margin:0 0 4px}
 .vs{opacity:.8}
@@ -74,13 +91,15 @@ a{color:var(--tn)}
 .specials-grid .sp .meta{color:var(--muted); font-size:13px}
 @media (max-width:900px){ .specials-grid .sp{grid-column:span 12} }
 
-/* Map placeholder */
-.map-placeholder{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; background:var(--card); padding:12px; border:1px dashed var(--line); border-radius:12px}
-.pin{border-radius:999px; padding:6px 10px; font-weight:700; text-align:center}
-.pin-food{background:#ffdfba; color:#3b2a00}
-.pin-drink{background:#ffd0d0; color:#3b0000}
-.pin-watch{background:#d0ffe0; color:#003b1a}
-.pin-parking{background:#d6e6ff; color:#001e3b}
+/* Leaflet map */
+.leaflet-map {
+  height: 320px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.leaflet-container a { color: var(--tn); }
+@media (max-width: 600px){ .leaflet-map { height: 260px; } }
 
 /* Newsletter */
 .nl{display:flex; gap:10px}
