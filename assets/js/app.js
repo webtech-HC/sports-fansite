@@ -1,3 +1,7 @@
+/* ========================================================================
+   Tennessee • Gameday Hub — client JS (GitHub Pages friendly)
+   ======================================================================== */
+
 // ---------- tiny helpers ----------
 const qs  = (s, ctx = document) => ctx.querySelector(s);
 const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
@@ -38,8 +42,12 @@ async function fetchJSON(path, fallback = null) {
 function paintLastUpdated(meta) {
   const stamp = meta?.lastUpdated
     ? new Date(meta.lastUpdated).toLocaleString()
-    : new Date().toLocaleString();
-  setText('[data-last-updated]', stamp);
+    : 'n/a';
+  // support both attribute and legacy id
+  const elA = document.querySelector('[data-last-updated]');
+  const elB = document.querySelector('#lastUpdated');
+  if (elA) elA.textContent = stamp;
+  if (elB) elB.textContent = stamp;
 }
 
 function paintQuick(next) {
@@ -144,6 +152,8 @@ function mountTicker(next) {
   if (next?.date) {
     const when = new Date(next.date);
     parts.push(`Kickoff vs ${next.opponent ?? 'TBD'} • ${when.toLocaleDateString()} ${when.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);
+  } else {
+    parts.push('Kickoff time TBA');
   }
   parts.push('Countdown 00d 00h 00m');
   bar.innerHTML = `<div class="ticker-inner">${parts.join(' — ')}</div>`;
@@ -152,7 +162,12 @@ function mountTicker(next) {
 // ---------- add to calendar ----------
 function wireAddToCal(next) {
   const links = qsa('[data-add-cal]');
-  if (!links.length || !next?.date) return;
+  if (!links.length) return;
+
+  if (!next?.date || !isValidISO(next.date)) {
+    links.forEach(a => { a.hidden = true; a.removeAttribute('href'); a.removeAttribute('download'); });
+    return;
+  }
 
   const dtStart = new Date(next.date);
   const dtEnd   = new Date(dtStart.getTime() + 3 * 3600000);
@@ -173,7 +188,7 @@ function wireAddToCal(next) {
   ].join('\r\n');
 
   const href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-  links.forEach(a => { a.href = href; a.download = 'tennessee-gameday.ics'; });
+  links.forEach(a => { a.href = href; a.download = 'tennessee-gameday.ics'; a.hidden = false; });
 }
 
 // ---------- helpers ----------
@@ -212,4 +227,3 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
