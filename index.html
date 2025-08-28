@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TENNESSEE • Gameday Hub (Unofficial)</title>
   <meta name="description" content="Fan-run, unofficial Tennessee football gameday hub: schedule, specials, map, and tips." />
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
   <link rel="canonical" href="https://webtech-hc.github.io/sports-fansite/">
 </head>
 <body>
@@ -24,27 +24,33 @@
   </header>
 
   <!-- Ticker (top ribbon) -->
-  <section class="ticker" aria-label="Gameday ticker"></section>
+  <section class="ticker" aria-label="Gameday ticker">
+    <div class="ticker-inner">Loading…</div>
+  </section>
 
   <!-- Hero -->
   <section class="hero" role="banner" aria-label="Site hero">
-    <!-- Optional hero background image -->
     <div class="hero-bg" style="background-image: url('');"></div>
     <div class="hero-inner">
       <h1 class="hero-title">TENNESSEE</h1>
       <p class="hero-sub">Fan-run. Unofficial. Built by fans for fans.</p>
+
       <div class="hero-actions">
         <a class="btn" href="schedule.html">View Schedule</a>
         <a class="btn ghost" href="specials.html">Find Specials</a>
         <a class="btn ghost" href="submit.html">Submit a Listing</a>
+        <a class="btn ghost" href="#" data-add-cal hidden>Add to Calendar</a>
       </div>
+
       <div class="mini-countdown" aria-live="polite">
         <span>Kickoff in</span>
         <strong id="miniDays">00</strong>d :
         <strong id="miniHours">00</strong>h :
         <strong id="miniMins">00</strong>m
       </div>
-      <p class="muted" style="margin-top:6px">Data updated — <span id="lastUpdated"></span></p>
+
+      <!-- JS will fill this -->
+      <p class="updated">Data updated — <span data-last-updated>—</span></p>
     </div>
   </section>
 
@@ -57,21 +63,24 @@
         <p class="big"><strong>Tennessee</strong> <span class="vs">vs</span> <span id="qOpp">Opponent</span></p>
         <p class="sub"><span id="qDate">Date</span> • <span id="qTime">Time</span></p>
         <p class="muted" id="qVenue">Knoxville, TN</p>
-        <p><a class="btn btn-small" href="schedule.html">Full schedule</a></p>
+        <p style="margin-top:6px">
+          <a class="btn ghost btn-slim" href="#" data-add-cal hidden>Add to Calendar</a>
+          <a class="btn btn-slim" href="schedule.html">Full schedule</a>
+        </p>
       </article>
 
-      <!-- Weather (stub, filled by data file) -->
+      <!-- Weather (3-day) -->
       <article class="card">
         <h2 class="hd">Weather (3-day)</h2>
-        <ul class="wx" id="wxList">
-          <li><b>Fri</b> <span>—</span> <em>—</em></li>
-          <li><b>Sat</b> <span>—</span> <em>—</em></li>
-          <li><b>Sun</b> <span>—</span> <em>—</em></li>
+        <ul class="wx">
+          <li id="wx0"><b>—</b> <span>—</span> <em>—</em></li>
+          <li id="wx1"><b>—</b> <span>—</span> <em>—</em></li>
+          <li id="wx2"><b>—</b> <span>—</span> <em>—</em></li>
         </ul>
         <p class="muted">Forecasts change—check again closer to kickoff.</p>
       </article>
 
-      <!-- This Week in Knoxville (static links for now) -->
+      <!-- This Week in Knoxville -->
       <article class="card">
         <h2 class="hd">This Week in Knoxville</h2>
         <ul class="links">
@@ -187,8 +196,6 @@
     <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.</p>
   </footer>
 
-  <!-- Your existing homepage logic (countdown, cards, etc.) -->
-  <script type="module" src="assets/js/app.js"></script>
+  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
 </body>
 </html>
-
