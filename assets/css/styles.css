@@ -21,6 +21,9 @@ a:hover{filter:brightness(1.06)}
   gap:12px; padding:12px 16px; border-bottom:1px solid var(--line);
   background:linear-gradient(180deg,var(--bg1),var(--bg2));
 }
+
+.nav a.active{ text-decoration:underline; color:#fff; }
+
 .brand{font-weight:800}
 .brand span{color:var(--muted)}
 .nav{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
