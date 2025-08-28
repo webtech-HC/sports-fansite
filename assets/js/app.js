@@ -32,10 +32,11 @@ const untilParts = (iso) => {
 };
 
 // Safe setters (no optional-chaining on the LHS of an assignment)
-const $ = (s, ctx = document) => ctx.querySelector(s);  // keep your existing $
-const setText = (sel, txt, ctx = document) => { const el = $(sel, ctx); if (el) el.textContent = txt; };
-
-
+// use the existing $ you already have at the top of the file
+const setText = (sel, txt, ctx = document) => {
+  const el = $(sel, ctx);
+  if (el) el.textContent = txt;
+};
 
 async function fetchJSON(path, fallback = null) {
   try {
