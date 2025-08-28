@@ -1,7 +1,3 @@
-/* ========================================================================
-   Tennessee • Gameday Hub — client JS (GitHub Pages friendly)
-   ======================================================================== */
-
 // ---------- tiny helpers ----------
 const qs  = (s, ctx = document) => ctx.querySelector(s);
 const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
@@ -216,3 +212,4 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
