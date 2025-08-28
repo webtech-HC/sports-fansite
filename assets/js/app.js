@@ -31,6 +31,12 @@ const untilParts = (iso) => {
   };
 };
 
+// Safe setters (no optional-chaining on the LHS of an assignment)
+const $ = (s, ctx = document) => ctx.querySelector(s);  // keep your existing $
+const setText = (sel, txt, ctx = document) => { const el = $(sel, ctx); if (el) el.textContent = txt; };
+
+
+
 async function fetchJSON(path, fallback = null) {
   try {
     const res = await fetch(path, { cache: 'no-store' });
@@ -118,38 +124,27 @@ async function paintLastUpdated(){
 
 /* ---------- countdown / ticker ---------- */
 let countdownTimer = null;
+
 function startCountdown(iso){
   if (!iso || !isValidISO(iso)) return;
-  const tick = ()=>{
-    const {d,h,m,s} = untilParts(iso);
-    $('#miniDays')?.textContent = pad(d);
-    $('#miniHours')?.textContent = pad(h);
-    $('#miniMins')?.textContent  = pad(m);
-    $('#cdD')?.textContent = pad(d);
-    $('#cdH')?.textContent = pad(h);
-    $('#cdM')?.textContent = pad(m);
-    $('#cdS')?.textContent = pad(s);
-  };
-  tick(); countdownTimer = setInterval(tick,1000);
-}
-function stopCountdown(){ if (countdownTimer) clearInterval(countdownTimer); }
 
-function mountTicker(nextGame){
-  const track = $('#tickerTrack'); if (!track) return;
-  if (!nextGame || !isValidISO(nextGame.date)){
-    track.innerHTML = `<div class="ticker-row">
-      <span class="ticker-item">Kickoff time TBA — schedule updates will appear here</span>
-    </div>`;
-    return;
-  }
-  const nowCountdownStr = ()=>{ const {d,h,m}=untilParts(nextGame.date); return `${pad(d)}d ${pad(h)}h ${pad(m)}m`; };
-  const chunk = ()=>[
-    `Kickoff vs ${nextGame.opponent}: ${fmtDate(nextGame.date)} ${fmtTime(nextGame.date)}`,
-    `Countdown ${nowCountdownStr()}`,
-    nextGame.venue || (nextGame.home ? 'Knoxville, TN' : 'Away'),
-  ].map(p=>`<span class="ticker-item">${p}</span><span class="ticker-bullet">•</span>`).join('');
-  track.innerHTML = `<div class="ticker-row">${chunk()}</div><div class="ticker-row">${chunk()}</div>`;
+  const tick = () => {
+    const { d, h, m, s } = untilParts(iso);
+    // hero mini
+    setText('#miniDays',  pad(d));
+    setText('#miniHours', pad(h));
+    setText('#miniMins',  pad(m));
+    // guide block
+    setText('#cdD', pad(d));
+    setText('#cdH', pad(h));
+    setText('#cdM', pad(m));
+    setText('#cdS', pad(s));
+  };
+
+  tick();
+  countdownTimer = setInterval(tick, 1000);
 }
+
 
 /* ---------- ICS helpers (uses element.hidden) ---------- */
 function toICSDate(iso){
