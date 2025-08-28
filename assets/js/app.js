@@ -4,7 +4,8 @@
 const PATH_SCHEDULE = 'data/schedule.json';
 const PATH_SPECIALS = 'data/specials.json'; // your hand-curated deals
 const PATH_WEATHER  = 'data/weather.json';  // produced by the Action
-// const PATH_PLACES   = 'data/places.json'; // (optional) for a map later
+const PATH_META     = 'data/meta.json';     // produced by the Action
+const PATH_PLACES   = 'data/places.json';   // produced by the Action (optional)
 
 // Helpers
 const $ = s => document.querySelector(s);
@@ -34,6 +35,7 @@ async function fetchJSON(path, fallback = null) {
 
 // Pick next upcoming game (>= now). If none, last game.
 function pickNextGame(schedule) {
+  if (!Array.isArray(schedule) || !schedule.length) return null;
   const now = Date.now();
   const sorted = [...schedule].sort((a, b) => new Date(a.date) - new Date(b.date));
   return sorted.find(g => new Date(g.date).getTime() >= now) || sorted[sorted.length - 1] || null;
@@ -65,7 +67,7 @@ function tickCountdown(kickoffISO) {
 function paintSchedule(schedule) {
   const tbody = $("#schBody");
   if (!tbody) return;
-  tbody.innerHTML = schedule.map(g => `
+  tbody.innerHTML = (schedule || []).map(g => `
     <tr>
       <td>${fmtDate(g.date)} ${fmtTime(g.date)}</td>
       <td>${g.opponent}</td>
@@ -101,6 +103,16 @@ async function paintWeather() {
     const pr = (x.precip ?? 0) + '%';
     return `<li><b>${w}</b> <span>${hi}°/${lo}°</span> <em>${pr}</em></li>`;
   }).join('');
+}
+
+// ---------- "Data last updated" (from /data/meta.json) ----------
+async function paintLastUpdated() {
+  const el = $("#dataUpdated");
+  if (!el) return;
+  const meta = await fetchJSON(PATH_META, null);
+  if (!meta?.lastUpdated) { el.textContent = 'Data updated — n/a'; return; }
+  const dt = new Date(meta.lastUpdated).toLocaleString([], { dateStyle:'medium', timeStyle:'short' });
+  el.textContent = `Data updated — ${dt}`;
 }
 
 // ---------- Marquee ticker ----------
@@ -172,23 +184,65 @@ function wireAddToCal(game) {
   });
 }
 
+// ---------- Leaflet Map (from /data/places.json) ----------
+async function paintLeafletMap() {
+  const mapEl = $("#leafletMap");
+  if (!mapEl) return;
+  if (typeof L === 'undefined') { console.warn('Leaflet not loaded'); return; }
+
+  // Init map (center Knoxville)
+  const map = L.map('leafletMap', { scrollWheelZoom: false });
+  const center = [35.9606, -83.9207];
+  map.setView(center, 13);
+
+  // Tiles + attribution (required by OSM)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Load places
+  const places = await fetchJSON(PATH_PLACES, []);
+  if (!places || !places.length) {
+    $("#mapNote") && ($("#mapNote").textContent = 'No live places data yet — check back soon.');
+    setTimeout(() => map.invalidateSize(), 50);
+    return;
+  }
+
+  const markers = [];
+  places.forEach(p => {
+    if (typeof p.lat !== 'number' || typeof p.lon !== 'number') return;
+    const m = L.marker([p.lat, p.lon]).addTo(map);
+    const link = p.url ? `<br><a href="${p.url}" target="_blank" rel="noopener">Website</a>` : '';
+    m.bindPopup(`<strong>${p.name}</strong><br>${p.address || p.area || ''}${link}`);
+    markers.push(m);
+  });
+
+  const group = L.featureGroup(markers);
+  try { map.fitBounds(group.getBounds().pad(0.2)); } catch {}
+  setTimeout(() => map.invalidateSize(), 100);
+}
+
 // ---------- Init ----------
 (async function init() {
-  // Load site data
-  const schedule = await fetchJSON(PATH_SCHEDULE, []);
-  const specials = await fetchJSON(PATH_SPECIALS, []);
+  const [schedule, specials] = await Promise.all([
+    fetchJSON(PATH_SCHEDULE, []),
+    fetchJSON(PATH_SPECIALS, [])
+  ]);
 
-  // Paint content
   paintSchedule(schedule);
   paintSpecials(specials);
   paintWeather();
+  paintLastUpdated();
 
-  // Next game + countdown/ticker
   const next = pickNextGame(schedule);
   paintQuick(next);
   tickCountdown(next?.date);
   setInterval(() => tickCountdown(next?.date), 1000);
   mountTicker(next);
   wireAddToCal(next);
+
+  paintLeafletMap();
 })();
 
