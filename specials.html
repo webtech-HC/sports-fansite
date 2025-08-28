@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Specials • TENNESSEE Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Specials • Tennessee Gameday Hub (Unofficial)</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -13,34 +13,29 @@
     <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
     <nav class="nav">
       <a href="schedule.html">Schedule</a>
-      <a href="specials.html">Specials</a>
+      <a href="specials.html" class="active">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small" href="submit.html">Submit</a>
     </nav>
   </header>
 
+  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+
   <main id="main" class="wrap">
     <section class="card">
       <h1 class="hd">Featured Specials</h1>
+      <div id="specialsGrid" class="specials-grid" style="margin-top:8px"></div>
       <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
-      <div id="specialsGrid" class="specials-grid"></div>
+      <p class="muted">Data updated — <span data-last-updated>—</span></p>
     </section>
-
-    <aside class="card">
-      <h2 class="hd">Want to be listed?</h2>
-      <p>Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
-      <a class="btn" href="submit.html">Submit a Listing</a>
-    </aside>
   </main>
 
   <footer class="sitefoot">
-    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <p><a href="schedule.html">Schedule</a> • <a href="map.html">Map</a> • <a href="guide.html">Guide</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
-  <script type="module">
-    import { initSpecialsPage } from './assets/js/page.js';
-    document.addEventListener('DOMContentLoaded', initSpecialsPage);
-  </script>
+  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
 </body>
 </html>
