@@ -6,9 +6,12 @@
   <title>Tennessee • Gameday Hub (Unofficial)</title>
   <meta name="description" content="Fan-run, unofficial Tennessee football weekend guide: schedule, specials, maps, and tips." />
   <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- Leaflet (map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
-  <!-- ===================== TENNESSEE GAMEDAY HUB — WIREFRAME STARTER ===================== -->
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
@@ -22,9 +25,15 @@
     </nav>
   </header>
 
+  <!-- TICKER (Top ribbon) -->
+  <section class="ticker" aria-label="Gameday ticker">
+    <div class="ticker-inner">
+      <div class="ticker-track" id="tickerTrack" aria-live="polite"></div>
+    </div>
+  </section>
+
   <!-- HERO -->
   <section class="hero" role="banner" aria-label="Site hero">
-    <!-- Optional: put your hero image at assets/img/hero.jpg and set this inline style -->
     <div class="hero-bg" style="background-image: url('');"></div>
     <div class="hero-inner">
       <h1 class="hero-title">TENNESSEE</h1>
@@ -33,6 +42,7 @@
         <a class="btn" href="#schedule">View Schedule</a>
         <a class="btn ghost" href="#specials">Find Specials</a>
         <a class="btn ghost" href="#submit">Submit a Listing</a>
+        <a id="addCalHero" class="btn ghost" href="#" download>Add to Calendar</a>
       </div>
       <div class="mini-countdown" aria-live="polite">
         <span>Kickoff in</span>
@@ -40,6 +50,7 @@
         <strong id="miniHours">00</strong>h :
         <strong id="miniMins">00</strong>m
       </div>
+      <div class="data-updated"><small id="dataUpdated">Data updated —</small></div>
     </div>
   </section>
 
@@ -52,15 +63,16 @@
         <p class="big"><strong>Tennessee</strong> <span class="vs">vs</span> <span id="qOpp">Opponent</span></p>
         <p class="sub"><span id="qDate">Date</span> • <span id="qTime">Time</span></p>
         <p class="muted" id="qVenue">Venue, Knoxville, TN</p>
+        <p><a id="addCalCard" class="btn btn-small ghost" href="#" download>Add to Calendar</a></p>
       </article>
 
-      <!-- Weather (stub) -->
+      <!-- Weather -->
       <article class="card">
         <h2 class="hd">Weather (3-day)</h2>
         <ul class="wx">
-          <li><b>Fri</b> <span>88°/70°</span> <em>20%</em></li>
-          <li><b>Sat</b> <span>90°/72°</span> <em>30%</em></li>
-          <li><b>Sun</b> <span>86°/69°</span> <em>10%</em></li>
+          <li><b>Fri</b> <span>—</span> <em>—</em></li>
+          <li><b>Sat</b> <span>—</span> <em>—</em></li>
+          <li><b>Sun</b> <span>—</span> <em>—</em></li>
         </ul>
         <p class="muted">Forecasts change—check again closer to kickoff.</p>
       </article>
@@ -104,16 +116,14 @@
 
       <!-- RIGHT (4 cols) -->
       <aside class="right">
-        <!-- Map card -->
+        <!-- Map card (Leaflet) -->
         <section id="map" class="card">
-          <h2 class="hd">Map (coming soon)</h2>
-          <div class="map-placeholder">
-            <div class="pin pin-food">Food</div>
-            <div class="pin pin-drink">Drinks</div>
-            <div class="pin pin-watch">Watch</div>
-            <div class="pin pin-parking">Parking</div>
-          </div>
-          <p class="muted">We’ll add an interactive map with categories and “Open now”.</p>
+          <h2 class="hd">Map</h2>
+          <div id="leafletMap" class="leaflet-map" role="region" aria-label="Places open now near Knoxville"></div>
+          <p class="muted sm" id="mapNote">
+            Pins show a sample of nearby food/drink/watch spots.
+            Data © Foursquare. Map © OpenStreetMap contributors.
+          </p>
         </section>
 
         <!-- Submit CTA -->
@@ -174,17 +184,20 @@
   </main>
 
   <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="#">Privacy</a> • <a href="#">Contact</a> • <a href="#">Accessibility</a></p>
+    <p>© 2025 HC Web Labs. Content licensed under
+      <a href="/LICENSE-CONTENT">CC BY-NC-ND 4.0</a> unless noted.
+      Code © HC Web Design Labs (all rights reserved).
+    </p>
+    <p>Independent, fan-operated site. Not affiliated with or endorsed by any university, athletics program, conference, or governing body.</p>
     <p class="muted">
-  Weather by <a href="https://open-meteo.com/" rel="nofollow">Open-Meteo</a> •
-  Schedule data via <a href="https://collegefootballdata.com" rel="nofollow">CollegeFootballData</a> •
-  Map data © <a href="https://www.openstreetmap.org/copyright">OSM contributors</a> •
-  Places data © Foursquare
-</p>
-
+      Weather by <a href="https://open-meteo.com/" rel="nofollow">Open-Meteo</a> •
+      Schedule data via <a href="https://collegefootballdata.com" rel="nofollow">CollegeFootballData</a> •
+      Map data © <a href="https://www.openstreetmap.org/copyright">OSM contributors</a> •
+      Places data © Foursquare
+    </p>
   </footer>
 
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
+
