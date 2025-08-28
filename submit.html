@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Submit a Listing • TENNESSEE Gameday Hub</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
+    <nav class="nav">
+      <a href="schedule.html">Schedule</a>
+      <a href="specials.html">Specials</a>
+      <a href="map.html">Map</a>
+      <a href="guide.html">Guide</a>
+      <a class="btn btn-small" href="submit.html">Submit</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="card">
+      <h1 class="hd">Submit a Listing</h1>
+      <p>Restaurant, bar, shop, or event with a gameday special? Add it for fans.</p>
+
+      <div class="card" style="display:grid; gap:10px">
+        <form id="dealForm" class="nl" style="display:grid; gap:10px">
+          <input name="title" placeholder="Deal title (e.g., Wings + Pitchers)" required />
+          <input name="biz"   placeholder="Business name (e.g., Checkerboard Tavern)" required />
+          <input name="area"  placeholder="Area (Downtown / The Strip / Old City…)" required />
+          <input name="time"  placeholder="Time window (e.g., 4–7pm, Sat–Sun)" required />
+          <input name="link"  placeholder="Details link (menu, post, event URL)" />
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button type="button" id="copyJson" class="btn">Copy JSON</button>
+            <a class="btn ghost" href="specials.html">View Specials</a>
+          </div>
+        </form>
+      </div>
+
+      <h2 class="hd" style="margin-top:14px">Preview</h2>
+      <div id="preview" class="specials-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="hd">Content guidelines (read first)</h2>
+      <ul>
+        <li>Must be relevant to gameday weekend or watch-party crowd.</li>
+        <li>Family-friendly wording; no offensive or adult content.</li>
+        <li>Include a real business name, neighborhood/area, and a time window.</li>
+        <li>By submitting, you confirm you’re authorized to share this info publicly.</li>
+        <li>Listings may be edited for clarity, format, or obvious typos.</li>
+      </ul>
+      <p class="muted">Independent site. Not affiliated with any university, athletics program, or governing body.</p>
+    </section>
+  </main>
+
+  <footer class="sitefoot">
+    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+  </footer>
+
+  <script type="module">
+    import { initSubmitPage } from './assets/js/page.js';
+    document.addEventListener('DOMContentLoaded', initSubmitPage);
+  </script>
+</body>
+</html>
