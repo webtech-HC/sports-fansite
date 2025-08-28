@@ -1,11 +1,11 @@
 // scripts/fetch-data.js
 // Node 20 has global fetch; no deps.
 
-// ---------------- Utilities ----------------
 import { writeFile, mkdir } from 'fs/promises';
 
 const OUTDIR = 'data';
 const nowISO = () => new Date().toISOString();
+
 const outJSON = async (file, data) => {
   await mkdir(OUTDIR, { recursive: true });
   await writeFile(`${OUTDIR}/${file}`, JSON.stringify(data, null, 2) + '\n');
@@ -26,7 +26,7 @@ const pickNextGame = (games) => {
   return sorted.find(g => new Date(g.date).getTime() >= now) || sorted[sorted.length - 1];
 };
 
-// ---------------- Providers ----------------
+// ---------- Providers ----------
 
 // A) CollegeFootballData — schedule (requires CFBD_API_KEY)
 async function fetchCFBDSchedule(year = (new Date()).getFullYear()) {
@@ -35,7 +35,6 @@ async function fetchCFBDSchedule(year = (new Date()).getFullYear()) {
   const url = `https://api.collegefootballdata.com/games?year=${year}&seasonType=regular&team=Tennessee`;
   const raw = await safeFetch(url, { headers: { Authorization: `Bearer ${key}` } });
 
-  // Normalize rows to the site shape
   const games = raw.map(g => {
     const homeTeam = g.home_team ?? '';
     const awayTeam = g.away_team ?? '';
@@ -48,7 +47,7 @@ async function fetchCFBDSchedule(year = (new Date()).getFullYear()) {
     if (hp != null && ap != null) result = isHome ? `${hp}-${ap}` : `${ap}-${hp}`;
 
     return {
-      date: startISO,                 // ISO string
+      date: startISO,
       opponent,
       home: Boolean(isHome),
       tv: g.tv ?? g.network ?? 'TBD',
@@ -69,13 +68,12 @@ async function fetchWeather() {
   const d = await safeFetch(url);
   if (!d?.daily?.time) return [];
 
-  const out = d.daily.time.map((t, i) => ({
+  return d.daily.time.map((t, i) => ({
     date: t,
     hi: d.daily.temperature_2m_max[i],
     lo: d.daily.temperature_2m_min[i],
     precip: d.daily.precipitation_probability_mean?.[i] ?? null
   }));
-  return out;
 }
 
 // C) Foursquare Places — open_now (optional; needs FSQ_API_KEY)
@@ -88,7 +86,7 @@ async function fetchPlaces() {
   const d = await safeFetch(url, { headers: { Authorization: key } });
   const results = d?.results || [];
 
-  const out = results.map(p => ({
+  return results.map(p => ({
     name: p.name ?? 'Place',
     area: p.location?.neighborhood?.[0] || p.location?.locality || 'Knoxville',
     address: [p.location?.address, p.location?.locality].filter(Boolean).join(', '),
@@ -96,10 +94,9 @@ async function fetchPlaces() {
     lon: p.geocodes?.main?.longitude ?? null,
     url: p.website || p.link || null
   }));
-  return out;
 }
 
-// ---------------- Run all & write JSON ----------------
+// ---------- Run all & write JSON ----------
 try {
   const year = (new Date()).getFullYear();
 
@@ -109,12 +106,10 @@ try {
     fetchPlaces().catch(e => { console.error('FSQ:', e.message); return []; })
   ]);
 
-  // Primary files (keep shapes simple for the site)
   if (schedule.length) await outJSON('schedule.json', schedule);
   if (weather.length)  await outJSON('weather.json',  weather);
   if (places.length)   await outJSON('places.json',   places);
 
-  // Convenience: derived "next game" + meta (optional to consume)
   const next = pickNextGame(schedule) || null;
   await outJSON('next.json', next || {});
   await outJSON('meta.json', {
@@ -132,3 +127,4 @@ try {
   console.error('FAILED:', e);
   process.exitCode = 1;
 }
+
