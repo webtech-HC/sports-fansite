@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gameday Guide • TENNESSEE Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Guide • Tennessee Gameday Hub (Unofficial)</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -15,34 +15,41 @@
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
-      <a href="guide.html">Guide</a>
+      <a href="guide.html" class="active">Guide</a>
       <a class="btn btn-small" href="submit.html">Submit</a>
     </nav>
   </header>
 
+  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+
   <main id="main" class="wrap">
     <section class="card guide">
-      <h1 class="hd">Gameday Guide (Unofficial)</h1>
+      <div class="guide-head">
+        <h1 class="hd">Gameday Guide (Unofficial)</h1>
+        <div class="countdown" aria-live="polite">
+          <div class="blk"><span id="cdD">00</span><em>days</em></div>
+          <div class="blk"><span id="cdH">00</span><em>hrs</em></div>
+          <div class="blk"><span id="cdM">00</span><em>min</em></div>
+          <div class="blk"><span id="cdS">00</span><em>sec</em></div>
+        </div>
+      </div>
 
-      <div class="guide-grid" style="margin-top:10px">
+      <div class="guide-grid">
         <article><h3>Getting There</h3><ul>
           <li>Rideshare or public lots; expect road closures near campus.</li>
           <li>Plan 60–90 minutes for traffic and entry queues.</li>
           <li>Pick a meetup spot in case phones die.</li>
         </ul></article>
-
         <article><h3>Entry & Bags</h3><ul>
           <li>Many venues have clear-bag rules and metal detectors.</li>
           <li>Leave large items, outside alcohol, and pointed umbrellas at home.</li>
           <li>Always verify with the official event page before you go.</li>
         </ul></article>
-
         <article><h3>Food & Water</h3><ul>
           <li>Many vendors are cashless—bring a card or mobile pay.</li>
           <li>Hydrate early; find refill spots on concourses.</li>
           <li>Family sections are great with kids; consider ear protection.</li>
         </ul></article>
-
         <article><h3>Accessibility</h3><ul>
           <li>Check ADA parking, shuttle drop-offs, elevators, and seating.</li>
           <li>Service animals typically permitted—follow venue guidance.</li>
@@ -50,17 +57,16 @@
         </ul></article>
       </div>
 
-      <p class="muted" style="margin-top:10px">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+      <p class="muted">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+      <p class="muted">Data updated — <span data-last-updated>—</span></p>
     </section>
   </main>
 
   <footer class="sitefoot">
-    <p>Independent fan resource • Not affiliated with any university or athletics program.</p>
+    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <p><a href="schedule.html">Schedule</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
-  <script type="module">
-    import { initGuidePage } from './assets/js/page.js';
-    document.addEventListener('DOMContentLoaded', initGuidePage);
-  </script>
+  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
 </body>
 </html>
