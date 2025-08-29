@@ -1,0 +1,25 @@
+{
+  "team": "Tennessee",
+  "year": 2025,
+  "week": 1,
+  "fetchedAt": "2025-08-29T11:27:45.476Z",
+  "game": {
+    "id": 401752676,
+    "start": "2025-08-30T16:00:00.000Z",
+    "status": "scheduled",
+    "home": "Tennessee",
+    "away": "Syracuse",
+    "home_points": null,
+    "away_points": null,
+    "period": null,
+    "clock": null,
+    "tv": null,
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    }
+  }
+}
