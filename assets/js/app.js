@@ -244,6 +244,42 @@ function wireAddToCal(g){
   }, { once:true });
 }
 
+// --- add once, above boot() ---
+if (typeof window.getJSON !== "function") {
+  window.getJSON = async function getJSON(path, fallback = null) {
+    try {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return await res.json();
+    } catch (err) {
+      console.warn("getJSON fallback:", path, err.message);
+      return fallback;
+    }
+  };
+}
+
+// ---------- boot ----------
+async function boot() {
+  try {
+    const [schedule, meta] = await Promise.all([
+      getJSON("/data/schedule.json", []),
+      getJSON("/data/meta.json", { lastUpdated: null })
+    ]);
+
+    (typeof paintSchedule === "function") && paintSchedule(schedule ?? []);
+    const next = (typeof pickNextGame === "function") ? pickNextGame(schedule ?? []) : null;
+    (typeof paintQuick === "function") && paintQuick(next);
+    (typeof setLastUpdated === "function") && setLastUpdated(meta);
+  } catch (err) {
+    console.error("boot error", err);
+    const t = document.querySelector(".ticker-inner");
+    if (t) t.textContent = "Live data unavailable right now.";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", boot);
+
+
 // ---------- boot ----------
 async function boot() {
   try {
