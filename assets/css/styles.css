@@ -374,6 +374,25 @@ body {
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0;
 }
+/* Glossy wordmark (now transparent PNG) */
+.wordmark{
+  width: min(920px, 92vw);
+  height: clamp(88px, 16vw, 190px);
+  /* PNG first; JPG as quiet fallback if PNG 404s */
+  background:
+    center / contain no-repeat
+    url("../img/tn-wordmark-glossy.png?v=1"),
+    url("../img/tn-wordmark-glossy.jpg?v=1");
+  display: block;
+
+  /* no more blend mode (it causes the white box on JPGs) */
+  mix-blend-mode: normal;
+
+  /* keep the nice shadow */
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.55));
+  user-select: none;
+  pointer-events: none;
+}
 
 
 /* Footer */
