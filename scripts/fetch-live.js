@@ -1,63 +1,85 @@
 // scripts/fetch-live.js
+// Produces a lightweight scoreboard snapshot for the current or next game.
+
 import fs from "node:fs/promises";
 
-const OUT  = "data";
-const YEAR = new Date().getFullYear();
-const TEAM = "Tennessee"; // update if you rebrand
+const CFBD_KEY = process.env.CFBD_API_KEY;
+if (!CFBD_KEY) { console.error("Missing CFBD_API_KEY"); process.exit(1); }
 
-const CFBD = "https://api.collegefootballdata.com";
+const TEAM   = process.env.TEAM || "Tennessee";
+const YEAR   = Number(process.env.YEAR) || new Date().getFullYear();
+const SEASON = "regular";
+const API    = "https://apinext.collegefootballdata.com";
+const HEAD   = { Authorization: `Bearer ${CFBD_KEY}`, accept: "application/json" };
 
-await fs.mkdir(OUT, { recursive: true });
-
-async function cfbd(path, params = {}) {
-  const u = new URL(CFBD + path);
-  Object.entries(params).forEach(([k, v]) => v != null && u.searchParams.set(k, v));
-  const res = await fetch(u, {
-    headers: { Authorization: `Bearer ${process.env.CFBD_API_KEY}` },
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} ← ${u}`);
-  return res.json();
+async function get(path, params = {}) {
+  const url = new URL(API + path);
+  Object.entries(params).forEach(([k, v]) => v != null && url.searchParams.set(k, v));
+  const r = await fetch(url, { headers: HEAD });
+  if (!r.ok) throw new Error(`${r.status} ${r.statusText} — ${url}`);
+  return r.json();
+}
+async function writeJSON(name, data) {
+  await fs.mkdir("data", { recursive: true });
+  await fs.writeFile(`data/${name}`, JSON.stringify(data, null, 2));
+  console.log("✓ wrote", `data/${name}`);
 }
 
-// 1) Full season schedule for this team
-const schedule = await cfbd("/games", { year: YEAR, team: TEAM });
-
-// helper: find the next game in the future
-function pickNext(games) {
-  const now = Date.now();
-  return games
-    .map(g => ({ ...g, _ts: g.start_date ? Date.parse(g.start_date) : NaN }))
-    .filter(g => Number.isFinite(g._ts) && g._ts > now)
-    .sort((a, b) => a._ts - b._ts)[0] || null;
-}
-const next = pickNext(schedule);
-
-// 2) Scoreboard filtered to this team/year (may be empty when no game today)
-let scoreboard = await cfbd("/scoreboard", { year: YEAR, team: TEAM }).catch(() => []);
-// API sometimes returns { games:[...] } or an array—normalize:
-const gamesArray = Array.isArray(scoreboard) ? scoreboard : (scoreboard?.games || []);
-
-// Prefer “live/in-progress” entry for this team if found
-const isUs = g =>
-  (g?.home_team?.school === TEAM) ||
-  (g?.home_team === TEAM) ||
-  (g?.away_team?.school === TEAM) ||
-  (g?.away_team === TEAM);
-
-const activeGame = gamesArray.find(isUs) || null;
-
-// 3) Live plays (optional) if we have a game id
-let livePlays = [];
-const gid = activeGame?.id || activeGame?.game_id;
-if (gid) {
-  livePlays = await cfbd("/live/plays", { gameId: gid }).catch(() => []);
+async function currentWeek(year) {
+  const cal = await get("/calendar", { year });
+  const now = new Date();
+  let cur = null, next = null;
+  for (const w of cal) {
+    const st = new Date(w.startDate || w.firstGameStart);
+    const en = new Date(w.endDate || w.lastGameStart || w.endDate);
+    const type = (w.seasonType || w.season_type || "").toLowerCase();
+    if (type !== "regular") continue;
+    if (now >= st && now <= en) { cur = w.week; break; }
+    if (!next && st > now) next = w.week;
+  }
+  return cur ?? next ?? 1;
 }
 
-// 4) Persist JSON for the front-end
-const meta = { team: TEAM, year: YEAR, asOf: new Date().toISOString() };
-await fs.writeFile(`${OUT}/scoreboard.json`, JSON.stringify({ meta, games: gamesArray }, null, 2));
-await fs.writeFile(`${OUT}/live.json`,        JSON.stringify({ meta, game: activeGame, plays: livePlays }, null, 2));
-await fs.writeFile(`${OUT}/next.json`,        JSON.stringify({ meta, next }, null, 2));
+function normalizeGame(g) {
+  if (!g) return null;
+  const v = g.venue || {};
+  return {
+    id: g.id ?? null,
+    start: g.startDate ?? g.start ?? null,
+    status: g.status ?? (g.completed ? "final" : "scheduled"),
+    home: g.homeTeam ?? g.home ?? null,
+    away: g.awayTeam ?? g.away ?? null,
+    home_points: g.homePoints ?? g.home_points ?? null,
+    away_points: g.awayPoints ?? g.away_points ?? null,
+    period: g.period ?? null,
+    clock: g.clock ?? null,
+    tv: g.tv ?? g.network ?? null,
+    venue: {
+      name: v.name ?? null,
+      city: v.city ?? null,
+      state: v.state ?? null,
+      latitude: v.location?.latitude ?? v.latitude ?? null,
+      longitude: v.location?.longitude ?? v.longitude ?? null
+    }
+  };
+}
 
-console.log("Wrote data/scoreboard.json, data/live.json, data/next.json");
+async function main() {
+  const wk = await currentWeek(YEAR);
+
+  // Pull the team's game for this week
+  const games = await get("/games", { year: YEAR, week: wk, seasonType: SEASON, team: TEAM });
+  const g = games?.[0] || null;
+
+  const payload = {
+    team: TEAM,
+    year: YEAR,
+    week: wk,
+    fetchedAt: new Date().toISOString(),
+    game: normalizeGame(g)
+  };
+
+  await writeJSON("scoreboard.json", payload);
+}
+
+main().catch(e => { console.error(e); process.exit(1); });
