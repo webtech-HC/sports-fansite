@@ -245,18 +245,18 @@ function wireAddToCal(g){
 }
 
 // ---------- boot ----------
-async function boot(){
+async function boot() {
   try {
     const [schedule, meta] = await Promise.all([
-      getJSON("/data/schedule.json"),
-      getJSON("/data/meta.json")
+      getJSON("/data/schedule.json", []),
+      getJSON("/data/meta.json", { lastUpdated: null })
     ]);
 
     paintSchedule(schedule || []);
     const next = pickNextGame(schedule || []);
     paintQuick(next);
     setLastUpdated(meta);
-  } catch (err){
+  } catch (err) {
     console.error("boot error", err);
     const t = $(".ticker-inner");
     if (t) t.textContent = "Live data unavailable right now.";
@@ -264,3 +264,4 @@ async function boot(){
 }
 
 document.addEventListener("DOMContentLoaded", boot);
+
