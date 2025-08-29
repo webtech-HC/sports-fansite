@@ -1,229 +1,155 @@
-/* ========================================================================
-   Tennessee • Gameday Hub — client JS (GitHub Pages friendly)
-   ======================================================================== */
+// assets/js/app.js — reads static JSON under /data and paints UI
 
-// ---------- tiny helpers ----------
-const qs  = (s, ctx = document) => ctx.querySelector(s);
-const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
-const pad2 = n => String(n).padStart(2, '0');
+const TEAM = "Tennessee";
 
-function untilParts(iso) {
-  const now = new Date();
-  const then = new Date(iso);
-  const ms = Math.max(0, then - now);
-  return {
-    d: Math.floor(ms / 86400000),
-    h: Math.floor((ms % 86400000) / 3600000),
-    m: Math.floor((ms % 3600000) / 60000),
-    s: Math.floor((ms % 60000) / 1000),
-  };
-}
-const isValidISO = iso => !Number.isNaN(new Date(iso).getTime());
-
-// Safe setter
-function setText(sel, txt) {
-  const el = qs(sel);
+// Shorthands
+const $ = (s, ctx = document) => ctx.querySelector(s);
+const setText = (sel, txt, ctx = document) => {
+  const el = typeof sel === "string" ? $(sel, ctx) : sel;
   if (el) el.textContent = txt;
+};
+const pad = (n) => String(n).padStart(2, "0");
+
+async function loadJSON(path) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Fetch ${path} failed`);
+  return res.json();
 }
 
-// ---------- data fetch ----------
-async function fetchJSON(path, fallback = null) {
-  try {
-    const res = await fetch(path, { cache: 'no-store' });
-    if (!res.ok) throw new Error(res.statusText);
-    return await res.json();
-  } catch (e) {
-    console.warn('fetchJSON failed:', path, e);
-    return fallback;
+function fmtDate(iso) { if (!iso) return "TBA"; return new Date(iso).toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"}); }
+function fmtTime(iso) { if (!iso) return "TBA"; return new Date(iso).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}); }
+
+let countdownTimer = null;
+function stopCountdown(){ if(countdownTimer) clearInterval(countdownTimer); countdownTimer = null; }
+function startCountdown(iso) {
+  if (!iso) return;
+  stopCountdown();
+  const tick = () => {
+    const now = new Date(), then = new Date(iso);
+    const ms = Math.max(0, then - now);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000)/3600000);
+    const m = Math.floor((ms % 3600000)/60000);
+    setText("#miniDays", pad(d));
+    setText("#miniHours", pad(h));
+    setText("#miniMins", pad(m));
+    setText("#kickoffTimer", `Kickoff in ${pad(d)}d : ${pad(h)}h : ${pad(m)}m`);
+  };
+  tick();
+  countdownTimer = setInterval(tick, 30000);
+}
+
+function paintUpcoming(next) {
+  const g = next?.game;
+  if (!g) {
+    setText("#qOpp", "Tennessee vs Opponent");
+    setText("#qDate", "Date • Time");
+    setText("#qVenue", "Venue");
+    return;
   }
+  const isHome = (g.home || "").toLowerCase().includes("tennessee");
+  const opp = isHome ? g.away : g.home;
+  setText("#qOpp", opp || "Opponent");
+  setText("#qDate", `${fmtDate(g.start)} • ${fmtTime(g.start)}`);
+  setText("#qVenue", [g.venue?.name, [g.venue?.city, g.venue?.state].filter(Boolean).join(", ")].filter(Boolean).join(" — "));
+  setText("#kickoffTimer", `Kickoff: ${fmtDate(g.start)} ${fmtTime(g.start)}`);
+  startCountdown(g.start);
 }
 
-// ---------- UI painters ----------
-function paintLastUpdated(meta) {
-  const stamp = meta?.lastUpdated
-    ? new Date(meta.lastUpdated).toLocaleString()
-    : 'n/a';
-  // support both attribute and legacy id
-  const elA = document.querySelector('[data-last-updated]');
-  const elB = document.querySelector('#lastUpdated');
-  if (elA) elA.textContent = stamp;
-  if (elB) elB.textContent = stamp;
-}
-
-function paintQuick(next) {
-  setText('#qOpp', next?.opponent ?? 'Opponent');
-  if (next?.date) {
-    const d = new Date(next.date);
-    setText('#qDate', d.toLocaleDateString([], { weekday:'long', month:'long', day:'numeric' }));
-    setText('#qTime', d.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }));
-  } else {
-    setText('#qDate', 'Date TBA');
-    setText('#qTime', 'Time TBA');
+function paintMedia(list) {
+  const ul = $("#tvList");
+  const note = $("#tvNote");
+  if (!ul) return;
+  ul.innerHTML = "";
+  if (!Array.isArray(list) || list.length === 0) {
+    if (note) note.textContent = "No TV/stream info yet—check again closer to kickoff.";
+    return;
   }
-  setText('#qVenue', next?.venue ?? 'Venue, Knoxville, TN');
-}
-
-function paintSchedule(list) {
-  const tbody = qs('#schBody');
-  if (!tbody) return;
-  const rows = (list ?? []).map(g => {
-    const dt = g.date ? new Date(g.date) : null;
-    const dateStr = dt
-      ? `${dt.toLocaleDateString([], { month:'short', day:'numeric', weekday:'short' })} ${dt.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' })}`
-      : 'TBA';
-    return `
-      <tr>
-        <td>${dateStr}</td>
-        <td>${g.opponent ?? 'TBD'}</td>
-        <td>${g.home ? 'Home' : 'Away'}</td>
-        <td>${g.tv ?? 'TBD'}</td>
-        <td>${g.result ?? ''}</td>
-      </tr>
-    `;
-  }).join('');
-  tbody.innerHTML = rows || `<tr><td colspan="5">No games yet.</td></tr>`;
-}
-
-function paintSpecials(items) {
-  const grid = qs('#specialsGrid');
-  if (!grid) return;
-  grid.innerHTML = (items ?? []).slice(0, 6).map(x => `
-    <article class="sp">
-      <h3>${x.title}</h3>
-      <div class="meta">${x.biz} • ${x.area} • ${x.time}</div>
-      <p><a href="${x.link || '#'}">Details</a></p>
-    </article>
-  `).join('');
-}
-
-function paintWeather(wx) {
-  if (!wx?.days?.length) return;
-  const map = { 0:'#wx0', 1:'#wx1', 2:'#wx2' };
-  wx.days.slice(0,3).forEach((d, i) => {
-    const el = qs(map[i]);
-    if (!el) return;
-    el.innerHTML = `
-      <b>${d.label}</b>
-      <span>${d.hi}°/${d.lo}°</span>
-      <em>${d.pop}%</em>
-    `;
+  if (note) note.textContent = "";
+  list.slice(0, 6).forEach(it => {
+    const li = document.createElement("li");
+    li.textContent = `${it.homeTeam} vs ${it.awayTeam}: ${it.outlet || "TBD"}`;
+    ul.appendChild(li);
   });
 }
 
-// ---------- countdown / ticker ----------
-let countdownTimer = null;
-
-function stopCountdown(resetUI = false) {
-  if (countdownTimer) {
-    clearInterval(countdownTimer);
-    countdownTimer = null;
-  }
-  if (resetUI) {
-    [
-      ['#miniDays','00'],['#miniHours','00'],['#miniMins','00'],
-      ['#cdD','00'],['#cdH','00'],['#cdM','00'],['#cdS','00']
-    ].forEach(([sel,val]) => setText(sel, val));
-  }
-}
-
-function startCountdown(iso) {
-  if (!iso || !isValidISO(iso)) { stopCountdown(true); return; }
-  stopCountdown();
-
-  const tick = () => {
-    const { d, h, m, s } = untilParts(iso);
-    setText('#miniDays',  pad2(d));
-    setText('#miniHours', pad2(h));
-    setText('#miniMins',  pad2(m));
-    setText('#cdD', pad2(d));
-    setText('#cdH', pad2(h));
-    setText('#cdM', pad2(m));
-    setText('#cdS', pad2(s));
-  };
-
-  tick();
-  countdownTimer = setInterval(tick, 1000);
-}
-
-function mountTicker(next) {
-  const bar = qs('.ticker');
-  if (!bar) return;
-  const parts = [];
-  if (next?.date) {
-    const when = new Date(next.date);
-    parts.push(`Kickoff vs ${next.opponent ?? 'TBD'} • ${when.toLocaleDateString()} ${when.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);
-  } else {
-    parts.push('Kickoff time TBA');
-  }
-  parts.push('Countdown 00d 00h 00m');
-  bar.innerHTML = `<div class="ticker-inner">${parts.join(' — ')}</div>`;
-}
-
-// ---------- add to calendar ----------
-function wireAddToCal(next) {
-  const links = qsa('[data-add-cal]');
-  if (!links.length) return;
-
-  if (!next?.date || !isValidISO(next.date)) {
-    links.forEach(a => { a.hidden = true; a.removeAttribute('href'); a.removeAttribute('download'); });
+function paintLines(lines) {
+  const box = $("#oddsBox");
+  if (!box) return;
+  if (!Array.isArray(lines) || lines.length === 0) {
+    box.textContent = "No lines posted yet.";
     return;
   }
-
-  const dtStart = new Date(next.date);
-  const dtEnd   = new Date(dtStart.getTime() + 3 * 3600000);
-  const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
-
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//HC Web Labs//Gameday Hub//EN',
-    'BEGIN:VEVENT',
-    `DTSTAMP:${fmt(new Date())}`,
-    `DTSTART:${fmt(dtStart)}`,
-    `DTEND:${fmt(dtEnd)}`,
-    `SUMMARY:Tennessee vs ${next.opponent ?? 'Opponent'}`,
-    `LOCATION:${next.venue ?? 'Knoxville, TN'}`,
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-
-  const href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-  links.forEach(a => { a.href = href; a.download = 'tennessee-gameday.ics'; a.hidden = false; });
+  const first = lines[0];
+  box.innerHTML = `
+    <div><b>Spread:</b> ${first.spread ?? "—"}</div>
+    <div><b>O/U:</b> ${first.overUnder ?? "—"}</div>
+    <div class="muted" style="margin-top:6px">Book: ${first.provider || "TBD"}</div>
+  `;
 }
 
-// ---------- helpers ----------
-function pickNextGame(schedule = []) {
-  const now = Date.now();
-  const future = schedule
-    .filter(g => g.date && isValidISO(g.date) && new Date(g.date).getTime() >= now)
-    .sort((a,b) => new Date(a.date) - new Date(b.date));
-  return future[0] ?? null;
+function paintRankings(rk) {
+  const list = $("#rankList");
+  const note = $("#rankNote");
+  if (!list) return;
+  list.innerHTML = "";
+  const ranks = rk?.ranks || [];
+  if (ranks.length === 0) {
+    if (note) note.textContent = "No rankings available.";
+    return;
+  }
+  ranks.slice(0,10).forEach(r => {
+    const li = document.createElement("li");
+    li.textContent = `${r.rank}. ${r.team}`;
+    list.appendChild(li);
+  });
+  if (note) note.textContent = rk?.poll ? `${rk.poll}${rk.week ? ` — Week ${rk.week}` : ""}` : "";
 }
 
-// ---------- init ----------
+function paintMap(next) {
+  const box = $("#miniMap");
+  if (!box) return;
+  const lat = Number(next?.game?.venue?.latitude ?? NaN);
+  const lon = Number(next?.game?.venue?.longitude ?? NaN);
+  if (isNaN(lat) || isNaN(lon)) {
+    box.innerHTML = '<p class="muted">Map will appear when coordinates are available.</p>';
+    return;
+  }
+  box.style.height = "220px";
+  const boot = () => {
+    if (box._leaflet) return;
+    const map = L.map(box).setView([lat, lon], 15);
+    box._leaflet = map;
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OSM contributors"
+    }).addTo(map);
+    const label = [next.game.venue?.name, next.game.venue?.city, next.game.venue?.state].filter(Boolean).join(", ");
+    L.marker([lat, lon]).addTo(map).bindPopup(label || "Venue").openPopup();
+  };
+  if (window.L) boot(); else window.addEventListener("load", boot);
+}
+
 async function init() {
-  console.log('TENNESSEE APP', new Date().toISOString().slice(0,10));
+  try {
+    const [meta, next, media, lines, rankings] = await Promise.all([
+      loadJSON("/sports-fansite/data/meta.json").catch(()=>({})),
+      loadJSON("/sports-fansite/data/next.json").catch(()=>({})),
+      loadJSON("/sports-fansite/data/media.json").catch(()=>([])),
+      loadJSON("/sports-fansite/data/lines.json").catch(()=>([])),
+      loadJSON("/sports-fansite/data/rankings.json").catch(()=>({}))
+    ]);
 
-  const [meta, next, schedule, specials, weather] = await Promise.all([
-    fetchJSON('./data/meta.json', null),
-    fetchJSON('./data/next.json', null),
-    fetchJSON('./data/schedule.json', []),
-    fetchJSON('./data/specials.json', []),
-    fetchJSON('./data/weather.json',  null),
-  ]);
+    paintUpcoming(next);
+    paintMap(next);
+    paintMedia(media);
+    paintLines(lines);
+    paintRankings(rankings);
 
-  paintLastUpdated(meta || {});
-  paintSchedule(schedule || []);
-  paintSpecials(specials || []);
-  if (weather) paintWeather(weather);
-
-  const chosen = (next && next.date) ? next : pickNextGame(schedule || []);
-  paintQuick(chosen);
-  wireAddToCal(chosen);
-  mountTicker(chosen);
-
-  stopCountdown(true);
-  if (chosen?.date && isValidISO(chosen.date)) startCountdown(chosen.date);
+    setText("#lastUpdated", meta.lastUpdated ? new Date(meta.lastUpdated).toLocaleString() : "");
+  } catch (e) {
+    console.error(e);
+    setText("#kickoffTimer", "Live data unavailable right now.");
+  }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener("DOMContentLoaded", init);
