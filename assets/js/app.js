@@ -1,265 +1,315 @@
-/* assets/js/app.js
-   Front page + shared helpers: schedule table, “upcoming game” card,
-   add-to-calendar, and last-updated. Focused on Tennessee only.
-*/
+/* ==========================================================================
+   TENNESSEE • Gameday Hub (front page)
+   - robust JSON loader that works on GitHub Pages
+   - idempotent guards (safe if script is loaded twice)
+   - upcoming game, countdown, schedule table, add-to-calendar, last-updated
+   ========================================================================== */
 
-"use strict";
+(() => {
+  "use strict";
 
-// ------------------------------
-// Tiny DOM helpers
-// ------------------------------
-const $  = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  // -------------------------------------------------------
+  // Small DOM helpers (install once/idempotent)
+  // -------------------------------------------------------
+  if (!window.$) {
+    window.$ = (sel, ctx = document) => ctx.querySelector(sel);
+  }
+  if (!window.$$) {
+    window.$$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  }
+  const setText = (sel, txt, ctx = document) => {
+    const el = $(sel, ctx);
+    if (el) el.textContent = txt ?? "";
+  };
 
-// Guarded text helper (tries several selectors safely)
-function setText(targets, txt) {
-  (Array.isArray(targets) ? targets : [targets])
-    .map((t) => (typeof t === "string" ? $(t) : t))
-    .filter(Boolean)
-    .forEach((el) => (el.textContent = txt));
-}
+  // -------------------------------------------------------
+  // Constants
+  // -------------------------------------------------------
+  const TEAM = "Tennessee";
 
-// ------------------------------
-// Constants
-// ------------------------------
-const TEAM = "Tennessee";
+  // -------------------------------------------------------
+  // Date helpers
+  // -------------------------------------------------------
+  const isValidISO = (v) => {
+    if (!v) return false;
+    const d = new Date(v);
+    return !Number.isNaN(d.valueOf());
+  };
 
-// ------------------------------
-// Date helpers
-// ------------------------------
-const isValidISO = (iso) => {
-  if (!iso) return false;
-  const d = new Date(iso);
-  return !Number.isNaN(d.valueOf());
-};
+  const fmtDateOnly = (iso) => {
+    if (!isValidISO(iso)) return "TBA";
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+    });
+  };
 
-const fmtDateTime = (iso) => {
-  if (!isValidISO(iso)) return "TBA";
-  const d = new Date(iso);
-  // Example: Wed, Sep 4 • 7:30 PM
-  return d.toLocaleString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-};
+  const fmtTime = (iso) => {
+    if (!isValidISO(iso)) return "TBA";
+    const d = new Date(iso);
+    return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  };
 
-const fmtDateOnly = (iso) => {
-  if (!isValidISO(iso)) return "TBA";
-  const d = new Date(iso);
-  return d.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    weekday: "short",
-  });
-};
+  // -------------------------------------------------------
+  // Countdown helpers
+  // -------------------------------------------------------
+  const pad = (n) => String(Math.max(0, n | 0)).padStart(2, "0");
 
-// ------------------------------
-// Shared JSON helper (idempotent)
-// ------------------------------
-const getJSON =
-  window.getJSON ||
-  (window.getJSON = async function (path, fallback = null) {
-    try {
-      const res = await fetch(path, { cache: "no-store" });
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      return await res.json();
-    } catch (err) {
-      console.warn("getJSON fallback:", path, err.message);
-      return fallback;
+  const untilParts = (iso) => {
+    if (!isValidISO(iso)) return { d: 0, h: 0, m: 0, s: 0 };
+    const now = Date.now();
+    const ms = Math.max(0, new Date(iso).valueOf() - now);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000) / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    return { d, h, m, s };
+  };
+
+  let countdownTimer = null;
+  function stopCountdown() {
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
     }
-  });
+  }
+  function startCountdown(iso) {
+    stopCountdown();
+    if (!isValidISO(iso)) return;
 
-// ------------------------------
-// UI painters
-// ------------------------------
+    const tick = () => {
+      const { d, h, m, s } = untilParts(iso);
+      setText("#cdD", pad(d));
+      setText("#cdH", pad(h));
+      setText("#cdM", pad(m));
+      setText("#cdS", pad(s));
+    };
 
-// Fill the schedule table (#sched) with rows
-function paintSchedule(list) {
-  const tbody = $("#sched");
-  if (!tbody) return;
-
-  const rows = (list || []).map((g) => {
-    const homeTeam = g.home;
-    const awayTeam = g.away;
-    const isHome = homeTeam === TEAM;
-    const opponent = isHome ? awayTeam : homeTeam;
-
-    // Result if points present
-    let result = "—";
-    if (typeof g.home_points === "number" && typeof g.away_points === "number") {
-      const my = isHome ? g.home_points : g.away_points;
-      const opp = isHome ? g.away_points : g.home_points;
-      if (my > opp) result = `W ${my}-${opp}`;
-      else if (my < opp) result = `L ${my}-${opp}`;
-      else result = `T ${my}-${opp}`;
-    }
-
-    const ha = g.neutral_site ? "N" : isHome ? "Home" : "Away";
-    const tv = g.tv || "TBD";
-
-    return `<tr>
-      <td>${fmtDateOnly(g.start)}</td>
-      <td>${opponent || "TBD"}</td>
-      <td>${ha}</td>
-      <td>${tv}</td>
-      <td>${result}</td>
-    </tr>`;
-  });
-
-  tbody.innerHTML = rows.join("") || `<tr><td colspan="5">No games yet.</td></tr>`;
-}
-
-// Choose the next upcoming (future) game for Tennessee
-function pickNextGame(list) {
-  const now = Date.now();
-  const games = (list || []).filter((g) => g.home === TEAM || g.away === TEAM);
-  // Sort by start date/time
-  games.sort((a, b) => {
-    const ta = new Date(a.start).valueOf();
-    const tb = new Date(b.start).valueOf();
-    return ta - tb;
-  });
-  return games.find((g) => new Date(g.start).valueOf() > now) || null;
-}
-
-// Paint the hero “Upcoming Game” card
-function paintQuick(game) {
-  if (!game) {
-    setText(["#who", "[data-who]"], "Tennessee — Next game TBA");
-    setText(["#when", "[data-when]"], "Date/Time TBA");
-    setText(["#where", "[data-where]"], "Venue TBA");
-    return;
+    tick();
+    countdownTimer = setInterval(tick, 1000);
   }
 
-  const isHome = game.home === TEAM;
-  const opponent = isHome ? game.away : game.home;
+  // -------------------------------------------------------
+  // Idempotent JSON loader + path resolver for GitHub Pages
+  // -------------------------------------------------------
+  (function installGetJSONOnce() {
+    if (window.getJSON) return;
 
-  setText(["#who", "[data-who]"], `Tennessee vs ${opponent || "TBD"}`);
-  setText(["#when", "[data-when]"], fmtDateTime(game.start));
+    function assetURL(p) {
+      const path = String(p || "");
 
-  const venue = game.venue || {};
-  const venueText =
-    venue.name ||
-    [venue.city, venue.state].filter(Boolean).join(", ") ||
-    (isHome ? "Knoxville, TN" : "TBA");
-  setText(["#where", "[data-where]"], venueText);
+      // Absolute http(s) URL — return as-is.
+      if (/^https?:\/\//i.test(path)) return path;
 
-  // Wire "Add to Calendar" button if present
-  wireAddToCal(game);
-}
+      // Determine the repo segment, e.g. "/sports-fansite"
+      const seg = (location.pathname.split("/")[1] || "");
+      const repo = seg ? `/${seg}` : "";
 
-// Footer: last updated timestamp
-function setLastUpdated(meta) {
-  const stampEls = $$(".date-last-updated");
-  if (!stampEls.length) return;
+      // If already starts with "/sports-fansite/..." keep from origin.
+      if (repo && path.startsWith(`${repo}/`)) return location.origin + path;
 
-  const iso = meta && meta.lastUpdated;
-  const txt = iso ? new Date(iso).toLocaleString() : "—";
-  stampEls.forEach((el) => (el.textContent = txt));
-}
+      // Leading slash → treat as project-root, not domain root.
+      if (path.startsWith("/")) return location.origin + repo + path;
 
-// ------------------------------
-// Add-to-calendar (.ics) wiring
-// ------------------------------
-function wireAddToCal(game) {
-  const btn =
-    $("#addToCalendar") ||
-    $("[data-add-to-cal]") ||
-    $("#iCal") ||
-    $("#ical");
+      // Relative path like "data/foo.json"
+      return `${location.origin}${repo}/${path}`;
+    }
 
-  if (!btn || !game) return;
+    window.getJSON = async function getJSON(path, fallback = null) {
+      try {
+        const url = assetURL(path);
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return await res.json();
+      } catch (err) {
+        console.warn(`getJSON fallback: ${path} 404`, err);
+        return fallback;
+      }
+    };
+  })();
 
-  btn.addEventListener(
-    "click",
-    (ev) => {
-      ev.preventDefault();
+  // -------------------------------------------------------
+  // UI painters
+  // -------------------------------------------------------
+  function paintSchedule(list) {
+    const tbody = $("#sched");
+    if (!tbody) return;
 
-      // 3 hour default duration
-      const start = isValidISO(game.start) ? new Date(game.start) : new Date();
-      const end = new Date(start.valueOf() + 3 * 60 * 60 * 1000);
+    const rows = (list || []).map((g) => {
+      const homeTeam = g?.home;
+      const awayTeam = g?.away;
+      const isHome = homeTeam === TEAM;
+      const opponent = isHome ? awayTeam : homeTeam;
 
-      const isHome = game.home === TEAM;
-      const opponent = isHome ? game.away : game.home;
-      const tv = game.tv || "TBD";
+      // Result if points present
+      let result = "—";
+      if (
+        typeof g.home_points === "number" &&
+        typeof g.away_points === "number"
+      ) {
+        const my = isHome ? g.home_points : g.away_points;
+        const opp = isHome ? g.away_points : g.home_points;
+        result = my > opp ? `W ${my}-${opp}` : my < opp ? `L ${my}-${opp}` : `T ${my}-${opp}`;
+      }
 
-      const venue = game.venue || {};
-      const loc =
-        venue.name ||
-        [venue.city, venue.state].filter(Boolean).join(", ") ||
-        (isHome ? "Knoxville, TN" : "TBD");
+      const ha = isHome ? "Home" : "Away";
+      const tv = g?.tv || "TBD";
+      const when = fmtDateOnly(g?.start_date);
 
-      const pad = (n) => String(n).padStart(2, "0");
-      const dt = (d) =>
-        `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(
-          d.getUTCHours()
-        )}${pad(d.getUTCMinutes())}00Z`;
+      return `
+        <tr>
+          <td>${when}</td>
+          <td>${opponent || ""}</td>
+          <td>${ha}</td>
+          <td>${tv}</td>
+          <td>${result}</td>
+        </tr>
+      `;
+    });
 
-      const summary = `Tennessee vs ${opponent || "TBD"}`;
-      const description = [
-        `TV: ${tv}`,
-        game.neutral_site ? "Neutral site" : isHome ? "Home game" : "Away game",
-      ]
-        .filter(Boolean)
-        .join(" • ");
-
-      const ics = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//Gameday Hub//Fansite//EN",
-        "BEGIN:VEVENT",
-        `UID:${game.id || Date.now()}@gamedayhub`,
-        `DTSTAMP:${dt(new Date())}`,
-        `DTSTART:${dt(start)}`,
-        `DTEND:${dt(end)}`,
-        `SUMMARY:${summary}`,
-        `LOCATION:${loc}`,
-        `DESCRIPTION:${description}`,
-        "END:VEVENT",
-        "END:VCALENDAR",
-      ].join("\r\n");
-
-      const blob = new Blob([ics], { type: "text/calendar" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${summary.replace(/\s+/g, "_")}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 800);
-    },
-    { once: true } // don’t attach repeatedly across reloads
-  );
-}
-
-// ------------------------------
-// Home boot (renamed to avoid collisions)
-// ------------------------------
-const startHome = async () => {
-  try {
-    const [schedule, meta] = await Promise.all([
-      getJSON("/data/schedule.json", []),
-      getJSON("/data/meta.json", { lastUpdated: null }),
-    ]);
-
-    paintSchedule(schedule ?? []);
-    const next = pickNextGame(schedule ?? []);
-    paintQuick(next);
-    setLastUpdated(meta);
-  } catch (err) {
-    console.error("home boot error", err);
-    const t = $(".ticker-inner");
-    if (t) t.textContent = "Live data unavailable right now.";
+    tbody.innerHTML = rows.join("") || `
+      <tr><td colspan="5" style="text-align:center">No games posted yet.</td></tr>
+    `;
   }
-};
 
-// Run once whether DOM is ready or already loaded
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", startHome, { once: true });
-} else {
-  startHome();
-}
+  function pickNextGame(list) {
+    const now = Date.now();
+    return (list || [])
+      .filter((g) => isValidISO(g?.start_date) && new Date(g.start_date).valueOf() > now)
+      .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0] || null;
+  }
+
+  function setLastUpdated(meta) {
+    const t = $("[data-last-updated]");
+    const iso = meta?.lastUpdated || null;
+    const stamp = iso && isValidISO(iso)
+      ? new Date(iso).toLocaleString()
+      : new Date().toLocaleString();
+    if (t) t.textContent = stamp;
+  }
+
+  // -------------------------------------------------------
+  // Add-to-calendar (ICS)
+  // -------------------------------------------------------
+  const fmtICS = (d) =>
+    new Date(d).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+
+  function makeICS(next) {
+    if (!next || !isValidISO(next.start_date)) return "";
+
+    const isHome = next.home === TEAM;
+    const opponent = isHome ? next.away : next.home;
+    const summary = `${TEAM} vs ${opponent}`;
+    const dtStart = fmtICS(next.start_date);
+
+    // Guess 3h duration if no explicit end; you can refine later.
+    const dtEnd = fmtICS(new Date(new Date(next.start_date).valueOf() + 3 * 3600 * 1000));
+    const loc =
+      next.venue?.name
+        ? `${next.venue.name}${next.venue.city ? ", " + next.venue.city : ""}`
+        : "TBA";
+
+    return [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//HC Web Labs//Gameday Hub//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      `UID:${TEAM}-${opponent}-${dtStart}@hc-weblabs`,
+      `DTSTAMP:${fmtICS(new Date())}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${summary}`,
+      `LOCATION:${loc}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+      "",
+    ].join("\r\n");
+  }
+
+  function wireAddToCal(next) {
+    const btn = $("#btnCal");
+    if (!btn) return;
+
+    if (!next || !isValidISO(next.start_date)) {
+      btn.setAttribute("disabled", "true");
+      return;
+    }
+
+    btn.removeAttribute("disabled");
+    btn.addEventListener(
+      "click",
+      () => {
+        const ics = makeICS(next);
+        if (!ics) return;
+        const blob = new Blob([ics], { type: "text/calendar" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${TEAM}-game.ics`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 800);
+      },
+      { once: true }
+    );
+  }
+
+  function paintQuick(next) {
+    if (!next) {
+      setText("#upMatch", `${TEAM} vs TBA`);
+      setText("#upWhen", "Date • Time TBA");
+      setText("#upWhere", "Venue TBA");
+      stopCountdown();
+      wireAddToCal(null);
+      return;
+    }
+
+    const isHome = next.home === TEAM;
+    const opponent = isHome ? next.away : next.home;
+    const when = `${fmtDateOnly(next.start_date)} · ${fmtTime(next.start_date)}`;
+    const venue = next.venue?.name
+      ? `${next.venue.name}${next.venue.city ? ", " + next.venue.city : ""}`
+      : "TBA";
+
+    setText("#upMatch", `${TEAM} vs ${opponent || "TBA"}`);
+    setText("#upWhen", when);
+    setText("#upWhere", venue);
+
+    startCountdown(next.start_date);
+    wireAddToCal(next);
+  }
+
+  // -------------------------------------------------------
+  // Boot (idempotent)
+  // -------------------------------------------------------
+  (function installBootOnce() {
+    if (window.boot) return;
+
+    window.boot = async function boot() {
+      try {
+        // Use relative paths — getJSON() will resolve to the correct
+        // "/sports-fansite/..." URLs on GitHub Pages.
+        const [schedule, meta] = await Promise.all([
+          getJSON("data/schedule.json", []),
+          getJSON("data/meta.json", { lastUpdated: null }),
+        ]);
+
+        paintSchedule(schedule || []);
+        const next = pickNextGame(schedule || []);
+        paintQuick(next);
+        setLastUpdated(meta);
+      } catch (err) {
+        console.error("boot error", err);
+        const t = $(".ticker-inner");
+        if (t) t.textContent = "Live data unavailable right now.";
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", window.boot);
+  })();
+})();
