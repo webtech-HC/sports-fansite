@@ -1,100 +1,166 @@
-// assets/js/live.js
-// Module scope so it won't collide with your other code.
-const $$  = (s, ctx = document) => ctx.querySelector(s);
-const pad = n => String(n).padStart(2, "0");
+/* assets/js/live.js
+   Live scoreboard — polls /data/scoreboard.json ~30s and paints:
+   - Top ticker (#ticker)
+   - Dedicated score box (#scoreBox and its child IDs)
+   - Upcoming game panel (name/date/venue)
+*/
 
-function fmtDateTime(iso) {
-  if (!iso) return "Date TBA";
-  const d = new Date(iso);
-  return d.toLocaleString([], { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
-}
+const $ = (s, c = document) => (c || document).querySelector(s);
+const setText = (sel, txt) => { const el = typeof sel === 'string' ? $(sel) : sel; if (el) el.textContent = txt; };
 
-// Safe accessors for CFBD team fields (sometimes object, sometimes string)
-const teamName = t => (t?.school || t || "TBD");
-const venueName = v => (v?.name || v || "TBD");
-const venueCity = v => (v?.location?.city || "");
-const venueState = v => (v?.location?.state || "");
-const venueLat = v => v?.location?.lat ?? v?.location?.latitude ?? null;
-const venueLng = v => v?.location?.lng ?? v?.location?.longitude ?? null;
+const TEAM = 'Tennessee';
+const POLL_MS = 30_000;
+const PATH = 'data/scoreboard.json';
 
-// ---------- countdown ----------
-let countdownTimer = null;
-function stopCountdown(){ if (countdownTimer) clearInterval(countdownTimer); countdownTimer = null; }
-function startCountdown(iso){
-  if (!iso) return;
-  stopCountdown();
-  const tick = () => {
-    const ms = new Date(iso) - new Date();
-    if (ms <= 0) { stopCountdown(); return; }
-    const d = Math.floor(ms/86400000);
-    const h = Math.floor(ms/3600000) % 24;
-    const m = Math.floor(ms/60000)   % 60;
-    const s = Math.floor(ms/1000)    % 60;
-    $$("#miniDays")  && ($$("#miniDays").textContent  = pad(d));
-    $$("#miniHours") && ($$("#miniHours").textContent = pad(h));
-    $$("#miniMins")  && ($$("#miniMins").textContent  = pad(m));
-    $$("#miniSecs")  && ($$("#miniSecs").textContent  = pad(s));
-  };
-  tick(); countdownTimer = setInterval(tick, 1000);
-}
+const isValidISO = (iso) => { try { return !!iso && !Number.isNaN(Date.parse(iso)); } catch { return false; } };
+const fmtKick = (iso) => !iso ? 'TBA' : new Date(iso).toLocaleString([], { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+const normStatus = (s='') => s.toLowerCase().replace(/\s+/g,'_'); // "In Progress" -> "in_progress"
+const isVolsHome = (g) => String(g?.home || '').toLowerCase() === TEAM.toLowerCase();
+const venueLine = (v={}) => [v.name, v.city, v.state].filter(Boolean).join(', ');
 
-// ---------- map ----------
-function mountMiniMap(g){
-  try{
-    const lat = venueLat(g?.venue), lng = venueLng(g?.venue);
-    if (!lat || !lng) return;
-    const el = $$("#miniMap");
-    if (!el) return;
-    if (!window.L) return; // Leaflet not present—fail quietly
-    const map = L.map(el, { scrollWheelZoom:false, attributionControl:true }).setView([lat, lng], 13);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
-    L.marker([lat, lng]).addTo(map).bindPopup(venueName(g?.venue) || "Venue");
-  }catch(e){ /* no-op */ }
-}
+function oppOf(g){ return isVolsHome(g) ? g.away : g.home; }
 
-// ---------- painters ----------
+// ---------- Ticker ----------
 function paintTicker(g){
-  const el = $$("#ticker");
-  if (!el || !g) return;
-  const h = teamName(g.home_team), a = teamName(g.away_team);
-  const hs = g.home_points ?? g.home_score ?? "-";
-  const as = g.away_points ?? g.away_score ?? "-";
-  const period = g.current_period ? `Q${g.current_period}` : (g.period || "");
-  const clock  = g.clock || "";
-  const status = g.status || "";
-  el.textContent = `${a} ${as}  —  ${h} ${hs}   ${period} ${clock} ${status}`.replace(/\s+/g," ").trim();
+  const t = $('#ticker'); if (!t || !g) return;
+  const status = normStatus(g.status || (g.completed ? 'final' : 'scheduled'));
+  const vs = isVolsHome(g) ? `${TEAM} vs ${g.away}` : `${TEAM} @ ${g.home}`;
+  const tv = g.tv ? ` • ${g.tv}` : '';
+  const venue = venueLine(g.venue);
+  const venueText = venue ? ` — ${venue}` : '';
+
+  if (['final','completed','postgame'].includes(status)) {
+    t.textContent = `FINAL — ${vs} — ${g.home}: ${g.home_points ?? '-'}  ${g.away}: ${g.away_points ?? '-'}${tv}`;
+    return;
+  }
+  if (['in_progress','live','halftime','overtime','ot'].includes(status) || /^q\d+/.test(status)) {
+    const period = g.period != null ? `Q${g.period}` : (status === 'halftime' ? 'HALF' : 'LIVE');
+    const clock  = g.clock ? ` ${g.clock}` : '';
+    t.textContent = `[LIVE] ${period}${clock} — ${vs} — ${g.home}: ${g.home_points ?? '-'}  ${g.away}: ${g.away_points ?? '-'}${tv}`;
+    return;
+  }
+  // scheduled
+  t.textContent = `Kickoff ${fmtKick(g.start)} — ${vs}${venueText}${tv}`;
 }
 
-function paintUpcomingCard(g){
+// ---------- Score Box ----------
+function paintScoreBox(g){
+  const box = $('#scoreBox'); if (!box || !g) return;
+
+  const statusEl = $('#scStatus');
+  const kickEl   = $('#scKick');
+  const aName    = $('#scAwayName');
+  const hName    = $('#scHomeName');
+  const aScore   = $('#scAwayScore');
+  const hScore   = $('#scHomeScore');
+  const periodEl = $('#scPeriod');
+  const clockEl  = $('#scClock');
+  const tvEl     = $('#scTV');
+  const venueEl  = $('#scVenue');
+
+  // Names
+  setText(aName, g.away || 'Away');
+  setText(hName, g.home || 'Home');
+
+  // Vols accent
+  [aName, hName].forEach(el => el && el.classList.remove('vols'));
+  if (isVolsHome(g)) { hName?.classList.add('vols'); } else { aName?.classList.add('vols'); }
+
+  // Status badge
+  const status = normStatus(g.status || (g.completed ? 'final' : 'scheduled'));
+  const human = (
+    status === 'in_progress' ? 'LIVE' :
+    status === 'final' || status === 'completed' || status === 'postgame' ? 'FINAL' :
+    status === 'halftime' ? 'HALF' :
+    'SCHEDULED'
+  );
+  setText(statusEl, human);
+  statusEl?.classList.remove('live','final','scheduled');
+  statusEl?.classList.add(human.toLowerCase());
+
+  // Kickoff
+  setText(kickEl, `Kickoff ${fmtKick(g.start)}`);
+
+  // Scores
+  const showScores = ['in_progress','live','final','completed','postgame','halftime','overtime','ot'].includes(status) || /^q\d+/.test(status);
+  setText(aScore, showScores ? (g.away_points ?? '0') : '–');
+  setText(hScore, showScores ? (g.home_points ?? '0') : '–');
+
+  // Leader highlight
+  aScore?.classList.remove('lead'); hScore?.classList.remove('lead');
+  const ah = Number(g.away_points ?? NaN), hh = Number(g.home_points ?? NaN);
+  if (showScores && !Number.isNaN(ah) && !Number.isNaN(hh)) {
+    if      (ah > hh) aScore?.classList.add('lead');
+    else if (hh > ah) hScore?.classList.add('lead');
+  }
+
+  // Period / clock / tv
+  setText(periodEl, (status === 'in_progress' || /^q\d+/.test(status)) ? `Q${g.period ?? ''}` : (human === 'HALF' ? 'HALF' : human));
+  setText(clockEl, g.clock ? g.clock : '—');
+  setText(tvEl, `TV: ${g.tv || 'TBD'}`);
+
+  // Venue
+  const vline = venueLine(g.venue);
+  setText(venueEl, `Venue: ${vline || (isVolsHome(g) ? 'Knoxville, TN' : 'TBA')}`);
+}
+
+// ---------- “Upcoming Game” card ----------
+function paintUpcoming(g){
   if (!g) return;
-  const isHome = teamName(g.home_team) === "Tennessee";
-  const opp = isHome ? teamName(g.away_team) : teamName(g.home_team);
-  const when = fmtDateTime(g.start_date);
-  const where = [venueName(g.venue), venueCity(g.venue), venueState(g.venue)].filter(Boolean).join(", ");
+  const who   = $('#who');
+  const when  = $('#when');
+  const where = $('#where');
 
-  $$("#qOpp")   && ($$("#qOpp").textContent = opp);
-  $$("#qDate")  && ($$("#qDate").textContent = when);
-  $$("#qVenue") && ($$("#qVenue").textContent = where);
+  const vs = isVolsHome(g) ? `${TEAM} vs ${g.away}` : `${TEAM} @ ${g.home}`;
+  setText(who, vs);
+  setText(when, isValidISO(g.start) ? fmtKick(g.start) : 'TBA');
+  const vline = venueLine(g.venue) || (isVolsHome(g) ? 'Knoxville, TN' : 'TBA');
+  setText(where, vline);
 }
 
-// ---------- boot ----------
-async function boot(){
-  // fetch in parallel
-  const [live, next] = await Promise.allSettled([
-    fetch("data/live.json",       { cache:"no-store" }).then(r => r.json()),
-    fetch("data/next.json",       { cache:"no-store" }).then(r => r.json()),
-  ]);
-
-  const liveGame = live.value?.game || null;
-  const nextGame = next.value?.next || null;
-
-  // prefer live if present, else next
-  const game = liveGame || nextGame || null;
-
-  paintUpcomingCard(game);
-  startCountdown(liveGame?.start_date || nextGame?.start_date || null);
-  mountMiniMap(game);
-  paintTicker(liveGame);
+// ---------- Countdown sync (optional) ----------
+let countdownTimer = null;
+function stopCountdown(){ if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } }
+function startCountdown(iso){
+  if (!isValidISO(iso)) return;
+  stopCountdown();
+  const pad = (n) => String(Math.trunc(n)).padStart(2,'0');
+  const tick = () => {
+    const end = new Date(iso).getTime(), now = Date.now();
+    const ms = Math.max(0, end - now);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000)/3600000);
+    const m = Math.floor((ms % 3600000)/60000);
+    const s = Math.floor((ms % 60000)/1000);
+    setText('#miniDays',  pad(d));
+    setText('#miniHours', pad(h));
+    setText('#miniMins',  pad(m));
+    setText('#cDD', pad(d)); setText('#cHH', pad(h)); setText('#cMM', pad(m)); setText('#cSS', pad(s));
+  };
+  tick();
+  countdownTimer = setInterval(tick, 1000);
 }
 
-document.addEventListener("DOMContentLoaded", boot);
+// ---------- Poll loop ----------
+async function pollOnce(){
+  try {
+    const res = await fetch(PATH, { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const g = data?.game;
+    if (!g) return;
+
+    paintTicker(g);
+    paintScoreBox(g);
+    paintUpcoming(g);
+
+    const status = normStatus(g.status || (g.completed ? 'final' : 'scheduled'));
+    if (status === 'scheduled' && isValidISO(g.start)) startCountdown(g.start);
+    else stopCountdown();
+  } catch { /* silent; app.js already paints defaults */ }
+}
+function startPolling(){
+  pollOnce();                // first shot
+  setInterval(pollOnce, POLL_MS);
+}
+document.addEventListener('DOMContentLoaded', startPolling);
