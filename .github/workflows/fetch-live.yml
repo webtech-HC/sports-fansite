@@ -1,0 +1,36 @@
+name: Refresh scoreboard (near-live)
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+env:
+  TEAM: Tennessee
+
+jobs:
+  fetch_live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build scoreboard JSON
+        run: node scripts/fetch-live.js
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          TEAM: ${{ env.TEAM }}
+
+      - name: Commit updated JSON
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/scoreboard.json || true
+          git commit -m "chore(data): scoreboard refresh" || echo "no changes"
+          git push
