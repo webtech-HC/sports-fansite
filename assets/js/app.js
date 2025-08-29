@@ -102,6 +102,19 @@ function startCountdown(iso){
   tick();
   countdownTimer = setInterval(tick, 1000);
 }
+// Safe JSON fetch with fallback
+if (typeof window.getJSON !== "function") {
+  window.getJSON = async function getJSON(path, fallback = null) {
+    try {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return await res.json();
+    } catch (err) {
+      console.warn("getJSON fallback:", path, err.message);
+      return fallback;
+    }
+  };
+}
 
 // ---------- data helpers ----------
 async function getJSON(path){
