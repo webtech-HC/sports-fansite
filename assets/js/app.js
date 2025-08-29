@@ -1,155 +1,199 @@
-// assets/js/app.js — reads static JSON under /data and paints UI
+/* assets/js/app.js
+   Front page logic — Tennessee-only view + safe guards.
+   Reads local /data/*.json written by your GitHub Actions.
+*/
 
+// ---------- tiny DOM guards ----------
+const $  = (s, c = document) => (c || document).querySelector(s);
+const $$ = (s, c = document) => Array.from((c || document).querySelectorAll(s));
+const setText = (s, t = "", c = document) => { const el = $(s, c); if (el) el.textContent = t; };
+
+// ---------- constants / formatters ----------
 const TEAM = "Tennessee";
+const _tn  = TEAM.toLowerCase();
 
-// Shorthands
-const $ = (s, ctx = document) => ctx.querySelector(s);
-const setText = (sel, txt, ctx = document) => {
-  const el = typeof sel === "string" ? $(sel, ctx) : sel;
-  if (el) el.textContent = txt;
+const tzFmt   = new Intl.DateTimeFormat(undefined, { weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit" });
+const dateFmt = new Intl.DateTimeFormat(undefined, { month:"short", day:"numeric" });
+const timeFmt = new Intl.DateTimeFormat(undefined, { hour:"numeric", minute:"2-digit" });
+
+const isValidISO = (iso) => {
+  try { return !!iso && !Number.isNaN(Date.parse(iso)); }
+  catch { return false; }
 };
-const pad = (n) => String(n).padStart(2, "0");
+const pad = (n) => String(Math.trunc(n)).padStart(2, "0");
 
-async function loadJSON(path) {
-  const res = await fetch(path, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Fetch ${path} failed`);
-  return res.json();
-}
-
-function fmtDate(iso) { if (!iso) return "TBA"; return new Date(iso).toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"}); }
-function fmtTime(iso) { if (!iso) return "TBA"; return new Date(iso).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}); }
-
+// ---------- countdown ----------
 let countdownTimer = null;
-function stopCountdown(){ if(countdownTimer) clearInterval(countdownTimer); countdownTimer = null; }
-function startCountdown(iso) {
-  if (!iso) return;
+function stopCountdown(){ if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } }
+function untilParts(iso){
+  const now = Date.now();
+  const to  = new Date(iso).getTime();
+  let ms = Math.max(0, to - now);
+  const d = Math.floor(ms / 86400000); ms -= d * 86400000;
+  const h = Math.floor(ms / 3600000);  ms -= h * 3600000;
+  const m = Math.floor(ms / 60000);    ms -= m * 60000;
+  const s = Math.floor(ms / 1000);
+  return { d, h, m, s };
+}
+function startCountdown(iso){
   stopCountdown();
+  if (!isValidISO(iso)) return;
   const tick = () => {
-    const now = new Date(), then = new Date(iso);
-    const ms = Math.max(0, then - now);
-    const d = Math.floor(ms / 86400000);
-    const h = Math.floor((ms % 86400000)/3600000);
-    const m = Math.floor((ms % 3600000)/60000);
-    setText("#miniDays", pad(d));
-    setText("#miniHours", pad(h));
-    setText("#miniMins", pad(m));
-    setText("#kickoffTimer", `Kickoff in ${pad(d)}d : ${pad(h)}h : ${pad(m)}m`);
+    const { d, h, m, s } = untilParts(iso);
+    setText("#cDD", pad(d));
+    setText("#cHH", pad(h));
+    setText("#cMM", pad(m));
+    setText("#cSS", pad(s));
   };
   tick();
-  countdownTimer = setInterval(tick, 30000);
+  countdownTimer = setInterval(tick, 1000);
 }
 
-function paintUpcoming(next) {
-  const g = next?.game;
-  if (!g) {
-    setText("#qOpp", "Tennessee vs Opponent");
-    setText("#qDate", "Date • Time");
-    setText("#qVenue", "Venue");
+// ---------- data helpers ----------
+async function getJSON(path){
+  const res = await fetch(path, { cache: "no-store" }).catch(() => null);
+  if (!res || !res.ok) return null;
+  return res.json().catch(() => null);
+}
+
+// ---------- Vols-only helpers ----------
+const isVolsGame = (g) => !!g && ((g.home||"").toLowerCase() === _tn || (g.away||"").toLowerCase() === _tn);
+const onlyVols   = (list) => Array.isArray(list) ? list.filter(isVolsGame) : [];
+
+function pickNextGame(schedule){
+  const list = onlyVols(schedule)
+    .filter(g => isValidISO(g.start))
+    .sort((a,b) => new Date(a.start) - new Date(b.start));
+  const now = Date.now();
+  return list.find(g => new Date(g.start).getTime() > now) || null;
+}
+const opponentOf = (g) => (!g ? "" : ((String(g.home).toLowerCase() === _tn) ? g.away : g.home));
+const homeAway   = (g) => (!g ? "" : ((String(g.home).toLowerCase() === _tn) ? "Home" : "Away"));
+
+// ---------- painters ----------
+function paintQuick(next){
+  if (!next){
+    setText("#who",  `${TEAM} vs Opponent`);
+    setText("#when", "Date • Time TBA");
+    setText("#where","Venue TBA");
+    stopCountdown();
+    const t = $(".ticker-inner"); if (t) t.textContent = "Kickoff time TBA — Countdown 00d 00h 00m 00s";
     return;
   }
-  const isHome = (g.home || "").toLowerCase().includes("tennessee");
-  const opp = isHome ? g.away : g.home;
-  setText("#qOpp", opp || "Opponent");
-  setText("#qDate", `${fmtDate(g.start)} • ${fmtTime(g.start)}`);
-  setText("#qVenue", [g.venue?.name, [g.venue?.city, g.venue?.state].filter(Boolean).join(", ")].filter(Boolean).join(" — "));
-  setText("#kickoffTimer", `Kickoff: ${fmtDate(g.start)} ${fmtTime(g.start)}`);
-  startCountdown(g.start);
-}
 
-function paintMedia(list) {
-  const ul = $("#tvList");
-  const note = $("#tvNote");
-  if (!ul) return;
-  ul.innerHTML = "";
-  if (!Array.isArray(list) || list.length === 0) {
-    if (note) note.textContent = "No TV/stream info yet—check again closer to kickoff.";
-    return;
+  const who = (String(next.home).toLowerCase() === _tn)
+    ? `${TEAM} vs ${next.away}`
+    : `${TEAM} @ ${next.home}`;
+  setText("#who", who);
+
+  if (isValidISO(next.start)){
+    const dt = new Date(next.start);
+    setText("#when", tzFmt.format(dt));
+    startCountdown(next.start);
+  } else {
+    setText("#when", "TBA");
+    stopCountdown();
   }
-  if (note) note.textContent = "";
-  list.slice(0, 6).forEach(it => {
-    const li = document.createElement("li");
-    li.textContent = `${it.homeTeam} vs ${it.awayTeam}: ${it.outlet || "TBD"}`;
-    ul.appendChild(li);
-  });
-}
 
-function paintLines(lines) {
-  const box = $("#oddsBox");
-  if (!box) return;
-  if (!Array.isArray(lines) || lines.length === 0) {
-    box.textContent = "No lines posted yet.";
-    return;
+  const v = next.venue || {};
+  const where = [v.name, v.city, v.state].filter(Boolean).join(", ")
+             || (next.neutralSite ? "Neutral site" : (homeAway(next) === "Home" ? "Knoxville, TN" : "TBA"));
+  setText("#where", where);
+
+  const t = $(".ticker-inner");
+  if (t){
+    const kickoff = isValidISO(next.start) ? timeFmt.format(new Date(next.start)) : "TBA";
+    t.textContent = `Kickoff ${kickoff} — ${who} — ${where}`;
   }
-  const first = lines[0];
-  box.innerHTML = `
-    <div><b>Spread:</b> ${first.spread ?? "—"}</div>
-    <div><b>O/U:</b> ${first.overUnder ?? "—"}</div>
-    <div class="muted" style="margin-top:6px">Book: ${first.provider || "TBD"}</div>
-  `;
+
+  wireAddToCal(next);
 }
 
-function paintRankings(rk) {
-  const list = $("#rankList");
-  const note = $("#rankNote");
-  if (!list) return;
-  list.innerHTML = "";
-  const ranks = rk?.ranks || [];
-  if (ranks.length === 0) {
-    if (note) note.textContent = "No rankings available.";
-    return;
-  }
-  ranks.slice(0,10).forEach(r => {
-    const li = document.createElement("li");
-    li.textContent = `${r.rank}. ${r.team}`;
-    list.appendChild(li);
-  });
-  if (note) note.textContent = rk?.poll ? `${rk.poll}${rk.week ? ` — Week ${rk.week}` : ""}` : "";
+function paintSchedule(schedule){
+  const tbody = $("#schBody");
+  if (!tbody) return;
+
+  const rows = onlyVols(schedule)
+    .slice()
+    .sort((a,b)=> new Date(a.start) - new Date(b.start))
+    .map(g => {
+      const opp = opponentOf(g) || "TBD";
+      const ha  = homeAway(g);
+      const tv  = g.tv || g.broadcast || "TBD";
+      const dt  = isValidISO(g.start) ? tzFmt.format(new Date(g.start)) : "TBA";
+      const result = (g.home_points!=null && g.away_points!=null)
+        ? `${g.home_points}-${g.away_points}` : "";
+      return `<tr>
+        <td>${dt}</td>
+        <td>${opp}</td>
+        <td>${ha}</td>
+        <td>${tv}</td>
+        <td>${result}</td>
+      </tr>`;
+    }).join("");
+
+  tbody.innerHTML = rows || `<tr><td colspan="5">No games posted yet.</td></tr>`;
 }
 
-function paintMap(next) {
-  const box = $("#miniMap");
-  if (!box) return;
-  const lat = Number(next?.game?.venue?.latitude ?? NaN);
-  const lon = Number(next?.game?.venue?.longitude ?? NaN);
-  if (isNaN(lat) || isNaN(lon)) {
-    box.innerHTML = '<p class="muted">Map will appear when coordinates are available.</p>';
-    return;
-  }
-  box.style.height = "220px";
-  const boot = () => {
-    if (box._leaflet) return;
-    const map = L.map(box).setView([lat, lon], 15);
-    box._leaflet = map;
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OSM contributors"
-    }).addTo(map);
-    const label = [next.game.venue?.name, next.game.venue?.city, next.game.venue?.state].filter(Boolean).join(", ");
-    L.marker([lat, lon]).addTo(map).bindPopup(label || "Venue").openPopup();
-  };
-  if (window.L) boot(); else window.addEventListener("load", boot);
+function setLastUpdated(meta){
+  const el = document.querySelector("[data-last-updated]");
+  const when = meta?.lastUpdated || new Date().toISOString();
+  if (el) el.textContent = new Date(when).toLocaleString();
 }
 
-async function init() {
+function wireAddToCal(g){
+  const btn = $("#addToCalendar, #addToCal") || $("#addToCal") || $("#addToCalendar");
+  if (!btn || !g) return;
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const dtStart = isValidISO(g.start) ? new Date(g.start) : null;
+    const dtEnd   = dtStart ? new Date(dtStart.getTime() + 3*60*60*1000) : null; // 3h default
+
+    const summary = (String(g.home).toLowerCase() === _tn)
+      ? `${TEAM} vs ${g.away}`
+      : `${TEAM} @ ${g.home}`;
+    const loc = [g.venue?.name, g.venue?.city, g.venue?.state].filter(Boolean).join(", ");
+
+    const fmtICS = (d) => d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/, "Z");
+    const ics = [
+      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//gameday-hub//EN","BEGIN:VEVENT",
+      dtStart ? `DTSTART:${fmtICS(dtStart)}` : "",
+      dtEnd   ? `DTEND:${fmtICS(dtEnd)}`     : "",
+      `SUMMARY:${summary}`,
+      loc ? `LOCATION:${loc}` : "",
+      `DESCRIPTION:${summary}`,
+      "END:VEVENT","END:VCALENDAR"
+    ].filter(Boolean).join("\r\n");
+
+    const blob = new Blob([ics], { type: "text/calendar" });
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${summary.replace(/\s+/g,"_")}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 800);
+  }, { once:true });
+}
+
+// ---------- boot ----------
+async function boot(){
   try {
-    const [meta, next, media, lines, rankings] = await Promise.all([
-      loadJSON("/sports-fansite/data/meta.json").catch(()=>({})),
-      loadJSON("/sports-fansite/data/next.json").catch(()=>({})),
-      loadJSON("/sports-fansite/data/media.json").catch(()=>([])),
-      loadJSON("/sports-fansite/data/lines.json").catch(()=>([])),
-      loadJSON("/sports-fansite/data/rankings.json").catch(()=>({}))
+    const [schedule, meta] = await Promise.all([
+      getJSON("/data/schedule.json"),
+      getJSON("/data/meta.json")
     ]);
 
-    paintUpcoming(next);
-    paintMap(next);
-    paintMedia(media);
-    paintLines(lines);
-    paintRankings(rankings);
-
-    setText("#lastUpdated", meta.lastUpdated ? new Date(meta.lastUpdated).toLocaleString() : "");
-  } catch (e) {
-    console.error(e);
-    setText("#kickoffTimer", "Live data unavailable right now.");
+    paintSchedule(schedule || []);
+    const next = pickNextGame(schedule || []);
+    paintQuick(next);
+    setLastUpdated(meta);
+  } catch (err){
+    console.error("boot error", err);
+    const t = $(".ticker-inner");
+    if (t) t.textContent = "Live data unavailable right now.";
   }
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", boot);
