@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Schedule • Tennessee Gameday Hub (Unofficial)</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
+
+  <meta name="asset-version" content="2025-08-28-5" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-5" />
+  <link rel="icon" href="assets/img/favicon.svg" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -12,7 +15,7 @@
   <header class="topbar">
     <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
     <nav class="nav">
-      <a href="schedule.html" class="active">Schedule</a>
+      <a class="active" href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
@@ -20,36 +23,36 @@
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+  <section class="ticker" aria-label="Gameday ticker">
+    <div class="ticker-inner" id="ticker">Loading…</div>
+  </section>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" aria-label="Main content">
     <section class="card">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
-        <h1 class="hd" style="margin:0">Schedule & Results</h1>
-        <div style="display:flex; gap:8px; align-items:center">
-          <a class="btn ghost btn-slim" href="#" data-add-cal hidden>Add to Calendar</a>
-        </div>
+      <div class="row align-center space-between">
+        <h1 class="h3">Schedule &amp; Results</h1>
+        <a id="addToCal" class="btn btn-small" href="#" aria-disabled="true">Add to Calendar</a>
       </div>
 
       <div class="table-wrap" style="margin-top:10px">
-        <table class="tbl" aria-describedby="schNote">
+        <table class="table" aria-describedby="note">
           <thead>
             <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
           </thead>
-          <tbody id="schBody"></tbody>
+          <tbody id="sched"></tbody>
         </table>
       </div>
-      <p id="schNote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
-
-      <p class="muted">Data updated — <span data-last-updated>—</span></p>
+      <p id="note" class="muted">Times/TV subject to change. Check official sources day-of.</p>
+      <p class="muted">Data updated — <span id="last-updated">--</span></p>
     </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="submit.html">Submit</a></p>
+    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a class="active" href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
-  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
+  <!-- Core app handles painting schedule/ticker -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-5"></script>
 </body>
 </html>
