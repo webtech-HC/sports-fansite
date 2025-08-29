@@ -2,11 +2,14 @@ name: Refresh live data
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes (be a good API citizen)
+    - cron: "*/30 * * * *"   # every 30 minutes
   workflow_dispatch: {}
 
 permissions:
   contents: write
+
+env:
+  TEAM: Tennessee            # <— keep data Tennessee-only
 
 jobs:
   fetch:
@@ -22,6 +25,7 @@ jobs:
         run: node scripts/fetch-data.js
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          TEAM: ${{ env.TEAM }}
 
       - name: Commit updated JSON
         run: |
