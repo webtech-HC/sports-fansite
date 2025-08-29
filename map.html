@@ -2,14 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Map • Tennessee Gameday Hub (Unofficial)</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
-  <!-- Leaflet (lightweight; okay on GH Pages) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <meta name="asset-version" content="2025-08-28-5" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-5" />
+  <link rel="icon" href="assets/img/favicon.svg" />
+
+  <!-- Leaflet CSS (for the mini map on this page only) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha384-QM8u7cH9qZt2N8r9c1SBs7hMZs2mBvYg2z1UQXu5lQeQv4aB8nq9x6p1v2dQyT3g"
+    crossorigin="anonymous"
+  />
   <style>
-    #mapbox{height:420px; border:1px solid var(--line); border-radius:12px; overflow:hidden}
-    .leaflet-container{background:#0d1117}
+    /* keep it local so the map feels good on mobile */
+    #map { height: 480px; border-radius: 10px; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -20,69 +29,85 @@
     <nav class="nav">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
-      <a href="map.html" class="active">Map</a>
+      <a class="active" href="map.html">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+  <section class="ticker" aria-label="Gameday ticker">
+    <div class="ticker-inner" id="ticker">Loading…</div>
+  </section>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" aria-label="Main content">
     <section class="card">
-      <h1 class="hd">Map</h1>
-      <p class="muted" style="margin-top:-4px">Pins by category; “open now” when available.</p>
-      <div id="mapbox"></div>
-      <p class="muted">Data updated — <span data-last-updated>—</span></p>
+      <h1 class="h3">Game-day map</h1>
+      <p class="muted">Data updated — <span id="last-updated">--</span></p>
+      <div id="map" role="region" aria-label="Knoxville map"></div>
+      <p class="muted" style="margin-top:10px">
+        Tip: Zoom for more detail. We’ll add categories soon (food, watch, drinks, parking).
+      </p>
     </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="schedule.html">Schedule</a> • <a href="specials.html">Specials</a> • <a href="guide.html">Guide</a> • <a href="submit.html">Submit</a></p>
+    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a class="active" href="map.html">Map</a> • <a href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script type="module">
-    // last-updated + ticker come from app.js
-    import './assets/js/app.js?v=2025-08-28-4';
+  <!-- Core app (ticker, meta, etc.) -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-5"></script>
 
-    async function bootMap(){
-      const el = document.getElementById('mapbox');
-      if(!el) return;
+  <!-- Leaflet JS + tiny guarded map boot -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha384-5g9y3Qq8G3p6u3k5zjV4oVx5/9xEwq3m8s0t4t6v2C4o3w3k0cP7T3m0DqJQ5F6u"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+  (async () => {
+    // default center = Knoxville
+    const KNOX = { lat: 35.955, lng: -83.924, z: 13 };
 
-      // Knoxville center
-      const map = L.map(el, { zoomControl: true }).setView([35.9606, -83.9207], 12);
+    const map = L.map('map', {
+      center: [KNOX.lat, KNOX.lng],
+      zoom: KNOX.z,
+      scrollWheelZoom: true
+    });
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '&copy; OSM'
-      }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-      try{
-        const res = await fetch('./data/places.json', { cache: 'no-store' });
-        const data = res.ok ? await res.json() : null;
-
-        if(!data || !Array.isArray(data) || data.length === 0){
-          L.marker([35.9606, -83.9207]).addTo(map)
-            .bindPopup('Places coming soon.<br>Use Specials while we add pins.');
-          return;
-        }
-
-        const group = L.featureGroup();
-        data.forEach(p => {
-          if(!p?.lat || !p?.lng) return;
-          const marker = L.marker([p.lat, p.lng]).addTo(map);
-          const cat = (p.category || '').toString();
-          marker.bindPopup(`<strong>${p.name ?? 'Place'}</strong><br>${cat}${p.time ? `<br>${p.time}`:''}`);
-          group.addLayer(marker);
-        });
-        map.fitBounds(group.getBounds().pad(0.2));
-      }catch(e){
-        console.warn(e);
+    // Try to center near the next game’s venue if we have coordinates
+    try {
+      const next = await fetch('data/next.json', { cache: 'no-store' }).then(r => r.json());
+      const v = next && next.venue ? next.venue : {};
+      const lat = Number(v.latitude ?? v.lat ?? NaN);
+      const lng = Number(v.longitude ?? v.lon ?? NaN);
+      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+        map.setView([lat, lng], 14);
+        L.marker([lat, lng]).addTo(map).bindPopup(`${v.name || 'Game venue'}`);
       }
+    } catch (e) {
+      console.warn('No next-venue coordinates yet.');
     }
 
-    bootMap();
+    // Optional: drop a pin for each scheduled home game with known coords
+    try {
+      const schedule = await fetch('data/schedule.json', { cache: 'no-store' }).then(r => r.json());
+      (schedule || []).forEach(g => {
+        const v = g && g.venue ? g.venue : {};
+        const lat = Number(v.latitude ?? NaN), lng = Number(v.longitude ?? NaN);
+        const isHome = (g.home || '').toLowerCase() === 'tennessee';
+        if (isHome && !Number.isNaN(lat) && !Number.isNaN(lng)) {
+          L.marker([lat, lng]).addTo(map)
+            .bindPopup(`${g.week ? 'Week ' + g.week + ': ' : ''}${g.away} @ ${g.home}<br>${new Date(g.start).toLocaleString()}`);
+        }
+      });
+    } catch { /* fine */ }
+  })();
   </script>
 </body>
 </html>
