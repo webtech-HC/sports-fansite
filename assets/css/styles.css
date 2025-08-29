@@ -393,6 +393,40 @@ body {
   user-select: none;
   pointer-events: none;
 }
+/* ===== site background (choose 1) ===== */
+:root {
+  --page-bg: url("assets/img/tn-hero-metal.jpg"); /* or tn-hero-clay.jpg */
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(14,17,22,0.35), rgba(8,10,14,0.92) 60%),
+    var(--page-bg) center top/cover no-repeat;
+  filter:saturate(.9) brightness(.75);
+}
+
+/* ===== header wordmark (transparent PNG) ===== */
+.topbar{padding:clamp(16px,3vw,24px) 0 0;
+  background:linear-gradient(180deg,rgba(9,12,16,.85),rgba(9,12,16,0) 60%);}
+.topbar .nav{display:flex; gap:14px; align-items:center; justify-content:flex-end;
+  padding:0 clamp(12px,3vw,24px); min-height:44px;}
+.brand-mini{margin-right:auto; font-weight:800; color:#fff; opacity:.6; text-decoration:none;}
+.brand{
+  margin: clamp(12px,5vw,36px) auto 8px;
+  width: min(920px, 92vw);
+  aspect-ratio: 16/4;
+  background: url("assets/img/tn-wordmark-glossy.png") center/contain no-repeat;
+  text-indent: -9999px;
+}
+.tagline{ text-align:center; color:#9aa3ad; margin:4px 0 clamp(16px,3vw,28px); font-size:.9rem; }
+
+/* ===== score box ===== */
+.scorebox{display:grid; gap:8px}
+.scorebox-row{display:flex; justify-content:space-between; align-items:center; font-size:1.05rem}
+.scorebox .team{font-weight:700}
+.scorebox .score{font-variant-numeric:tabular-nums; font-weight:800}
+.scorebox-meta{display:flex; gap:8px; align-items:center; color:#aab2bb}
 
 
 /* Footer */
