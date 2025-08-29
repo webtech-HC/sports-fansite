@@ -2,7 +2,7 @@
   "days": [
     {
       "label": "Fri",
-      "hi": 29.4,
+      "hi": 29.2,
       "lo": 11.6,
       "precipPct": 0
     },
@@ -22,5 +22,5 @@
   "source": "open-meteo",
   "lat": 35.9606,
   "lon": -83.9207,
-  "fetchedAt": "2025-08-29T15:08:05.066Z"
+  "fetchedAt": "2025-08-29T15:34:20.219Z"
 }
