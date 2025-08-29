@@ -30,24 +30,22 @@
 </section>
 
 <!-- HERO -->
-<section class="hero" role="banner" aria-label="Site hero">
-  <div class="hero-bg"></div>
-  <div class="hero-inner">
-    <h1 class="hero-title">TENNESSEE</h1>
-    <p class="hero-sub">Fan-run. Unofficial. Built by fans for fans.</p>
-    <div class="hero-actions">
-      <a class="btn" href="schedule.html">View Schedule</a>
-      <a class="btn ghost" href="specials.html">Find Specials</a>
-      <a class="btn ghost" href="submit.html">Submit a Listing</a>
-      <a class="btn" id="addToCal" href="#" aria-disabled="true">Add to Calendar</a>
-    </div>
-    <div class="mini-countdown" aria-live="polite">
-      <span>Kickoff in</span>
-      <strong id="miniDays">00</strong>d :
-      <strong id="miniHours">00</strong>h :
-      <strong id="miniMins">00</strong>m
-    </div>
-    <p class="muted" style="margin-top:6px">Data updated — <span id="lastUpdated" data-last-updated>--</span></p>
+<section class="hero hero-has-image" data-hero="metal">
+  <picture class="hero-media">
+    <!-- prefer webp if you add it later -->
+    <!-- <source srcset="assets/img/tn-hero-metal.webp" type="image/webp"> -->
+    <img src="assets/img/tn-hero-metal.jpg"
+         alt="Tennessee wordmark on Neyland field"
+         width="1600" height="600" loading="eager" decoding="async">
+  </picture>
+
+  <div class="hero-overlay"></div>
+
+  <div class="wrap hero-inner">
+    <h1 class="site-name">TENNESSEE</h1>
+    <p class="site-tag">Fan-run. Unofficial. Built by fans for fans.</p>
+    <!-- Optional: wordmark image instead of text (comment out the H1 above if you use this) -->
+    <!-- <img class="wordmark-img" src="assets/img/tn-wordmark-glossy.png" alt="Tennessee"> -->
   </div>
 </section>
 
