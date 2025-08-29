@@ -1,1 +1,884 @@
-
+[
+  {
+    "week": 1,
+    "homeTeam": "Western Kentucky",
+    "awayTeam": "Sam Houston",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Hawai'i",
+    "awayTeam": "Stanford",
+    "outlet": "CBS"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Hawai'i",
+    "awayTeam": "Stanford",
+    "outlet": "Paramount+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "South Florida",
+    "awayTeam": "Boise State",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Rutgers",
+    "awayTeam": "Ohio",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Bowling Green",
+    "awayTeam": "Lafayette",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "NC State",
+    "awayTeam": "East Carolina",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "UCF",
+    "awayTeam": "Jacksonville State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Delaware",
+    "awayTeam": "Delaware State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "UL Monroe",
+    "awayTeam": "St. Francis (PA)",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Georgia",
+    "awayTeam": "Marshall",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Texas State",
+    "awayTeam": "Eastern Michigan",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Fresno State",
+    "awayTeam": "Georgia Southern",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Oregon State",
+    "awayTeam": "California",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arizona",
+    "awayTeam": "Hawai'i",
+    "outlet": "TNT"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arizona",
+    "awayTeam": "Hawai'i",
+    "outlet": "HBO Max"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arizona",
+    "awayTeam": "Hawai'i",
+    "outlet": "Max"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Florida State",
+    "awayTeam": "Alabama",
+    "outlet": "ABC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Iowa State",
+    "awayTeam": "South Dakota",
+    "outlet": "FOX"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Nicholls",
+    "awayTeam": "Incarnate Word",
+    "outlet": "ESPN2"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Portland State",
+    "awayTeam": "Tarleton State",
+    "outlet": "ESPN2"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Mercer",
+    "awayTeam": "UC Davis",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Southern",
+    "awayTeam": "North Carolina Central",
+    "outlet": "ABC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Norfolk State",
+    "awayTeam": "Towson",
+    "outlet": "ESPNU"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Indiana State",
+    "awayTeam": "McKendree",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Youngstown State",
+    "awayTeam": "Mercyhurst",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Eastern Illinois",
+    "awayTeam": "Dayton",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Northwestern State",
+    "awayTeam": "Alcorn State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Colgate",
+    "awayTeam": "Monmouth",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Marist",
+    "awayTeam": "New Haven",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Northern Colorado",
+    "awayTeam": "Chadron St",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "South Dakota State",
+    "awayTeam": "Sacramento State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Jackson State",
+    "awayTeam": "Hampton",
+    "outlet": "HBCU Go"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tennessee State",
+    "awayTeam": "North Carolina A&T",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "North Carolina Central",
+    "awayTeam": "New Hampshire",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Furman",
+    "awayTeam": "William & Mary",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "East Tennessee State",
+    "awayTeam": "Murray State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "UT Rio Grande Valley",
+    "awayTeam": "Sul Ross State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "The Citadel",
+    "awayTeam": "North Dakota State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Lehigh",
+    "awayTeam": "Richmond",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Davidson",
+    "awayTeam": "Georgetown",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Northern Iowa",
+    "awayTeam": "Butler",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Valparaiso",
+    "awayTeam": "Virginia University Of Lynchburg",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tennessee Tech",
+    "awayTeam": "Cumberland (TN)",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Florida A&M",
+    "awayTeam": "Howard",
+    "outlet": "ESPNU"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Western Carolina",
+    "awayTeam": "Gardner-Webb",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "South Carolina State",
+    "awayTeam": "Wofford",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Mercer",
+    "awayTeam": "Presbyterian",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Morehead State",
+    "awayTeam": "Allen",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Stetson",
+    "awayTeam": "Webber International",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Sacred Heart",
+    "awayTeam": "Stonehill",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Incarnate Word",
+    "awayTeam": "Eastern Washington",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "McNeese",
+    "awayTeam": "Louisiana College",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Southern Illinois",
+    "awayTeam": "Thomas More College",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Houston Christian",
+    "awayTeam": "Little Rock",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "San Diego",
+    "awayTeam": "Cal Poly",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Southern Utah",
+    "awayTeam": "Idaho State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Utah Tech",
+    "awayTeam": "UC Davis",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Houston",
+    "awayTeam": "Stephen F. Austin",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "UAB",
+    "awayTeam": "Alabama State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Cincinnati",
+    "awayTeam": "Nebraska",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Wisconsin",
+    "awayTeam": "Miami (OH)",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Army",
+    "awayTeam": "Tarleton State",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Michigan State",
+    "awayTeam": "Western Michigan",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Wake Forest",
+    "awayTeam": "Kennesaw State",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Charlotte",
+    "awayTeam": "App State",
+    "outlet": "ESPNU"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Florida International",
+    "awayTeam": "Bethune-Cookman",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Illinois",
+    "awayTeam": "Western Illinois",
+    "outlet": "Peacock"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kansas",
+    "awayTeam": "Wagner",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Baylor",
+    "awayTeam": "Auburn",
+    "outlet": "FOX"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Colorado",
+    "awayTeam": "Georgia Tech",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "San José State",
+    "awayTeam": "Central Michigan",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Ohio State",
+    "awayTeam": "Texas",
+    "outlet": "FOX"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tennessee",
+    "awayTeam": "Syracuse",
+    "outlet": "ABC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Southern Miss",
+    "awayTeam": "Mississippi State",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Maryland",
+    "awayTeam": "Florida Atlantic",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Purdue",
+    "awayTeam": "Ball State",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tulane",
+    "awayTeam": "Northwestern",
+    "outlet": "ESPNU"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Pittsburgh",
+    "awayTeam": "Duquesne",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Navy",
+    "awayTeam": "VMI",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kent State",
+    "awayTeam": "Merrimack",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kentucky",
+    "awayTeam": "Toledo",
+    "outlet": "SEC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Boston College",
+    "awayTeam": "Fordham",
+    "outlet": "ACC Extra"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Boston College",
+    "awayTeam": "Fordham",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Indiana",
+    "awayTeam": "Old Dominion",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Penn State",
+    "awayTeam": "Nevada",
+    "outlet": "CBS"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Penn State",
+    "awayTeam": "Nevada",
+    "outlet": "Paramount+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Sam Houston",
+    "awayTeam": "UNLV",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "West Virginia",
+    "awayTeam": "Robert Morris",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "BYU",
+    "awayTeam": "Portland State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "North Texas",
+    "awayTeam": "Lamar",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tulsa",
+    "awayTeam": "Abilene Christian",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "SMU",
+    "awayTeam": "East Texas A&M",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Massachusetts",
+    "awayTeam": "Temple",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Virginia",
+    "awayTeam": "Coastal Carolina",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Texas A&M",
+    "awayTeam": "UTSA",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Clemson",
+    "awayTeam": "LSU",
+    "outlet": "ABC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "USC",
+    "awayTeam": "Missouri State",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Michigan",
+    "awayTeam": "New Mexico",
+    "outlet": "NBC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Michigan",
+    "awayTeam": "New Mexico",
+    "outlet": "Peacock"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Utah State",
+    "awayTeam": "UTEP",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Ole Miss",
+    "awayTeam": "Georgia State",
+    "outlet": "SEC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Louisiana",
+    "awayTeam": "Rice",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Akron",
+    "awayTeam": "Wyoming",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Minnesota",
+    "awayTeam": "Buffalo",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Missouri",
+    "awayTeam": "Central Arkansas",
+    "outlet": "SEC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Benedict College",
+    "awayTeam": "Fayetteville State",
+    "outlet": "HBCU Go"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Savannah St",
+    "awayTeam": "Edward Waters",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Tuskegee",
+    "awayTeam": "Winston-Salem",
+    "outlet": "ESPNU"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Duke",
+    "awayTeam": "Elon",
+    "outlet": "ACC Extra"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Duke",
+    "awayTeam": "Elon",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Oklahoma State",
+    "awayTeam": "UT Martin",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Louisville",
+    "awayTeam": "Eastern Kentucky",
+    "outlet": "ACC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Air Force",
+    "awayTeam": "Bucknell",
+    "outlet": "CBSSN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Northern Illinois",
+    "awayTeam": "Holy Cross",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Oregon",
+    "awayTeam": "Montana State",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Liberty",
+    "awayTeam": "Maine",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "UCLA",
+    "awayTeam": "Utah",
+    "outlet": "FOX"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Washington",
+    "awayTeam": "Colorado State",
+    "outlet": "BTN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "South Carolina",
+    "awayTeam": "Virginia Tech",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Miami",
+    "awayTeam": "Notre Dame",
+    "outlet": "ABC"
+  },
+  {
+    "week": 1,
+    "homeTeam": "North Carolina",
+    "awayTeam": "TCU",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Oklahoma",
+    "awayTeam": "Illinois State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Oklahoma",
+    "awayTeam": "Illinois State",
+    "outlet": "SECN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Iowa",
+    "awayTeam": "UAlbany",
+    "outlet": "FS1"
+  },
+  {
+    "week": 1,
+    "homeTeam": "James Madison",
+    "awayTeam": "Weber State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Florida",
+    "awayTeam": "Long Island University",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Florida",
+    "awayTeam": "Long Island University",
+    "outlet": "SECN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kansas State",
+    "awayTeam": "North Dakota",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Vanderbilt",
+    "awayTeam": "Charleston Southern",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Vanderbilt",
+    "awayTeam": "Charleston Southern",
+    "outlet": "SECN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Middle Tennessee",
+    "awayTeam": "Austin Peay",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Western Kentucky",
+    "awayTeam": "North Alabama",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arkansas State",
+    "awayTeam": "Southeast Missouri State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Samford",
+    "awayTeam": "West Georgia",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Drake",
+    "awayTeam": "Upper Iowa University",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "South Alabama",
+    "awayTeam": "Morgan State",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Troy",
+    "awayTeam": "Nicholls",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Texas Tech",
+    "awayTeam": "Arkansas-Pine Bluff",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Louisiana Tech",
+    "awayTeam": "SE Louisiana",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "New Mexico State",
+    "awayTeam": "Bryant",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arizona State",
+    "awayTeam": "Northern Arizona",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Washington State",
+    "awayTeam": "Idaho",
+    "outlet": "The CW Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Arkansas",
+    "awayTeam": "Alabama A&M",
+    "outlet": "SEC Network"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Memphis",
+    "awayTeam": "Chattanooga",
+    "outlet": "ESPN+"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kansas State",
+    "awayTeam": "Iowa State",
+    "outlet": "ESPN"
+  },
+  {
+    "week": 1,
+    "homeTeam": "Kansas",
+    "awayTeam": "Fresno State",
+    "outlet": "FOX"
+  }
+]

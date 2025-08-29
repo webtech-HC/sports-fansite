@@ -1,1 +1,21 @@
-{}
+{
+  "lastUpdated": "2025-08-29T09:10:35.028Z",
+  "year": 2025,
+  "game": {
+    "id": 401752676,
+    "week": 1,
+    "start": "2025-08-30T16:00:00.000Z",
+    "home": "Tennessee",
+    "away": "Syracuse",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": true
+  }
+}
