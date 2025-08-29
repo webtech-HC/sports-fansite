@@ -2,91 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Submit a Listing • Tennessee Gameday Hub (Unofficial)</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
-  <style>
-    .grid2{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:20px}
-    .grid2 > .card{grid-column:span 8}
-    .grid2 > .side{grid-column:span 4}
-    @media (max-width:980px){ .grid2 > .card, .grid2 > .side{grid-column:span 12} }
-    .field{display:grid; gap:6px; margin:10px 0}
-    .field input,.field textarea, .field select{
-      background:#0d1117; color:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submit • Tennessee Gameday Hub (Unofficial)</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-7" />
+  <meta name="theme-color" content="#0b0f14" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
     <nav class="nav">
+      <a class="brand-mini" href="index.html" aria-label="Tennessee Gameday Hub">TN</a>
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small active" href="submit.html">Submit</a>
     </nav>
+    <h1 class="brand" aria-label="Tennessee">TENNESSEE</h1>
+    <p class="tagline">Got a restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
-
-  <main id="main" class="wrap grid2">
+  <main id="main" class="wrap">
     <section class="card">
-      <h1 class="hd">Submit a Listing</h1>
-      <p class="muted" style="margin-top:-6px">Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
-
-      <!-- Simple static form; swap action for your processor (e.g., Formspree) -->
-      <form onsubmit="event.preventDefault(); alert('Thanks! We’ll review and post if approved.'); this.reset();">
-        <div class="field"><label>Business*</label><input required placeholder="Business name"></div>
-        <div class="field"><label>Website / Menu URL</label><input type="url" placeholder="https://"></div>
-        <div class="field"><label>Area</label>
-          <select>
-            <option>Downtown</option><option>The Strip</option><option>Old City</option><option>North Knox</option><option>West</option>
-          </select>
+      <h2 class="h6">Submit a Listing</h2>
+      <form onsubmit="alert('Thanks! New entries are reviewed and not auto-approved.'); this.reset(); return false;">
+        <div class="grid">
+          <label>Category<select required><option value="">Choose…</option><option>Restaurant/Bar</option><option>Shop/Service</option><option>Event</option></select></label>
+          <label>Business/Name<input required placeholder="Checkerboard Tavern"></label>
         </div>
-        <div class="field"><label>Deal title*</label><input required placeholder="e.g., Wings + Pitchers"></div>
-        <div class="field"><label>Valid days*</label><input required placeholder="Gameday only / Fri–Sun / All week"></div>
-        <div class="field"><label>Time window</label><input placeholder="e.g., 4pm–7pm"></div>
-        <div class="field"><label>Short description*</label><textarea required rows="4" placeholder="1–2 sentences. No emojis or ALL CAPS, please."></textarea></div>
-
-        <div class="field"><label>Contact email*</label><input required type="email" placeholder="you@example.com"></div>
-
-        <div class="field">
-          <label><input type="checkbox" required> I confirm I’m authorized to submit this deal, and I agree this info may be published and edited for clarity.</label>
-        </div>
-        <div class="field">
-          <label><input type="checkbox" required> I’ve read the Content Guidelines and Privacy notice.</label>
-        </div>
-
-        <button class="btn" type="submit">Submit Deal</button>
+        <label>Location / Neighborhood<input placeholder="Old City • Downtown • UTK"></label>
+        <label>Details<textarea rows="4" placeholder="Describe the special or listing. Links welcome."></textarea></label>
+        <label class="check"><input type="checkbox" required> I agree to the Content Guidelines and Privacy notice.</label>
+        <button class="btn">Submit</button>
       </form>
-
-      <p class="muted" style="margin-top:10px">Data updated — <span data-last-updated>—</span></p>
+      <p class="muted" style="margin-top:10px">Listings are community-submitted. Call ahead to confirm.</p>
     </section>
-
-    <aside class="card side">
-      <h2 class="hd">Content Guidelines</h2>
-      <ul>
-        <li>Keep it factual and family-friendly. No harassment, hate speech, or adult content.</li>
-        <li>Deals must be genuine and publicly available during stated times.</li>
-        <li>No copyrighted logos or marks; use generic stadium/city language.</li>
-        <li>Use sentence case; avoid emoji, excessive caps, or marketing fluff.</li>
-        <li>Submissions are moderated; we may edit for clarity/length or decline.</li>
-        <li>By submitting, you confirm you have permission to share this info.</li>
-      </ul>
-      <h3 style="margin-top:12px">Privacy</h3>
-      <p class="muted">We only use your email for follow-ups about your listing. We don’t sell your data.</p>
-      <p class="muted">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    </aside>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="schedule.html">Schedule</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="guide.html">Guide</a></p>
+    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="schedule.html">Schedule</a></p>
   </footer>
 
-  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
+  <!-- “extra script” so dates/ticker/utilities stay consistent site-wide -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-7"></script>
 </body>
 </html>
+
