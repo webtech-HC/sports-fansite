@@ -252,16 +252,18 @@ async function boot() {
       getJSON("/data/meta.json", { lastUpdated: null })
     ]);
 
-    paintSchedule(schedule || []);
-    const next = pickNextGame(schedule || []);
-    paintQuick(next);
-    setLastUpdated(meta);
+    // Guarded calls so the page doesn't explode if a helper is missing
+    (typeof paintSchedule === "function") && paintSchedule(schedule ?? []);
+    const next = (typeof pickNextGame === "function") ? pickNextGame(schedule ?? []) : null;
+    (typeof paintQuick === "function") && paintQuick(next);
+    (typeof setLastUpdated === "function") && setLastUpdated(meta);
   } catch (err) {
     console.error("boot error", err);
-    const t = $(".ticker-inner");
+    const t = document.querySelector(".ticker-inner");
     if (t) t.textContent = "Live data unavailable right now.";
   }
 }
 
 document.addEventListener("DOMContentLoaded", boot);
+
 
