@@ -2,25 +2,25 @@
   "days": [
     {
       "label": "Fri",
-      "hi": 29.3,
+      "hi": 29.1,
       "lo": 11.6,
       "precipPct": 0
     },
     {
       "label": "Sat",
       "hi": 30.8,
-      "lo": 16.3,
-      "precipPct": 3
+      "lo": 16.1,
+      "precipPct": 2
     },
     {
       "label": "Sun",
       "hi": 30.3,
       "lo": 16.8,
-      "precipPct": 12
+      "precipPct": 10
     }
   ],
   "source": "open-meteo",
   "lat": 35.9606,
   "lon": -83.9207,
-  "fetchedAt": "2025-08-29T20:10:16.831Z"
+  "fetchedAt": "2025-08-29T20:36:31.999Z"
 }
