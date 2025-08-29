@@ -1,198 +1,174 @@
-/* eslint-disable no-console */
-(() => {
-  "use strict";
+/* app.js — Tennessee Gameday Hub (Unofficial) */
 
-  // ------------------------------
-  // Site / team constants
-  // ------------------------------
-  const TEAM = "Tennessee"; // UT Vols only
+const TEAM = "Tennessee";
 
-  // ------------------------------
-  // Small DOM helpers
-  // ------------------------------
-  const $  = (sel, ctx = document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
-  const setText = (sel, txt, ctx = document) => { const el = $(sel, ctx); if (el) el.textContent = txt; };
-  const pad = (n) => String(n).padStart(2, "0");
+/* ------------- tiny DOM utils ------------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  // ------------------------------
-  // Dates
-  // ------------------------------
-  const isValidISO = (v) => {
-    if (!v || typeof v !== "string") return false;
-    const d = new Date(v);
-    return !Number.isNaN(d.valueOf());
-  };
-  const fmtDateOnly = (iso) => {
-    if (!isValidISO(iso)) return "TBA";
-    return new Date(iso).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      weekday: "short",
-    });
-  };
+/* ------------- date helpers ------------- */
+const isValidISO = (iso) => !!iso && !Number.isNaN(Date.parse(iso));
+const fmtDateOnly = (iso) => {
+  if (!isValidISO(iso)) return "TBA";
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, {
+    month: "short", day: "numeric", weekday: "short",
+  });
+};
+const fmtTime = (iso) => {
+  if (!isValidISO(iso)) return "TBA";
+  return new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+};
 
-  // ------------------------------
-  // Shared JSON helper (idempotent)
-  //  - Reuses window.getJSON if it exists
-  //  - Auto-prefixes the repo base path (GitHub Pages)
-  // ------------------------------
-  const getJSON =
-    window.getJSON ||
-    (window.getJSON = async function getJSON(path, fallback = null) {
-      try {
-        // Build a URL that respects GitHub Pages subdirectory
-        let url = path;
-        if (!/^https?:\/\//i.test(path)) {
-          const base = location.pathname.replace(/[^/]+$/, ""); // '/sports-fansite/'
-          url = base + path.replace(/^\//, "");                  // 'data/schedule.json' -> '/sports-fansite/data/schedule.json'
-        }
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return await res.json();
-      } catch (err) {
-        console.warn("getJSON fallback:", path, err.message);
-        return fallback;
-      }
-    });
+/* ------------- base path util (GitHub Pages safe) ------------- */
+function addBase(path) {
+  // On *.github.io/repo/... we need “/repo” as the base.
+  if (location.hostname.endsWith("github.io")) {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const repo = parts.length ? `/${parts[0]}` : "";
+    return `${repo}${path}`;
+  }
+  return path;
+}
 
-  // ------------------------------
-  // Paint: Schedule table (home page)
-  // ------------------------------
-  function paintSchedule(list) {
-    const tbody = $("#sched");
-    if (!tbody) return;
+/* ------------- Shared JSON helper (idempotent) ------------- */
+const getJSON = window.getJSON || (window.getJSON = async function(path, fallback = null) {
+  try {
+    // try with computed base first
+    let res = await fetch(addBase(path), { cache: "no-store" });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("getJSON fallback:", path, String(err));
+    try {
+      // local fallback (useful in dev/alternate hosting)
+      const res2 = await fetch(path, { cache: "no-store" });
+      if (!res2.ok) throw new Error(`${res2.status} ${res2.statusText}`);
+      return await res2.json();
+    } catch {
+      return fallback;
+    }
+  }
+});
 
-    const rows = (list || []).map((g) => {
-      const homeTeam = g.home;
-      const awayTeam = g.away;
-      const isHome   = homeTeam === TEAM;
-      const opponent = isHome ? awayTeam : homeTeam;
-
-      // Score (if finished or in-progress)
+/* ------------- painters / builders ------------- */
+function paintSchedule(list = []) {
+  const tbody = $("#sched");
+  if (!tbody) return;
+  const rows = list
+    .filter(g => g && (g.home === TEAM || g.away === TEAM))
+    .map(g => {
+      const isHome = g.home === TEAM;
+      const opponent = isHome ? g.away : g.home;
+      const ha = isHome ? "H" : (g.away === TEAM ? "A" : "N");
+      const when = `${fmtDateOnly(g.start)} ${fmtTime(g.start)}`;
       let result = "–";
       if (typeof g.home_points === "number" && typeof g.away_points === "number") {
         const my = isHome ? g.home_points : g.away_points;
-        const op = isHome ? g.away_points : g.home_points;
-        result = `${my}-${op}`;
+        const other = isHome ? g.away_points : g.home_points;
+        result = `${my}-${other}`;
       }
-
-      const loc = isHome ? "Home" : "Away";
-      const tv  = g.tv || "TBD";
+      const tv = g.tv ?? g.tv_network ?? (g.channels ? g.channels.join(", ") : "") || "";
       return `<tr>
-        <td>${fmtDateOnly(g.start)}</td>
-        <td>${opponent || "TBD"}</td>
-        <td class="muted">${loc}</td>
-        <td class="muted">${tv}</td>
+        <td>${when}</td>
+        <td>${opponent}</td>
+        <td>${ha}</td>
+        <td>${tv}</td>
         <td>${result}</td>
       </tr>`;
-    });
+    })
+    .join("");
+  tbody.innerHTML = rows || `<tr><td colspan="5" class="muted">No games yet.</td></tr>`;
+}
 
-    tbody.innerHTML = rows.join("") || `<tr><td colspan="5" class="muted">No games yet.</td></tr>`;
+function pickNextGame(list = []) {
+  const now = Date.now();
+  const future = list
+    .filter(g => isValidISO(g.start))
+    .filter(g => new Date(g.start).getTime() >= now)
+    .sort((a, b) => new Date(a.start) - new Date(b.start));
+  return future[0] || null;
+}
+
+function paintNextCard(g) {
+  const match = $("#nextMatch"), t = $("#nextTime"), v = $("#nextVenue"), btn = $("#btnAddCal");
+  if (!g) {
+    if (match) match.textContent = "No upcoming game found.";
+    if (btn) btn.disabled = true;
+    return;
   }
-
-  // ------------------------------
-  // Compute next upcoming game (for hero card / countdown)
-  // ------------------------------
-  function pickNextGame(list) {
-    const now = Date.now();
-    return (list || [])
-      .map((g) => ({ ...g, _ts: isValidISO(g.start) ? new Date(g.start).getTime() : null }))
-      .filter((g) => g._ts !== null && g._ts > now)
-      .sort((a, b) => a._ts - b._ts)[0] || null;
+  const isHome = g.home === TEAM;
+  const opponent = isHome ? g.away : g.home;
+  if (match) match.textContent = `${TEAM} vs ${opponent}`;
+  if (t) t.textContent = `${fmtDateOnly(g.start)}, ${fmtTime(g.start)}`;
+  if (v) v.textContent = g.venue?.name ? `${g.venue.name}${g.venue.city ? ` — ${g.venue.city}` : ""}` : "";
+  if (btn) {
+    btn.disabled = false;
+    btn.onclick = () => downloadICS(g, opponent, isHome);
   }
+}
 
-  // ------------------------------
-  // Paint: “Upcoming Game” card (be tolerant if elements missing)
-  // ------------------------------
-  function paintQuick(next) {
-    if (!next) {
-      setText("#gOpponent", "TBD");
-      setText("#gVenue", "TBA");
-      setText("#gDate", "—");
-      return;
-    }
-    const isHome   = next.home === TEAM;
-    const opponent = isHome ? next.away : next.home;
-    const venue    = isHome ? "Knoxville, TN" : (next.venue && next.venue.name) || "TBA";
+function setLastUpdated(meta) {
+  const el = $(".date-last-updated");
+  if (!el || !meta) return;
+  const when = meta.lastUpdated || meta.updated || meta.time || null;
+  el.textContent = when ? new Date(when).toLocaleString() : "—";
+}
 
-    setText("#gOpponent", opponent || "TBD");
-    setText("#gVenue", venue);
-    setText("#gDate", fmtDateOnly(next.start));
+/* ------------- ICS download ------------- */
+function downloadICS(g, opponent, isHome) {
+  const dtStart = isValidISO(g.start) ? new Date(g.start) : null;
+  const dtEnd = dtStart ? new Date(dtStart.getTime() + 3 * 3600 * 1000) : null; // 3h block
+  const summary = `${TEAM} ${isHome ? "vs" : "at"} ${opponent}`;
+  const loc = [g.venue?.name, g.venue?.city, g.venue?.state].filter(Boolean).join(", ");
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Gameday Hub//TN//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${(g.id || Date.now())}@tn-hub`,
+    `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, "").slice(0, 15)}Z`,
+    dtStart ? `DTSTART:${dtStart.toISOString().replace(/[-:.]/g, "").slice(0, 15)}Z` : "",
+    dtEnd ? `DTEND:${dtEnd.toISOString().replace(/[-:.]/g, "").slice(0, 15)}Z` : "",
+    `SUMMARY:${summary}`,
+    `LOCATION:${loc}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ]
+  .filter(Boolean)
+  .join("\r\n");
+
+  const blob = new Blob([ics], { type: "text/calendar" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${summary.replace(/\s+/g, "_")}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 800);
+}
+
+/* ------------- guarded boot (idempotent) ------------- */
+async function boot() {
+  if (window.__APP_BOOTED__) return;
+  window.__APP_BOOTED__ = true;
+
+  try {
+    const [schedule, meta] = await Promise.all([
+      getJSON("/data/schedule.json", []),
+      getJSON("/data/meta.json", { lastUpdated: null }),
+    ]);
+
+    paintSchedule(schedule || []);
+    paintNextCard(pickNextGame(schedule || []));
+    setLastUpdated(meta);
+  } catch (err) {
+    console.error("boot error:", err);
+    const t = $(".date-last-updated");
+    if (t) t.textContent = "Live data unavailable right now.";
   }
-
-  // ------------------------------
-  // Last-updated footer helper
-  // ------------------------------
-  function setLastUpdated(meta) {
-    const slot = document.querySelector("[data-last-updated]");
-    if (!slot) return;
-    const when = meta && meta.lastUpdated ? new Date(meta.lastUpdated) : null;
-    slot.textContent = when ? when.toLocaleString() : "—";
-  }
-
-  // ------------------------------
-  // Export: .ics (optional existing UI)
-  // ------------------------------
-  function downloadICS(summary, dtStartISO, dtEndISO, loc = "", description = "") {
-    // Guard for pages that don’t expose an “Add to Calendar” UI
-    const start = isValidISO(dtStartISO) ? new Date(dtStartISO) : null;
-    const end   = isValidISO(dtEndISO) ? new Date(dtEndISO) : null;
-    if (!start || !end) return;
-
-    const fmtICS = (d) =>
-      `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
-
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//HC Web//sports-fansite//EN",
-      "CALSCALE:GREGORIAN",
-      "BEGIN:VEVENT",
-      `DTSTART:${fmtICS(start)}`,
-      `DTEND:${fmtICS(end)}`,
-      `SUMMARY:${summary}`,
-      `LOCATION:${loc}`,
-      `DESCRIPTION:${description}`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-
-    const blob = new Blob([ics], { type: "text/calendar" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href = url;
-    a.download = `${summary.replace(/\s+/g, "_")}.ics`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 800);
-  }
-
-  // ------------------------------
-  // Boot (idempotent)
-  // ------------------------------
-  if (!("boot" in window)) {
-    window.boot = async function boot() {
-      try {
-        const [schedule, meta] = await Promise.all([
-          getJSON("data/schedule.json", []),
-          getJSON("data/meta.json", { lastUpdated: null }),
-        ]);
-
-        paintSchedule(schedule || []);
-        const next = pickNextGame(schedule || []);
-        paintQuick(next);
-        setLastUpdated(meta);
-      } catch (err) {
-        console.error("boot error:", err);
-        const t = $(".ticker-inner");
-        if (t) t.textContent = "Live data unavailable right now.";
-      }
-    };
-  }
-
-  // It’s safe to attach this listener more than once; the handler is the same function reference.
-  document.addEventListener("DOMContentLoaded", window.boot);
-})();
-
+}
+document.addEventListener("DOMContentLoaded", boot);
