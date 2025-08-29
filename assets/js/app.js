@@ -22,6 +22,60 @@ const isValidISO = (iso) => {
 };
 const pad = (n) => String(Math.trunc(n)).padStart(2, "0");
 
+
+// --- PATCH: force all JSON to load from /data and keep guards ---
+
+const DATA = 'data/';
+const J = (name) => `${DATA}${name}.json`;
+async function fetchJSON(path, fallback = null) {
+  try {
+    const res = await fetch(path, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } catch (e) {
+    console.warn('fetchJSON fallback:', path, e.message);
+    return fallback;
+  }
+}
+
+async function boot() {
+  try {
+    // Load everything we need from /data/*
+    const [
+      schedule,             // schedule & results table
+      specials,             // featured specials
+      media,                // tv/stream links
+      nextGame,             // "next.json" for countdown/opponent/venue
+      weather,              // 3-day weather
+      meta,                 // lastUpdated stamp, year, etc.
+    ] = await Promise.all([
+      fetchJSON(J('schedule'), []),
+      fetchJSON(J('specials'), []),
+      fetchJSON(J('media'),    []),
+      fetchJSON(J('next'),     null),
+      fetchJSON(J('weather'),  null),
+      fetchJSON(J('meta'),     { lastUpdated: null }),
+    ]);
+
+    // ---- your existing painters below ----
+    // paintSchedule(schedule);
+    // paintSpecials(specials);
+    // paintWeather(weather);
+    // paintLastUpdated(meta);
+    // mountTicker(nextGame);
+    // wireAddToCal(nextGame);
+    // paintLeafletMap(); // if you enable it
+  } catch (err) {
+    console.error('BOOT ERROR', err);
+    const el = document.querySelector('#ticker');
+    if (el && !el.textContent.trim()) el.textContent = 'Data not available right now.';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+
+
+
 // ---------- countdown ----------
 let countdownTimer = null;
 function stopCountdown(){ if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } }
