@@ -1,5 +1,6 @@
 {
-  "lastUpdated": "2025-08-29T11:08:05.645Z",
+  "lastUpdated": "2025-08-29T11:25:07.702Z",
+  "team": "Tennessee",
   "year": 2025,
   "game": {
     "id": 401752676,
@@ -16,6 +17,8 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": true
+    "neutralSite": true,
+    "home_points": null,
+    "away_points": null
   }
 }

@@ -14,7 +14,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": true
+    "neutralSite": true,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752692,
@@ -31,7 +33,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752705,
@@ -48,7 +52,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752715,
@@ -65,7 +71,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752720,
@@ -82,7 +90,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752735,
@@ -99,7 +109,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752738,
@@ -116,7 +128,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752747,
@@ -133,7 +147,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752757,
@@ -150,7 +166,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752771,
@@ -167,7 +185,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752775,
@@ -184,7 +204,9 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   },
   {
     "id": 401752791,
@@ -201,6 +223,8 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": false
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
   }
 ]
