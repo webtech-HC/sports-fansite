@@ -163,6 +163,83 @@ a:hover{filter:brightness(1.06)}
 .scorebox .score-foot .venue { opacity:.9; }
 /* ======= /Live Score Box ======= */
 
+/* ===== UT brand tokens ===== */
+:root{
+  --tn-orange: #FF8200;
+  --tn-smokey: #2b2e32;
+  --tn-cream:  #f6f7f8;
+}
+
+/* ===== Always-on page background (image + dark gradients) ===== */
+/* choose which image via body[data-bg] */
+body{
+  /* layered: vignette, vertical fade, chosen photo, solid fallback */
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 70%),
+    linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.78)),
+    var(--page-bg) center / cover no-repeat fixed,
+    #0d0f12;
+  color-scheme: dark;
+}
+body[data-bg="metal"]{ --page-bg: url("assets/img/tn-hero-metal.jpg"); }
+body[data-bg="clay"] { --page-bg: url("assets/img/tn-hero-clay.jpg");  }
+
+/* Mobile scroll perf: avoid 'fixed' attachment on smaller screens */
+@media (max-width: 768px){
+  body{
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 70%),
+      linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.78)),
+      var(--page-bg) center / cover no-repeat,
+      #0d0f12;
+  }
+}
+
+/* ===== Hero: keep it dark (no hero photo) ===== */
+.hero.hero-plain{
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)) ,
+              var(--card, #13161a);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  min-height: clamp(200px, 28vw, 380px);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+}
+.hero-plain .hero-inner{
+  padding: clamp(24px, 6vw, 56px) var(--gap, 16px);
+}
+
+/* Glossy image wordmark */
+.wordmark-img{
+  width: min(92%, 760px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 26px rgba(0,0,0,.55));
+  margin: 0;
+}
+
+/* Tagline below wordmark */
+.site-tag{
+  margin: .35rem 0 0;
+  color: rgba(255,255,255,.85);
+}
+
+/* Screen-reader only helper */
+.sr-only{
+  position:absolute !important;
+  width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+/* Accent buttons keep UT orange, non-neon */
+.btn, .btn-small, .btn-orange{
+  background: var(--tn-orange);
+  color: #000;
+  border: 1px solid rgba(255,255,255,.07);
+}
+.btn:hover{ filter: brightness(1.05); }
+
 
 /* Footer */
 .sitefoot{margin:24px auto; max-width:1100px; padding:16px; text-align:center; color:var(--muted); border-top:1px solid var(--line)}
