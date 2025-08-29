@@ -1,7 +1,7 @@
 [
   {
     "provider": "Bovada",
-    "spread": -14,
+    "spread": -13.5,
     "overUnder": 52,
     "lastUpdated": null
   }
