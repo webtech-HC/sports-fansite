@@ -11,6 +11,10 @@
   <link rel="icon" href="assets/img/favicon.svg" />
 </head>
 <body>
+  <body data-bg="metal">
+<!-- or -->
+<!-- <body data-bg="clay"> -->
+
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="topbar">
@@ -29,25 +33,15 @@
   <div class="ticker-inner" id="ticker">Kickoff time TBA — Countdown 00d 00h 00m</div>
 </section>
 
-<!-- HERO -->
-<section class="hero hero-has-image" data-hero="metal">
-  <picture class="hero-media">
-    <!-- prefer webp if you add it later -->
-    <!-- <source srcset="assets/img/tn-hero-metal.webp" type="image/webp"> -->
-    <img src="assets/img/tn-hero-metal.jpg"
-         alt="Tennessee wordmark on Neyland field"
-         width="1600" height="600" loading="eager" decoding="async">
-  </picture>
-
-  <div class="hero-overlay"></div>
-
+<!-- HERO: dark background, glossy wordmark only -->
+<section class="hero hero-plain">
   <div class="wrap hero-inner">
-    <h1 class="site-name">TENNESSEE</h1>
+    <h1 class="sr-only">Tennessee</h1>
+    <img class="wordmark-img" src="assets/img/glossy-tennessee.png" alt="Tennessee">
     <p class="site-tag">Fan-run. Unofficial. Built by fans for fans.</p>
-    <!-- Optional: wordmark image instead of text (comment out the H1 above if you use this) -->
-    <!-- <img class="wordmark-img" src="assets/img/tn-wordmark-glossy.png" alt="Tennessee"> -->
   </div>
 </section>
+
 
 <main id="main" class="wrap" aria-label="Main content">
 
