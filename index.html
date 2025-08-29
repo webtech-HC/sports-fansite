@@ -2,19 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TENNESSEE • Gameday Hub (Unofficial)</title>
-  <meta name="description" content="Fan-run, unofficial Tennessee football gameday hub: schedule, specials, map, and tips." />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
-  <link rel="canonical" href="https://webtech-hc.github.io/sports-fansite/">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TENNESSEE • Gameday Hub</title>
+
+  <!-- Theme / SEO basics -->
+  <meta name="description" content="Fan-run, unofficial Tennessee football gameday guide: schedule, specials, maps, and tips." />
+  <link rel="icon" href="assets/img/favicon.svg" />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- Leaflet (mini-map) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
 </head>
+
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <!-- Top bar -->
   <header class="topbar">
     <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
-    <nav class="nav">
+    <nav class="nav" aria-label="Primary">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
@@ -23,14 +36,14 @@
     </nav>
   </header>
 
-  <!-- Ticker (top ribbon) -->
-  <section class="ticker" aria-label="Gameday ticker">
-    <div class="ticker-inner">Loading…</div>
-  </section>
+  <!-- LIVE ticker (filled by assets/js/live.js) -->
+  <section class="ticker" id="ticker" aria-live="polite"></section>
 
-  <!-- Hero -->
+  <!-- HERO -->
   <section class="hero" role="banner" aria-label="Site hero">
+    <!-- Optional background image -->
     <div class="hero-bg" style="background-image: url('');"></div>
+
     <div class="hero-inner">
       <h1 class="hero-title">TENNESSEE</h1>
       <p class="hero-sub">Fan-run. Unofficial. Built by fans for fans.</p>
@@ -39,50 +52,45 @@
         <a class="btn" href="schedule.html">View Schedule</a>
         <a class="btn ghost" href="specials.html">Find Specials</a>
         <a class="btn ghost" href="submit.html">Submit a Listing</a>
-        <a class="btn ghost" href="#" data-add-cal hidden>Add to Calendar</a>
       </div>
 
+      <!-- Mini countdown; live.js writes values -->
       <div class="mini-countdown" aria-live="polite">
         <span>Kickoff in</span>
         <strong id="miniDays">00</strong>d :
         <strong id="miniHours">00</strong>h :
-        <strong id="miniMins">00</strong>m
+        <strong id="miniMins">00</strong>m :
+        <strong id="miniSecs">00</strong>s
       </div>
-
-      <!-- JS will fill this -->
-      <p class="updated">Data updated — <span data-last-updated>—</span></p>
     </div>
   </section>
 
   <main id="main" class="wrap" aria-label="Main content">
     <!-- QUICK GLANCE ROW -->
     <section class="row-quick">
-      <!-- Upcoming Game -->
-      <article class="card">
-        <h2 class="hd">Upcoming Game</h2>
+      <!-- Upcoming Game (ids consumed by live.js) -->
+      <article class="card" aria-labelledby="upcoming-hd">
+        <h2 id="upcoming-hd" class="hd">Upcoming Game</h2>
         <p class="big"><strong>Tennessee</strong> <span class="vs">vs</span> <span id="qOpp">Opponent</span></p>
-        <p class="sub"><span id="qDate">Date</span> • <span id="qTime">Time</span></p>
-        <p class="muted" id="qVenue">Knoxville, TN</p>
-        <p style="margin-top:6px">
-          <a class="btn ghost btn-slim" href="#" data-add-cal hidden>Add to Calendar</a>
-          <a class="btn btn-slim" href="schedule.html">Full schedule</a>
-        </p>
+        <p class="sub"><span id="qDate">Date • Time</span></p>
+        <p class="muted" id="qVenue">Venue, Knoxville, TN</p>
+        <p><a class="btn btn-small ghost" id="addToCalTop" href="#" aria-disabled="true">Add to Calendar</a></p>
       </article>
 
-      <!-- Weather (3-day) -->
-      <article class="card">
-        <h2 class="hd">Weather (3-day)</h2>
+      <!-- Weather stub -->
+      <article class="card" aria-labelledby="wx-hd">
+        <h2 id="wx-hd" class="hd">Weather (3-day)</h2>
         <ul class="wx">
-          <li id="wx0"><b>—</b> <span>—</span> <em>—</em></li>
-          <li id="wx1"><b>—</b> <span>—</span> <em>—</em></li>
-          <li id="wx2"><b>—</b> <span>—</span> <em>—</em></li>
+          <li><b>Fri</b> <span>—/—</span> <em>—%</em></li>
+          <li><b>Sat</b> <span>—/—</span> <em>—%</em></li>
+          <li><b>Sun</b> <span>—/—</span> <em>—%</em></li>
         </ul>
         <p class="muted">Forecasts change—check again closer to kickoff.</p>
       </article>
 
       <!-- This Week in Knoxville -->
-      <article class="card">
-        <h2 class="hd">This Week in Knoxville</h2>
+      <article class="card" aria-labelledby="week-hd">
+        <h2 id="week-hd" class="hd">This Week in Knoxville</h2>
         <ul class="links">
           <li><a href="#" target="_blank" rel="noopener">Market Square Live Music</a></li>
           <li><a href="#" target="_blank" rel="noopener">Old City Night Market</a></li>
@@ -96,11 +104,8 @@
       <!-- LEFT (8 cols) -->
       <div class="left">
         <!-- Schedule -->
-        <section id="schedule" class="card">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
-            <h2 class="hd" style="margin:0">Schedule & Results</h2>
-            <a class="btn btn-small" href="schedule.html">Open full page</a>
-          </div>
+        <section id="schedule" class="card" aria-labelledby="schedule-hd">
+          <h2 id="schedule-hd" class="hd">Schedule & Results</h2>
           <div class="table-wrap">
             <table class="tbl" aria-describedby="schNote">
               <thead>
@@ -113,11 +118,8 @@
         </section>
 
         <!-- Featured specials -->
-        <section id="specials" class="card">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
-            <h2 class="hd" style="margin:0">Featured Specials</h2>
-            <a class="btn btn-small" href="specials.html">Open full page</a>
-          </div>
+        <section id="specials" class="card" aria-labelledby="specials-hd">
+          <h2 id="specials-hd" class="hd">Featured Specials</h2>
           <div class="specials-grid" id="specialsGrid"></div>
           <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
         </section>
@@ -125,31 +127,26 @@
 
       <!-- RIGHT (4 cols) -->
       <aside class="right">
-        <!-- Map card -->
-        <section id="map" class="card">
-          <h2 class="hd">Map</h2>
-          <div class="map-placeholder">
-            <div class="pin pin-food">Food</div>
-            <div class="pin pin-drink">Drinks</div>
-            <div class="pin pin-watch">Watch</div>
-            <div class="pin pin-parking">Parking</div>
-          </div>
-          <p class="muted">We’ll add an interactive map. For now, see the <a href="map.html">Map page</a>.</p>
+        <!-- Mini Map card (live.js mounts Leaflet here) -->
+        <section id="map" class="card" aria-labelledby="map-hd">
+          <h2 id="map-hd" class="hd">Map</h2>
+          <div id="miniMap" style="height: 200px; border-radius: 12px; overflow: hidden;"></div>
+          <p class="muted">We’ll add an interactive map with categories and “Open now”. For now, see the full <a href="map.html">Map page</a>.</p>
         </section>
 
         <!-- Submit CTA -->
-        <section class="card cta">
-          <h2 class="hd">Submit a Listing</h2>
+        <section id="submit" class="card cta" aria-labelledby="submit-hd">
+          <h2 id="submit-hd" class="hd">Submit a Listing</h2>
           <p>Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
           <a class="btn" href="submit.html">Open form</a>
         </section>
 
         <!-- Newsletter -->
-        <section class="card">
-          <h2 class="hd">Newsletter</h2>
+        <section class="card" aria-labelledby="nl-hd">
+          <h2 id="nl-hd" class="hd">Newsletter</h2>
           <p>Get a quick gameday morning email: kickoff time, weather, and new specials.</p>
           <form class="nl" onsubmit="event.preventDefault(); alert('Thanks!');">
-            <input type="email" placeholder="you@example.com" required>
+            <input type="email" placeholder="you@example.com" required />
             <button class="btn">Subscribe</button>
           </form>
           <p class="muted">We don’t sell your data. Unsubscribe anytime.</p>
@@ -157,45 +154,72 @@
       </aside>
     </section>
 
-    <!-- GUIDE (compact on homepage; full at guide.html) -->
-    <section id="guide" class="card guide">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
-        <h2 class="hd" style="margin:0">Gameday Guide (Unofficial)</h2>
-        <a class="btn btn-small" href="guide.html">Open full guide</a>
+    <!-- GUIDE -->
+    <section id="guide" class="card guide" aria-labelledby="guide-hd">
+      <div class="guide-head">
+        <h2 id="guide-hd" class="hd">Gameday Guide (Unofficial)</h2>
+        <div class="countdown" aria-live="polite">
+          <div class="blk"><span id="cdD">00</span><em>days</em></div>
+          <div class="blk"><span id="cdH">00</span><em>hrs</em></div>
+          <div class="blk"><span id="cdM">00</span><em>min</em></div>
+          <div class="blk"><span id="cdS">00</span><em>sec</em></div>
+        </div>
       </div>
 
-      <div class="guide-grid" style="margin-top:10px">
+      <div class="guide-grid">
         <article><h3>Getting There</h3><ul>
           <li>Rideshare or public lots; expect road closures near campus.</li>
           <li>Plan 60–90 minutes for traffic and entry queues.</li>
           <li>Pick a meetup spot in case phones die.</li>
         </ul></article>
+
         <article><h3>Entry & Bags</h3><ul>
           <li>Many venues have clear-bag rules and metal detectors.</li>
           <li>Leave large items, outside alcohol, and pointed umbrellas at home.</li>
           <li>Always verify with the official event page before you go.</li>
         </ul></article>
+
         <article><h3>Food & Water</h3><ul>
           <li>Many vendors are cashless—bring a card or mobile pay.</li>
           <li>Hydrate early; find refill spots on concourses.</li>
           <li>Family sections are great with kids; consider ear protection.</li>
         </ul></article>
+
         <article><h3>Accessibility</h3><ul>
           <li>Check ADA parking, shuttle drop-offs, elevators, and seating.</li>
           <li>Service animals typically permitted—follow venue guidance.</li>
           <li>Contact accessibility office ahead for assistance.</li>
         </ul></article>
       </div>
-      <p class="muted" style="margin-top:10px">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+
+      <p class="muted">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
     </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="schedule.html">Schedule</a> • <a href="map.html">Map</a> • <a href="submit.html">Submit</a></p>
+    <p>
+      <a href="guide.html">Guide</a> •
+      <a href="specials.html">Specials</a> •
+      <a href="schedule.html">Schedule</a> •
+      <a href="map.html">Map</a> •
+      <a href="submit.html">Submit</a>
+    </p>
     <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.</p>
   </footer>
 
-  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
+  <!-- Your existing front-end logic (schedule/specials rendering, etc.) -->
+  <script type="module" src="assets/js/app.js"></script>
+
+  <!-- Leaflet JS (for the mini map) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="">
+  </script>
+
+  <!-- Live integration (ticker + mini countdown + mini map) -->
+  <script type="module" src="assets/js/live.js"></script>
 </body>
 </html>
+
