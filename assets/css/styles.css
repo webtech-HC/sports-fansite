@@ -125,5 +125,44 @@ a:hover{filter:brightness(1.06)}
 .guide li{margin:6px 0}
 @media (max-width:900px){ .guide .guide-grid article{grid-column:span 12} }
 
+/* ======= Live Score Box ======= */
+.scorebox { display:grid; gap:12px; }
+.scorebox .score-head {
+  display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+.scorebox .badge {
+  display:inline-block; font-weight:800; letter-spacing:.3px;
+  padding:6px 10px; border-radius:999px; border:1px solid var(--line);
+  background:#11151b; color:#e9edf1;
+}
+.scorebox .badge.live     { background: #1d2a16; color:#d9ffd0; border-color:#2a3b22; }
+.scorebox .badge.final    { background: #2a1a1a; color:#ffd9d9; border-color:#3b2222; }
+.scorebox .badge.scheduled{ background: #11151b; color:#e9edf1; }
+
+.scorebox .score-body { display:grid; gap:8px; }
+.scorebox .score-row {
+  display:grid; grid-template-columns: 1fr auto; align-items:center;
+  background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px;
+}
+.scorebox .team { display:flex; gap:10px; align-items:baseline; }
+.scorebox .team .tag {
+  font-size:12px; color:var(--muted); background:#0d1117; border:1px solid var(--line);
+  border-radius:8px; padding:2px 8px;
+}
+.scorebox .team .name { font-weight:800; letter-spacing:.2px; }
+.scorebox .team .name.vols { color: var(--tn); }
+
+.scorebox .score { font: 800 28px/1 system-ui,sans-serif; min-width: 36px; text-align:right; }
+.scorebox .score.lead { text-shadow: 0 0 10px rgba(255,130,0,.35); }
+
+.scorebox .score-foot {
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  color:var(--muted);
+}
+.scorebox .score-foot .meta { display:flex; gap:12px; align-items:center; }
+.scorebox .score-foot .venue { opacity:.9; }
+/* ======= /Live Score Box ======= */
+
+
 /* Footer */
 .sitefoot{margin:24px auto; max-width:1100px; padding:16px; text-align:center; color:var(--muted); border-top:1px solid var(--line)}
