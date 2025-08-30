@@ -3,113 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Submit a Listing — Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-9" />
-
-  <style>
-    :root{ --ut-orange:#FF8200; }
-    .hero{
-      position:relative;
-      padding:clamp(24px,6vw,72px) 0;
-      background:
-        radial-gradient(120% 70% at 50% 0%, rgba(255,130,0,.18), transparent 60%),
-        linear-gradient(180deg, #0d1015 0%, #0b0e12 60%, #0a0c10 100%);
-      text-align:center;
-    }
-    .wordmark{
-      margin:0;
-      font-size:clamp(36px, 9vw, 96px);
-      line-height:1;
-      font-weight:800;
-      color:var(--ut-orange);
-      text-shadow:0 2px 0 rgba(0,0,0,.35), 0 12px 24px rgba(0,0,0,.5);
-      -webkit-text-stroke:1px rgba(0,0,0,.35);
-    }
-  </style>
+  <title>Tennessee — Submit a Listing</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <div class="brand">TN</div>
-    <nav class="nav">
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
+    </div>
+    <div class="header-countdown">
+      <div id="countdown" class="countdown">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+    <nav class="site-nav">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
-      <a class="btn btn-small active" href="submit.html">Submit</a>
+      <a class="btn active" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="hero" aria-label="Hero">
-    <h1 class="wordmark">TENNESSEE</h1>
-  </section>
-
-  <main id="main" class="wrap">
-    <section class="card">
-      <header class="card-hd">
-        <h2 class="card-ttl">Submit a Listing</h2>
-        <p class="muted">Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
-      </header>
-      <div class="card-bd">
-        <form id="submitForm">
-          <div class="grid">
-            <label class="field">
-              <span>Business / Event *</span>
-              <input required name="title" placeholder="Checkerboard Tavern" />
-            </label>
-            <label class="field">
-              <span>Area / Neighborhood</span>
-              <input name="area" placeholder="Old City, Fort, Downtown…" />
-            </label>
-            <label class="field">
-              <span>Time Window</span>
-              <input name="time" placeholder="Sat 9–11am / All weekend / Fri & Sat" />
-            </label>
-            <label class="field">
-              <span>Link (optional)</span>
-              <input name="link" type="url" placeholder="https://example.com/menu" />
-            </label>
-          </div>
-          <label class="field">
-            <span>Details</span>
-            <textarea name="details" rows="4" placeholder="Describe the special or listing."></textarea>
-          </label>
-          <label class="check">
-            <input required type="checkbox" /> I confirm I’m authorized to submit this, and I agree this may be published and edited for clarity.
-          </label>
-          <label class="check">
-            <input required type="checkbox" /> I’ve read the Content Guidelines and Privacy notice.
-          </label>
-          <button class="btn" type="submit">Submit</button>
-        </form>
-        <p class="muted" style="margin-top:12px">Data updated — <span data-last-updated>Loading…</span>.</p>
-      </div>
-    </section>
-
-    <section class="card">
-      <header class="card-hd"><h2 class="card-ttl">Content Guidelines</h2></header>
-      <div class="card-bd">
-        <ul class="list">
-          <li>No illegal sales, hate speech, harassment, or adult content.</li>
-          <li>Listings must be generally available during listed times.</li>
-          <li>Bring required IDs/entries; see venue fine print.</li>
-          <li>Moderation at our discretion; we may edit for clarity/length.</li>
-        </ul>
-      </div>
+  <main class="wrap">
+    <section class="grid grid-single">
+      <article class="card card-span2">
+        <div class="card-head"><h1 class="card-title">Submit a Listing</h1></div>
+        <div class="card-body">
+          <p class="small">This sends us an email with your details. We’ll review and publish.</p>
+          <form id="submitForm" class="form">
+            <div class="field">
+              <label>Business / Event Name</label>
+              <input id="fName" type="text" placeholder="Checkerboard Tavern" required />
+            </div>
+            <div class="field">
+              <label>Category</label>
+              <select id="fCat">
+                <option>Food &amp; Drink</option>
+                <option>Shop</option>
+                <option>Event</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Details</label>
+              <textarea id="fDetails" rows="5" placeholder="Happy hour 4–7pm, wings + pitchers…"></textarea>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn">Send</button>
+              <button type="reset" class="btn ghost">Reset</button>
+            </div>
+          </form>
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p class="muted">© 2025 HC Web Labs. Content licensed under
-      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.
-    </p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
   </footer>
 
-  <!-- Safe: app.js guards missing elements -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-9"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
-
-
