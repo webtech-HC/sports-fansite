@@ -1,134 +1,88 @@
-<<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TN • Tennessee — Gameday Hub</title>
-  <meta name="description" content="Unofficial Tennessee football gameday hub: schedule, TV, odds, weather, and more." />
-  <link rel="preload" href="assets/css/styles.css" as="style" />
+  <title>Tennessee — Gameday Hub</title>
+  <meta name="description" content="Unofficial Tennessee Vols gameday hub: schedule, live weather, TV info, specials, and more." />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
-
 <body>
-  <a class="skip" href="#main">Skip to content</a>
 
-  <!-- Sticky top header with countdown -->
-  <header class="topbar">
-    <div class="topbar-inner wrap">
-      <div class="brand">
-        <span class="badge">TN</span>
-        <a href="index.html" class="brand-link">Tennessee</a>
-        <span id="ticker-small" class="ticker-small" aria-live="polite">Loading…</span>
-      </div>
-      <nav class="nav">
-        <a href="schedule.html">Schedule</a>
-        <a href="specials.html">Specials</a>
-        <a href="map.html">Map</a>
-        <a href="guide.html">Guide</a>
-        <a class="btn btn-orange btn-sm" href="submit.html">Submit</a>
-      </nav>
-      <div class="countdown-top" aria-label="Countdown to next game">
-        <div id="countdown-top" class="countdown is-loading">
-          <div><span class="num" data-k="d">00</span><span class="lab">days</span></div>
-          <div><span class="num" data-k="h">00</span><span class="lab">hrs</span></div>
-          <div><span class="num" data-k="m">00</span><span class="lab">mins</span></div>
-          <div><span class="num" data-k="s">00</span><span class="lab">secs</span></div>
-        </div>
-      </div>
+  <!-- ===== Header / Global Nav (countdown centered) ===== -->
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html" aria-label="Go to homepage">
+        <span class="logo-badge">TN</span>
+        <span class="brand-name">Tennessee</span>
+      </a>
     </div>
+
+    <div class="header-countdown">
+      <div id="countdown" class="countdown" aria-live="polite">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+
+    <nav class="site-nav">
+      <a href="schedule.html">Schedule</a>
+      <a href="specials.html">Specials</a>
+      <a href="map.html">Map</a>
+      <a href="guide.html">Guide</a>
+      <a class="btn" href="submit.html">Submit</a>
+    </nav>
   </header>
 
-  <main id="main" class="wrap page">
-    <!-- 3-up: Live + Upcoming + Weather -->
-    <section class="grid-3up">
-      <article class="card">
-        <header class="card-h"><h2 class="h">Live Score Box</h2></header>
-        <div class="card-b" id="score-live">
-          <div class="live-row">
-            <div>
-              <div class="team" id="score-team">Tennessee</div>
-              <div class="sub" id="score-status">No game in progress.</div>
-            </div>
-            <div class="score" id="score-points">—</div>
+  <main class="wrap">
+    <section class="grid">
+
+      <!-- Lead 3-up -->
+      <article class="card card-tight">
+        <div class="card-head">
+          <h2 class="card-title">Live Score Box</h2>
+        </div>
+        <div id="scorebox" class="card-body small">
+          <div class="score-row">
+            <div class="team">Tennessee</div>
+            <div class="score" id="scoreStatus">Loading…</div>
+          </div>
+          <div id="scoreGrid" class="score-grid" hidden>
+            <div class="score-team" id="homeLine">—</div>
+            <div class="score-team" id="awayLine">—</div>
+            <div class="score-state" id="scoreState">—</div>
           </div>
         </div>
       </article>
 
-      <article class="card">
-        <header class="card-h"><h2 class="h">Upcoming Game</h2></header>
-        <div class="card-b" id="next-game">
-          <p id="next-line">Loading…</p>
-          <button id="add-ics" class="btn btn-orange btn-sm" disabled>Add to Calendar</button>
+      <article class="card card-tight">
+        <div class="card-head">
+          <h2 class="card-title">Upcoming Game</h2>
+        </div>
+        <div class="card-body small" id="upcomingBox">
+          <p id="upcomingLine">Loading…</p>
+          <button id="addToCal" class="btn pill" disabled>Add to Calendar</button>
         </div>
       </article>
 
-      <article class="card">
-        <header class="card-h"><h2 class="h">Weather (3-day)</h2></header>
-        <div class="card-b" id="weather">
-          <ul class="weather-brief" id="weather-list">
-            <li>Fri — forecast posts closer to kickoff.</li>
-            <li>Sat — forecast posts closer to kickoff.</li>
-            <li>Sun — forecast posts closer to kickoff.</li>
-          </ul>
+      <article class="card card-tight">
+        <div class="card-head">
+          <h2 class="card-title">Weather (3-day)</h2>
+        </div>
+        <div class="card-body small" id="weatherBox">
+          <ul id="weatherList" class="bullets"><li>Loading…</li></ul>
+          <div class="meta tiny" id="weatherMeta"></div>
         </div>
       </article>
-    </section>
 
-    <!-- Main + Rail -->
-    <section class="grid-main-rail">
-      <div class="maincol">
+      <!-- Rail -->
+      <aside class="rail">
         <article class="card">
-          <header class="card-h">
-            <h2 class="h">Schedule & Results</h2>
-            <div class="stamp">Data updated — <span id="data-updated">Loading…</span></div>
-          </header>
-          <div class="card-b">
-            <div class="table-wrap">
-              <table class="table" aria-describedby="schNote">
-                <thead>
-                  <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
-                </thead>
-                <tbody id="sched"></tbody>
-              </table>
-              <div class="fade" id="sched-fade"></div>
-            </div>
-            <div class="card-f">
-              <button id="toggle-sched" class="btn btn-soft">Show full schedule</button>
-              <p id="schNote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <header class="card-h"><h2 class="h">Featured Specials</h2></header>
-          <div class="card-b" id="specials">Listings are community-submitted. Call ahead to confirm.</div>
-        </article>
-
-        <article class="card">
-          <header class="card-h"><h2 class="h">Map</h2></header>
-          <div class="card-b">Interactive map coming soon.</div>
-        </article>
-
-        <article class="card">
-          <header class="card-h"><h2 class="h">TV & Streams (This Week)</h2></header>
-          <div class="card-b">Updates closer to kickoff.</div>
-        </article>
-
-        <article class="card">
-          <header class="card-h"><h2 class="h">Odds</h2></header>
-          <div class="card-b">For entertainment only. Check a licensed sportsbook for current numbers.</div>
-        </article>
-
-        <article class="card">
-          <header class="card-h"><h2 class="h">Rankings (AP Top 25)</h2></header>
-          <div class="card-b" id="rankings">AP poll updates weekly.</div>
-        </article>
-      </div>
-
-      <aside class="rail" aria-label="Sidebar">
-        <article class="card">
-          <header class="card-h"><h2 class="h">Quick Links</h2></header>
-          <div class="card-b list-links">
+          <div class="card-head"><h3 class="card-title">Quick Links</h3></div>
+          <div class="card-body small links">
             <a href="guide.html">Guide</a>
             <a href="specials.html">Specials</a>
             <a href="map.html">Map</a>
@@ -138,34 +92,77 @@
         </article>
 
         <article class="card">
-          <header class="card-h"><h2 class="h">Countdown</h2></header>
-          <div class="card-b">
-            <div id="countdown-rail" class="countdown is-loading">
-              <div><span class="num" data-k="d">00</span><span class="lab">days</span></div>
-              <div><span class="num" data-k="h">00</span><span class="lab">hrs</span></div>
-              <div><span class="num" data-k="m">00</span><span class="lab">mins</span></div>
-              <div><span class="num" data-k="s">00</span><span class="lab">secs</span></div>
-            </div>
+          <div class="card-head"><h3 class="card-title">Mini Map</h3></div>
+          <div class="card-body mini-map">
+            <iframe title="Knoxville Map"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.992%2C35.930%2C-83.886%2C36.000&layer=mapnik&marker=35.9606%2C-83.9207"
+              loading="lazy"></iframe>
+            <a class="map-open" target="_blank" rel="noopener"
+               href="https://www.openstreetmap.org/?mlat=35.9606&mlon=-83.9207#map=13/35.9606/-83.9207">Open full map</a>
           </div>
         </article>
       </aside>
-    </section>
 
-    <section class="card card-minor">
-      <header class="card-h"><h2 class="h">Quick Links</h2></header>
-      <div class="card-b small-links">
-        <a href="guide.html">Guide</a> ·
-        <a href="specials.html">Specials</a> ·
-        <a href="map.html">Map</a> ·
-        <a href="schedule.html">Schedule</a> ·
-        <a href="submit.html">Submit</a>
-      </div>
+      <!-- Schedule -->
+      <article class="card card-span2">
+        <div class="card-head">
+          <h2 class="card-title">Schedule &amp; Results</h2>
+          <div class="subtle" id="metaUpdated">Data updated — Loading…</div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table class="table" id="sched">
+              <thead>
+                <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
+              </thead>
+              <tbody id="schedBody"><tr><td colspan="5">Loading…</td></tr></tbody>
+            </table>
+          </div>
+          <div class="table-actions">
+            <button id="toggleSched" class="btn small">Show full schedule</button>
+          </div>
+          <p class="meta small">Times/TV subject to change. Check official sources day-of.</p>
+        </div>
+      </article>
+
+      <!-- More tiles -->
+      <article class="card">
+        <div class="card-head"><h3 class="card-title">Featured Specials</h3></div>
+        <div class="card-body small">See the <a href="specials.html">Specials</a> page for live listings.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3 class="card-title">TV &amp; Streams (This Week)</h3></div>
+        <div class="card-body small" id="tvBox">Updates closer to kickoff.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3 class="card-title">Odds</h3></div>
+        <div class="card-body small">For entertainment only. Check a licensed sportsbook for current numbers.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3 class="card-title">Rankings (AP Top 25)</h3></div>
+        <div class="card-body small">AP poll updates weekly.</div>
+      </article>
+
+      <article class="card card-span2">
+        <div class="card-head"><h3 class="card-title">Quick Links</h3></div>
+        <div class="card-body small links">
+          <a href="guide.html">Guide</a>
+          <a href="specials.html">Specials</a>
+          <a href="map.html">Map</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="submit.html">Submit</a>
+        </div>
+      </article>
+
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p class="small">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <p class="tiny">© 2025 HC Web Labs — <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a></p>
   </footer>
 
   <script src="assets/js/app.js"></script>
