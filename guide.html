@@ -3,346 +3,369 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tennessee — Gameday Guide</title>
-  <meta name="description" content="Pre-game, game-time, and post-game guide for Tennessee Volunteers fans." />
-  <meta name="theme-color" content="#0e2218" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-30" />
-
-  <!-- Page-local hardening so layout can’t collapse even if global CSS changes -->
-  <style>
-    :root{
-      --container-max: 1160px;
-      --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem;
-      --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
-      --surface-1:#0f241a; --surface-2:#142a20; --surface-3:#1a3427;
-      --muted:#9bb3a7; --text:#eaf4ef; --accent:#ff8a00;
-    }
-
-    /* container */
-    .container{max-width:var(--container-max); margin-inline:auto; padding-inline:var(--space-4)}
-    .page-hero{margin-block:var(--space-6) var(--space-4)}
-    .page-title{font-size:clamp(1.5rem,2.4vw,2rem); margin:0 0 .25rem}
-    .lede{margin:0 0 var(--space-2); color:var(--muted)}
-    .actions{display:flex; gap:.75rem; flex-wrap:wrap}
-    .btn{border-radius:999px; padding:.5rem .9rem; font-weight:700}
-    .btn-accent{background:var(--accent); color:#111}
-    .btn-outline{border:1px solid rgba(255,255,255,.15); color:var(--text); background:transparent}
-
-    /* header / nav */
-    .site-header{position:sticky; top:0; z-index:30; backdrop-filter:saturate(1.2) blur(6px)}
-    .topbar{display:flex; align-items:center; gap:1rem; padding-block:.6rem}
-    .brand{display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--text)}
-    .brand-mark{display:inline-grid; place-items:center; width:28px; height:28px; border-radius:7px; background:var(--accent); color:#111; font-weight:900}
-    .brand-word{font-weight:800; letter-spacing:.2px}
-    .nav{display:flex; gap:1rem; margin-left:auto; list-style:none; padding:0; align-items:center}
-    .nav a{color:var(--text); opacity:.9}
-    .is-active a{opacity:1; text-decoration:underline}
-    .header-countdown{margin-inline:auto; order:0}
-    .count{display:flex; gap:.45rem}
-    .count .box{display:grid; place-items:center; background:var(--surface-2); border-radius:8px; padding:.25rem .4rem}
-    .count .num{font-weight:900}
-    .count .lab{font-size:.7rem; color:var(--muted)}
-
-    /* cards */
-    .grid{display:grid; gap:var(--space-4)}
-    .grid-rail{grid-template-columns:1fr}
-    .card{background:var(--surface-2); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
-    .card-h{padding:.85rem 1rem .6rem; border-bottom:1px solid rgba(255,255,255,.06)}
-    .card-b{padding:1rem}
-    .flow>*+*{margin-top:var(--space-3)}
-    .small{font-size:.9rem}
-    .muted{color:var(--muted)}
-
-    /* rail grid for wide viewports */
-    @media (min-width: 980px){
-      .grid-rail{grid-template-columns:minmax(0,1fr) 320px; align-items:start}
-      .col-main{min-width:0}
-      .col-rail{position:sticky; top:calc(56px + .75rem); height:max-content}
-    }
-
-    /* timeline */
-    .timeline{display:grid; gap:.75rem}
-    .timeline .row{display:flex; gap:.75rem; align-items:baseline}
-    .timeline .tstamp{min-width:7.2rem; font-variant-numeric:tabular-nums; color:var(--muted)}
-
-    /* toc */
-    .toc{display:flex; gap:.5rem; flex-wrap:wrap; padding:.5rem 0}
-    .toc a{background:var(--surface-2); border:1px solid rgba(255,255,255,.06); padding:.35rem .6rem; border-radius:10px; font-weight:700}
-
-    /* rail widgets */
-    .map-embed iframe{width:100%; height:260px; display:block; border:0}
-  </style>
+  <title>Tennessee — Game Weekend Guide</title>
+  <meta name="description" content="Everything you need for game weekend in Knoxville—before, during, and after kickoff." />
+  <link rel="preload" href="/assets/css/styles.css" as="style" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="icon" href="/assets/tn.png" />
+  <meta name="theme-color" content="#f57f17" />
 </head>
-<body class="page page-guide">
+<body class="theme-tn">
 
-  <!-- Header / Nav -->
+  <!-- ===== Header (shared style) ===== -->
   <header class="site-header">
-    <nav class="topbar container">
-      <a class="brand" href="index.html" aria-label="Home">
-        <span class="brand-mark">TN</span><span class="brand-word">Tennessee</span>
+    <nav class="nav">
+      <a class="brand" href="/index.html" aria-label="Tennessee home">
+        <span class="brand-badge">TN</span>
+        <span class="brand-name">Tennessee</span>
       </a>
 
-      <div class="header-countdown">
-        <div id="countdown" class="count" aria-live="polite">
-          <div class="box"><span class="num" id="cd-days">00</span><span class="lab">days</span></div>
-          <div class="box"><span class="num" id="cd-hrs">00</span><span class="lab">hrs</span></div>
-          <div class="box"><span class="num" id="cd-mins">00</span><span class="lab">mins</span></div>
-          <div class="box"><span class="num" id="cd-secs">00</span><span class="lab">secs</span></div>
-        </div>
-      </div>
-
-      <ul class="nav">
-        <li><a href="schedule.html">Schedule</a></li>
-        <li><a href="specials.html">Specials</a></li>
-        <li><a href="map.html">Map</a></li>
-        <li class="is-active"><a href="guide.html" aria-current="page">Guide</a></li>
-        <li><a class="btn btn-small" href="submit.html">Submit</a></li>
+      <ul class="nav-links">
+        <li><a href="/schedule.html">Schedule</a></li>
+        <li><a href="/specials.html">Specials</a></li>
+        <li><a href="/map.html">Map</a></li>
+        <li class="active"><a href="/guide.html" aria-current="page">Guide</a></li>
+        <li><a class="btn btn-primary" href="/submit.html">Submit</a></li>
       </ul>
+
+      <!-- countdown lives in the header for every page -->
+      <div id="hd-countdown" class="countdown countdown--header" aria-live="polite">
+        <div class="ct-seg"><span class="ct-num">00</span><span class="ct-lab">days</span></div>
+        <div class="ct-sep">:</div>
+        <div class="ct-seg"><span class="ct-num">00</span><span class="ct-lab">hrs</span></div>
+        <div class="ct-sep">:</div>
+        <div class="ct-seg"><span class="ct-num">00</span><span class="ct-lab">mins</span></div>
+        <div class="ct-sep">:</div>
+        <div class="ct-seg"><span class="ct-num">00</span><span class="ct-lab">secs</span></div>
+      </div>
     </nav>
   </header>
 
-  <!-- Hero -->
-  <section class="page-hero container">
-    <h1 class="page-title">Gameday Guide</h1>
-    <p class="lede">Everything you need for game day in Knoxville—before, during, and after kickoff.</p>
-    <div class="actions">
-      <button class="btn btn-accent js-ics">Add next game to Calendar</button>
-      <button class="btn btn-outline" onclick="window.print()">Print guide</button>
-    </div>
-  </section>
+  <main class="wrap guide-wrap">
 
-  <!-- Main + Rail -->
-  <main class="container grid grid-rail">
-    <!-- MAIN -->
-    <article class="col-main flow">
+    <!-- ===== Page Title + actions ===== -->
+    <section class="page-intro">
+      <h1>Game Weekend Guide</h1>
+      <p class="muted">Everything you need for game weekend in Knoxville—before, during, and after kickoff.</p>
+      <div class="actions">
+        <a id="btnAddCal" class="btn btn-primary" href="#" target="_blank" rel="noopener">Add next game to Calendar</a>
+        <a id="btnPrint" class="btn" href="javascript:window.print()">Print guide</a>
+      </div>
+    </section>
 
-      <section class="card">
-        <header class="card-h"><h2>Game-day snapshot</h2></header>
-        <div class="card-b" id="snapshot"><div class="muted">Loading next opponent and kickoff…</div></div>
-      </section>
+    <!-- ===== Grid: main + right rail ===== -->
+    <div class="grid guide-grid">
 
-      <nav class="toc">
-        <a href="#timeline">Timeline</a>
-        <a href="#parking">Parking & getting there</a>
-        <a href="#bags">Bags & entry</a>
-        <a href="#inside">Inside the stadium</a>
-        <a href="#families">With kids</a>
-        <a href="#access">Accessibility</a>
-        <a href="#postgame">Post-game</a>
-      </nav>
+      <!-- ===== Main column ===== -->
+      <div class="col-main flow">
 
-      <section id="timeline" class="card flow">
-        <header class="card-h">
-          <h2>Timeline</h2>
-          <p class="muted">Times below auto-calc from the next scheduled kickoff.</p>
-        </header>
-        <div class="card-b">
-          <div id="timelineList" class="timeline"><div class="muted">Calculating…</div></div>
-        </div>
-      </section>
+        <!-- snapshot bar with jump links -->
+        <section class="card">
+          <div class="card-hd">
+            <h2 class="card-title">Game-day snapshot</h2>
+            <div id="nextGameSmall" class="badge badge-soft">Next game: <span>Loading…</span></div>
+          </div>
+          <nav class="chip-row">
+            <a class="chip" href="#pre">Pre-game</a>
+            <a class="chip" href="#game">Game-time</a>
+            <a class="chip" href="#post">Post-game</a>
+            <a class="chip" href="#emergency">Emergency & help</a>
+          </nav>
+        </section>
 
-      <section id="parking" class="card flow">
-        <header class="card-h"><h2>Parking & getting there</h2></header>
-        <div class="card-b flow">
-          <ul>
-            <li><strong>Arrive early</strong>—near-campus lots fill 3–4 hours pre-kick for big games.</li>
-            <li>Expect lane reversals post-game; check the live map in the rail to pick a faster route.</li>
-            <li>Rideshare: set pickup a few blocks off closures for better ETAs.</li>
+        <!-- Timeline (relative, filled from next kickoff) -->
+        <section class="card" id="timeline">
+          <h3 class="card-title">Timeline</h3>
+          <p class="muted">Times below auto-calculate from the next scheduled kickoff.</p>
+          <ul class="timeline-list" id="timelineList">
+            <li>Loading…</li>
           </ul>
-          <p class="small muted">Add special closures via <code>/data/guide.json</code> and they’ll appear under notes.</p>
-        </div>
-      </section>
+        </section>
 
-      <section id="bags" class="card flow">
-        <header class="card-h"><h2>Bags & entry</h2></header>
-        <div class="card-b grid" style="--cols:2">
-          <div class="flow">
-            <h3>Generally allowed</h3>
-            <ul><li>Small clear bags (venue sizes), small clutch</li><li>Factory-sealed water</li><li>Phone, keys, charger</li></ul>
+        <!-- ========= PRE-GAME ========= -->
+        <section class="card" id="pre">
+          <h2 class="section-title">Pre-game</h2>
+
+          <div class="split two">
+            <div class="split-col">
+              <h3>Parking & getting there</h3>
+              <ul class="dot-list">
+                <li><strong>Arrive early</strong>—near campus lots fill 3–4 hours pre-kick for big games.</li>
+                <li><strong>Expect lane closures</strong>. Check the live map (right) for a faster route.</li>
+                <li>Rideshare: pick a pickup point a few blocks from the stadium for quicker exits.</li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <h3>Bags & entry</h3>
+              <div class="grid two">
+                <div>
+                  <h4>Generally allowed</h4>
+                  <ul class="dot-list">
+                    <li>Small clear bag</li>
+                    <li>Factory-sealed water</li>
+                    <li>Phone, keys, charger</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Generally not allowed</h4>
+                  <ul class="dot-list">
+                    <li>Backpacks/large bags</li>
+                    <li>Outside food/alcohol</li>
+                    <li>Umbrellas, noisemakers (varies)</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="fine">Policies can change—verify day-of.</p>
+            </div>
           </div>
-          <div class="flow">
-            <h3>Generally not allowed</h3>
-            <ul><li>Backpacks/large bags</li><li>Outside food/alcohol; glass</li><li>Umbrellas, noisemakers (varies)</li></ul>
+
+          <div class="split two">
+            <div class="split-col">
+              <h3>With kids</h3>
+              <ul class="dot-list">
+                <li>Family restrooms & changing tables available—ask staff near your section.</li>
+                <li>Bring ear protection; pack wipes and a spare layer for breeze after sunset.</li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <h3>Accessibility</h3>
+              <ul class="dot-list">
+                <li>Use elevators and accessible routes as posted—staff can guide you.</li>
+                <li>Service animals typically permitted—follow venue guidance.</li>
+              </ul>
+            </div>
           </div>
-          <p class="small muted" style="grid-column:1/-1">Policies can change—verify day-of. Open mobile tickets before the scanners.</p>
-        </div>
-      </section>
+        </section>
 
-      <section id="inside" class="card flow">
-        <header class="card-h"><h2>Inside the stadium</h2></header>
-        <div class="card-b grid" style="--cols:2">
-          <div class="flow">
-            <h3>Comfort</h3>
-            <ul><li>Hydrate; refill stations at main concourses.</li><li>Sunscreen + light layer for night breeze.</li><li>It gets loud—ear protection helps.</li></ul>
+        <!-- ========= GAME-TIME ========= -->
+        <section class="card" id="game">
+          <h2 class="section-title">Game-time</h2>
+
+          <div class="split two">
+            <div class="split-col">
+              <h3>Inside the stadium</h3>
+              <ul class="dot-list">
+                <li><strong>Hydrate & shade</strong>: refill stations on main concourses, sunscreen, brimmed hats.</li>
+                <li><strong>Mobile tickets</strong>: brighten your screen before the scanners.</li>
+                <li>Keep an eye on the <a href="/index.html#live">Live Score Box</a> for quick updates.</li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <h3>Food & cashless</h3>
+              <ul class="dot-list">
+                <li>Most vendors are cashless; set up wallet beforehand.</li>
+                <li>Grab concessions mid-quarter to avoid lines.</li>
+              </ul>
+            </div>
           </div>
-          <div class="flow">
-            <h3>Food & cashless</h3>
-            <ul><li>Most vendors are cashless; set up wallet beforehand.</li><li>Grab concessions mid-quarter to avoid halftime rush.</li></ul>
+        </section>
+
+        <!-- ========= POST-GAME ========= -->
+        <section class="card" id="post">
+          <h2 class="section-title">Post-game</h2>
+          <div class="split two">
+            <div class="split-col">
+              <h3>Traffic tips</h3>
+              <ul class="dot-list">
+                <li><strong>Wait 20–30 minutes</strong> if you parked close—saves time overall.</li>
+                <li>Use side streets or move north (when open) to beat main flow.</li>
+                <li>Walk outside control points before calling rideshare.</li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <h3>Food & drink</h3>
+              <ul class="dot-list">
+                <li>Check <a href="/specials.html">Specials</a> for fan-friendly spots and hours.</li>
+                <li>Family sections and quieter eats are a short drive north of campus.</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="families" class="card flow">
-        <header class="card-h"><h2>With kids</h2></header>
-        <div class="card-b flow">
-          <ul><li>Family restrooms/changing tables available—ask staff for nearest to your section.</li><li>Bring ear protection; pack wipes and a spare layer.</li></ul>
-        </div>
-      </section>
+        <!-- ========= EMERGENCY & HELP ========= -->
+        <section class="card" id="emergency">
+          <h2 class="section-title">Emergency & help</h2>
+          <div class="grid two">
+            <div>
+              <h3>Call or text</h3>
+              <ul class="dot-list">
+                <li><strong>Emergency</strong>: dial <a href="tel:911">911</a></li>
+                <li><strong>Mental health</strong>: call or text <a href="tel:988">988</a></li>
+                <li><strong>Poison control</strong>: <a href="tel:18002221222">1-800-222-1222</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3>Local resources</h3>
+              <ul class="dot-list">
+                <li><a href="https://safety.utk.edu/" target="_blank" rel="noopener">UT Police & campus safety</a></li>
+                <li><a href="https://www.knoxvilletn.gov/government/city_departments_offices/police_department" target="_blank" rel="noopener">Knoxville Police Department</a></li>
+                <li><a href="https://www.knoxsheriff.org/" target="_blank" rel="noopener">Knox County Sheriff</a></li>
+                <li><a href="https://www.kub.org/outage-center/" target="_blank" rel="noopener">KUB Outage Center</a></li>
+              </ul>
+              <p class="fine">Links open official sites—confirm non-emergency numbers there.</p>
+            </div>
+          </div>
+        </section>
 
-      <section id="access" class="card flow">
-        <header class="card-h"><h2>Accessibility</h2></header>
-        <div class="card-b flow">
-          <ul><li>Elevators and accessible routes are marked; staff can guide you.</li><li>Service animals typically permitted—follow venue guidance.</li></ul>
-        </div>
-      </section>
+      </div><!-- /col-main -->
 
-      <section id="postgame" class="card flow">
-        <header class="card-h"><h2>Post-game</h2></header>
-        <div class="card-b flow">
-          <ul><li><strong>Wait 20–30 minutes</strong> if parked close—saves time overall.</li><li>Use side streets or river route (when open) to beat main flow.</li><li>Walk outside control points before calling rideshare.</li></ul>
-        </div>
-      </section>
+      <!-- ===== Right rail (sticky) ===== -->
+      <aside class="col-rail">
+        <!-- Weather -->
+        <section class="card" id="wxCard">
+          <h3 class="card-title">Weather now</h3>
+          <div id="wxNow" class="wx-now">Loading…</div>
+        </section>
 
-      <section class="card">
-        <header class="card-h"><h2>Game-specific notes</h2></header>
-        <div class="card-b">
-          <p class="small muted">Add <code>/data/guide.json</code> with <code>{"closures":[...],"tips":[...]}</code> and they’ll render below:</p>
-          <div id="guideNotes" class="flow small"></div>
-        </div>
-      </section>
-
-    </article>
-
-    <!-- RAIL -->
-    <aside class="col-rail flow">
-      <section class="card">
-        <header class="card-h"><h3>Weather now</h3></header>
-        <div class="card-b" id="wx-now"><div class="muted">Loading current conditions…</div></div>
-      </section>
-
-      <section class="card">
-        <header class="card-h"><h3>Traffic & Map</h3></header>
-        <div class="card-b">
-          <div class="map-embed">
+        <!-- Live traffic near Neyland -->
+        <section class="card">
+          <h3 class="card-title">Traffic & Map</h3>
+          <p class="fine">Pin centers near Neyland. Explore closures & backups.</p>
+          <div class="iframe-wrap">
             <iframe
-              title="Waze live traffic — Neyland Stadium area"
+              title="Waze live map — Neyland area"
+              loading="lazy"
               src="https://embed.waze.com/iframe?zoom=14&lat=35.955&lon=-83.925&pin=1"
-              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
-          <p class="muted small">Pin centers near Neyland. Explore closures and backups.</p>
-        </div>
-      </section>
+        </section>
 
-      <section class="card">
-        <header class="card-h"><h3>Quick links</h3></header>
-        <div class="card-b">
+        <!-- Quick links -->
+        <section class="card">
+          <h3 class="card-title">Quick links</h3>
           <ul class="link-list">
-            <li><a href="schedule.html">Schedule</a></li>
-            <li><a href="map.html">Map</a></li>
-            <li><a href="specials.html">Specials</a></li>
-            <li><a href="submit.html">Submit a listing</a></li>
+            <li><a href="/guide.html">Guide</a></li>
+            <li><a href="/specials.html">Specials</a></li>
+            <li><a href="/map.html">Map</a></li>
+            <li><a href="/schedule.html">Schedule</a></li>
+            <li><a href="/submit.html">Submit a listing</a></li>
           </ul>
-        </div>
-      </section>
-    </aside>
+        </section>
+      </aside>
+
+    </div><!-- /grid -->
+
   </main>
 
-  <footer class="site-footer container">
-    <p class="disclaimer small">Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <nav class="footer-links small">
-      <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> ·
-      <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
+  <footer class="site-footer">
+    <p class="fine">
+      Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.
+    </p>
+    <nav class="foot-links">
+      <a href="/guide.html">Guide</a> ·
+      <a href="/specials.html">Specials</a> ·
+      <a href="/map.html">Map</a> ·
+      <a href="/schedule.html">Schedule</a> ·
+      <a href="/submit.html">Submit</a>
     </nav>
-    <p class="small">© 2025 HC Web Labs. Content licensed under CC BY-NC-ND 4.0.</p>
+    <p class="fine">© 2025 HC Web Labs. Content licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.</p>
   </footer>
 
-  <!-- Core scripts -->
-  <script src="assets/js/app.js?v=2025-08-30" defer></script>
-  <script src="assets/js/live.js?v=2025-08-30" defer></script>
-
-  <!-- Page-local data hooks -->
+  <!-- ===== Page-local scripts (self-contained, no keys) ===== -->
   <script>
-  (function weatherNow(){
-    const el = document.getElementById('wx-now');
-    if (!el) return;
-    const lat=35.955, lon=-83.925;
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York`;
-    fetch(url).then(r=>r.ok?r.json():Promise.reject(r)).then(d=>{
-      const c=d.current||{};
-      const t=Math.round(c.temperature_2m), feels=Math.round(c.apparent_temperature), wind=Math.round(c.wind_speed_10m);
-      el.innerHTML=`<div class="wx-now">
-        <div class="wx-row" style="display:flex;gap:.75rem;align-items:baseline;">
-          <div class="big" style="font-size:2rem;font-weight:900">${t}°F</div>
-          <div class="meta small">Feels <strong>${feels}°</strong> · Wind <strong>${wind} mph</strong></div>
-        </div>
-        <div class="muted small">Knoxville, just now</div></div>`;
-    }).catch(()=>el.innerHTML='<div class="muted">Weather temporarily unavailable.</div>');
-  })();
+  (function () {
+    // --- small helpers
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const fmt = (d) => new Date(d).toLocaleString(undefined, {
+      weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'
+    });
+    const fmtDate = (d, opts) => new Date(d).toLocaleString(undefined, opts||{hour:'numeric',minute:'2-digit'});
 
-  const fmt = d => d.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
-
-  async function getNextGame(){
-    try{
-      const res=await fetch('/data/schedule.json',{cache:'no-store'});
-      const raw=await res.json();
-      const list=Array.isArray(raw)?raw:(raw.games||[]);
-      const now=Date.now();
-      return list.map(g=>({...g,startTs:Date.parse(g.start)}))
-                 .filter(g=>Number.isFinite(g.startTs)&&g.startTs>now)
-                 .sort((a,b)=>a.startTs-b.startTs)[0]||null;
-    }catch{return null}
-  }
-
-  (async function initGuide(){
-    const next=await getNextGame();
-    const snap=document.getElementById('snapshot');
-    const tbox=document.getElementById('timelineList');
-
-    if(!next){
-      snap.innerHTML='<div class="muted">Next game: <strong>TBA</strong></div>';
-      tbox.innerHTML='<div class="muted">Timeline will populate once a future game is on the schedule.</div>';
-      return;
+    // --- next game + countdown + Google Calendar link
+    async function bootSchedule() {
+      try {
+        const res = await fetch('/data/schedule.json', { cache:'no-store' });
+        if (!res.ok) throw new Error('schedule missing');
+        const raw = await res.json();
+        const list = Array.isArray(raw) ? raw : (raw.games || []);
+        const now = Date.now();
+        const next = list.find(g => new Date(g.start).getTime() > now);
+        const span = $('#nextGameSmall span');
+        if (next) {
+          span.textContent = fmt(next.start) + (next.opponent ? ` — vs ${next.opponent}` : '');
+          wireCountdown(new Date(next.start));
+          // Google Calendar "create event" link
+          const s = new Date(next.start);
+          const e = new Date(s.getTime() + 3*60*60*1000);
+          const pad = n => String(n).padStart(2,'0');
+          const mk = (dt) => dt.getUTCFullYear()
+            + pad(dt.getUTCMonth()+1) + pad(dt.getUTCDate()) + 'T'
+            + pad(dt.getUTCHours()) + pad(dt.getUTCMinutes()) + '00Z';
+          const text = encodeURIComponent('Tennessee Football vs ' + (next.opponent||'Opponent'));
+          const details = encodeURIComponent('Unofficial fan calendar entry from sports-fansite.');
+          const location = encodeURIComponent('Neyland Stadium, Knoxville, TN');
+          const href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${mk(s)}/${mk(e)}&location=${location}&details=${details}`;
+          $('#btnAddCal').href = href;
+        } else {
+          span.textContent = 'TBA';
+        }
+        buildTimeline(next);
+      } catch (err) {
+        console.warn('schedule error', err);
+        $('#nextGameSmall span').textContent = 'TBA';
+      }
     }
 
-    const start=new Date(next.start);
-    const opp=next.opponent||'Opponent TBA';
-    const isHome=next.isHome?'Home':'Away';
-    snap.innerHTML=`<div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem">
-      <div><div class="small muted">Opponent</div><div class="h3" style="font-weight:800">${opp}</div></div>
-      <div><div class="small muted">Kickoff</div><div class="h3" style="font-weight:800">${fmt(start)}</div></div>
-      <div><div class="small muted">Site</div><div class="h3" style="font-weight:800">${isHome}</div></div>
-    </div>`;
-
-    const steps=[
-      {rel:-24*60, label:'T-24h', text:'Confirm tickets, charge phones, plan parking/route.'},
-      {rel:-6*60,  label:'T-6h',  text:'Hydrate, pack clear bag, check weather & traffic.'},
-      {rel:-3*60,  label:'T-3h',  text:'Drive in and park (earlier for marquee games).'},
-      {rel:-2*60,  label:'T-2h',  text:'Head toward gates; explore tailgates & Vol Village.'},
-      {rel:0,      label:'Kick',  text:'Kickoff! Open mobile ticket before the reader.'},
-      {rel:+30,    label:'T+30m', text:'Leaving? Use side streets or wait out first wave.'},
-      {rel:+120,   label:'T+2h',  text:'Rideshare from outside closures for faster pickup.'}
-    ];
-    tbox.innerHTML=steps.map(s=>{
-      const t=new Date(start.getTime()+s.rel*60*1000);
-      return `<div class="row"><div class="tstamp">${fmt(t)}</div><div><strong>${s.label}</strong> — ${s.text}</div></div>`;
-    }).join('');
-
-    // Optional extra notes
-    try{
-      const r=await fetch('/data/guide.json',{cache:'no-store'});
-      if(r.ok){
-        const notes=await r.json();
-        const wrap=document.getElementById('guideNotes');
-        const parts=[];
-        if(Array.isArray(notes.closures)&&notes.closures.length){
-          parts.push(`<h4>Closures & detours</h4><ul>`+notes.closures.map(x=>`<li>${x}</li>`).join('')+`</ul>`);
-        }
-        if(Array.isArray(notes.tips)&&notes.tips.length){
-          parts.push(`<h4>Extra tips</h4><ul>`+notes.tips.map(x=>`<li>${x}</li>`).join('')+`</ul>`);
-        }
-        wrap.innerHTML=parts.length?parts.join(''):'<div class="muted">No game-specific notes yet.</div>';
+    function wireCountdown(targetDate) {
+      const root = $('#hd-countdown');
+      if (!root) return;
+      function tick() {
+        const t = targetDate - new Date();
+        const segs = [86400000, 3600000, 60000, 1000].map((ms, i, arr) => {
+          const v = i===0 ? Math.floor(t/ms) : Math.floor((t%arr[i-1])/ms);
+          return v < 0 ? 0 : v;
+        });
+        [...root.querySelectorAll('.ct-num')].forEach((el, i) => el.textContent = String(segs[i]).padStart(2,'0'));
       }
-    }catch{}
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function buildTimeline(next) {
+      const ul = $('#timelineList');
+      ul.innerHTML = '';
+      if (!next) {
+        ul.innerHTML = '<li>Populates once a future game is on the schedule.</li>';
+        return;
+      }
+      const k = new Date(next.start);
+      const items = [
+        { t: new Date(k.getTime() - 4*60*60*1000), label:'Arrive to campus, park & explore' },
+        { t: new Date(k.getTime() - 3*60*60*1000), label:'Tailgates & pre-game spots warm up' },
+        { t: new Date(k.getTime() - 2*60*60*1000), label:'Gates typically open; security lines build' },
+        { t: new Date(k.getTime() - 60*60*1000),  label:'Head to seats & grab food' },
+        { t: k,                                   label:'Kickoff' },
+        { t: new Date(k.getTime() + 3*60*60*1000), label:'Post-game: staggered exits help traffic' }
+      ];
+      for (const it of items) {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="tl-time">${fmtDate(it.t)}</span><span class="tl-dot"></span><span>${it.label}</span>`;
+        ul.appendChild(li);
+      }
+    }
+
+    // --- live Knoxville weather (Open-Meteo; no key)
+    async function bootWeather() {
+      const lat = 35.955, lon = -83.925; // Neyland area
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto`;
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        const j = await res.json();
+        const curT = Math.round(j.current.temperature_2m);
+        const wind = Math.round(j.current.wind_speed_10m);
+        $('#wxNow').innerHTML =
+          `<div class="wx-row"><strong>${curT}°F</strong> <span class="fine">Feels like —</span></div>
+           <div class="wx-row"><span class="fine">Wind</span> <strong>${wind} mph</strong></div>
+           <div class="fine">Knoxville just now.</div>`;
+      } catch (e) {
+        console.warn('weather', e);
+        $('#wxNow').textContent = 'Weather unavailable.';
+      }
+    }
+
+    bootSchedule();
+    bootWeather();
   })();
   </script>
 </body>
