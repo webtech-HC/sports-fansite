@@ -3,17 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Submit a Listing — Tennessee Gameday Hub (Unofficial)</title>
-
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-8" />
-  <link rel="preload" as="image" href="assets/img/tn-wordmark-glossy.jpg" />
+  <title>Submit a Listing — Tennessee Gameday Hub</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-9" />
 
   <style>
-    .hero{ background-image:url("assets/img/tn-hero-metal.jpg"); background-size:cover; background-position:center; }
-    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.55));pointer-events:none;}
-    .hero-wrap{ position:relative; }
-    .hero-wordmark{ display:block; margin:0 auto; width:min(620px,90vw); height:auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.45)); }
-    .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+    :root{ --ut-orange:#FF8200; }
+    .hero{
+      position:relative;
+      padding:clamp(24px,6vw,72px) 0;
+      background:
+        radial-gradient(120% 70% at 50% 0%, rgba(255,130,0,.18), transparent 60%),
+        linear-gradient(180deg, #0d1015 0%, #0b0e12 60%, #0a0c10 100%);
+      text-align:center;
+    }
+    .wordmark{
+      margin:0;
+      font-size:clamp(36px, 9vw, 96px);
+      line-height:1;
+      font-weight:800;
+      color:var(--ut-orange);
+      text-shadow:0 2px 0 rgba(0,0,0,.35), 0 12px 24px rgba(0,0,0,.5);
+      -webkit-text-stroke:1px rgba(0,0,0,.35);
+    }
   </style>
 </head>
 <body>
@@ -30,9 +41,8 @@
     </nav>
   </header>
 
-  <section class="hero hero-wrap" aria-label="Hero">
-    <h1 class="sr-only">Submit a Listing</h1>
-    <img class="hero-wordmark" src="assets/img/tn-wordmark-glossy.jpg" alt="Tennessee" width="620" height="150" decoding="async" loading="eager" />
+  <section class="hero" aria-label="Hero">
+    <h1 class="wordmark">TENNESSEE</h1>
   </section>
 
   <main id="main" class="wrap">
@@ -81,10 +91,10 @@
       <header class="card-hd"><h2 class="card-ttl">Content Guidelines</h2></header>
       <div class="card-bd">
         <ul class="list">
-          <li>No illegal sales, hate speech, harassment, hot takes, or adult content.</li>
+          <li>No illegal sales, hate speech, harassment, or adult content.</li>
           <li>Listings must be generally available during listed times.</li>
-          <li>Bring receipt, IDs, or entries; see venue fine print.</li>
-          <li>Moderation at our sole discretion; we may edit for clarity/length.</li>
+          <li>Bring required IDs/entries; see venue fine print.</li>
+          <li>Moderation at our discretion; we may edit for clarity/length.</li>
         </ul>
       </div>
     </section>
@@ -92,11 +102,13 @@
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
+    <p class="muted">© 2025 HC Web Labs. Content licensed under
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.
+    </p>
   </footer>
 
-  <!-- scripts (safe: the app guards if DOM pieces are missing) -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-8"></script>
+  <!-- Safe: app.js guards missing elements -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-9"></script>
 </body>
 </html>
 
