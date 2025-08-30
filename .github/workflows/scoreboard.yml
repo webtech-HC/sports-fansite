@@ -1,0 +1,46 @@
+name: Update scoreboard.json (CFBD)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/1 * * * *"   # every minute
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch TN scoreboard from CFBD
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          YEAR=$(date +%Y)
+          # Get today’s games and try to find Tennessee (home or away)
+          curl -s -H "Authorization: Bearer $CFBD_API_KEY" \
+            "https://api.collegefootballdata.com/scoreboard?year=$YEAR&classification=fbs" > sb_raw.json
+
+          jq '(.games // []) | map(select((.homeTeam|ascii_downcase|test("tennessee")) or (.awayTeam|ascii_downcase|test("tennessee")))) | .[0]' sb_raw.json > sb_one.json
+
+          if [ "$(jq -r 'type' sb_one.json)" = "null" ] || [ "$(jq -r '.id' sb_one.json)" = "null" ]; then
+            echo '{"status":"none"}' > data/scoreboard.json
+          else
+            # Map CFBD fields into our simple shape
+            jq '{
+                status: (if .status == "final" then "final"
+                         elif .status == "in_progress" then "in_progress"
+                         elif .status == "scheduled" or .status == "pre" then "pre"
+                         else .status end),
+                clock: (.period + " " + (.clock // "") // ""),
+                home: { name: .homeTeam, score: (.homeScore // 0) },
+                away: { name: .awayTeam, score: (.awayScore // 0) }
+              }' sb_one.json > data/scoreboard.json
+          fi
+
+      - name: Commit update
+        run: |
+          git config user.name "scorebot"
+          git config user.email "scorebot@users.noreply.github.com"
+          git add data/scoreboard.json
+          git commit -m "auto: scoreboard refresh" || echo "No changes"
+          git push
