@@ -31,6 +31,12 @@ body{
   background-size: cover;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
 }
+/* ensure the field background never tiles */
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
 
 /* Layout shell */
 .page{
