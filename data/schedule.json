@@ -1,5 +1,26 @@
 [
   {
+    "start": "2025-08-30T12:00:00-04:00",
+    "opponent": "Syracuse",
+    "isHome": true,
+    "tv": "ESPN"
+  },
+  {
+    "start": "2025-09-06T12:00:00-04:00",
+    "opponent": "East Tennessee State",
+    "isHome": true,
+    "tv": "TBD"
+  },
+  {
+    "start": "2025-09-13T12:00:00-04:00",
+    "opponent": "Georgia",
+    "isHome": true,
+    "tv": "TBD"
+  }
+]
+
+[
+  {
     "id": 401752676,
     "week": 1,
     "start": "2025-08-30T16:00:00.000Z",
