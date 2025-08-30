@@ -3,45 +3,50 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Specials • Tennessee Gameday Hub (Unofficial)</title>
-
-  <meta name="asset-version" content="2025-08-28-5" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-5" />
-  <link rel="icon" href="assets/img/favicon.svg" />
+  <title>Tennessee — Specials</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
-    <nav class="nav">
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
+    </div>
+    <div class="header-countdown">
+      <div id="countdown" class="countdown">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+    <nav class="site-nav">
       <a href="schedule.html">Schedule</a>
       <a class="active" href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
-      <a class="btn btn-small" href="submit.html">Submit</a>
+      <a class="btn" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker">
-    <div class="ticker-inner" id="ticker">Loading…</div>
-  </section>
-
-  <main id="main" class="wrap" aria-label="Main content">
-    <section class="card">
-      <h1 class="h3">Featured Specials</h1>
-      <div id="specialsGrid" class="specials-grid" style="margin-top:8px"></div>
-      <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
-      <p class="muted">Data updated — <span id="last-updated">--</span></p>
+  <main class="wrap">
+    <section class="grid grid-single">
+      <article class="card card-span2">
+        <div class="card-head"><h1 class="card-title">Featured Specials</h1></div>
+        <div class="card-body">
+          <div id="specialsList" class="list list-lines small">
+            <!-- Pull from data/specials.json if you add it -->
+          </div>
+          <p class="tiny meta">Want yours listed? Use <a href="submit.html">Submit</a>.</p>
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a class="active" href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
   </footer>
 
-  <!-- Core app paints specials grid + ticker/meta -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-5"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
