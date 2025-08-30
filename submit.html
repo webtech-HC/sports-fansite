@@ -3,50 +3,101 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Submit • Tennessee Gameday Hub (Unofficial)</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-7" />
-  <meta name="theme-color" content="#0b0f14" />
+  <title>Submit a Listing — Tennessee Gameday Hub (Unofficial)</title>
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-8" />
+  <link rel="preload" as="image" href="assets/img/tn-wordmark-glossy.jpg" />
+
+  <style>
+    .hero{ background-image:url("assets/img/tn-hero-metal.jpg"); background-size:cover; background-position:center; }
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.55));pointer-events:none;}
+    .hero-wrap{ position:relative; }
+    .hero-wordmark{ display:block; margin:0 auto; width:min(620px,90vw); height:auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.45)); }
+    .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
+    <div class="brand">TN</div>
     <nav class="nav">
-      <a class="brand-mini" href="index.html" aria-label="Tennessee Gameday Hub">TN</a>
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small active" href="submit.html">Submit</a>
     </nav>
-    <h1 class="brand" aria-label="Tennessee">TENNESSEE</h1>
-    <p class="tagline">Got a restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
   </header>
+
+  <section class="hero hero-wrap" aria-label="Hero">
+    <h1 class="sr-only">Submit a Listing</h1>
+    <img class="hero-wordmark" src="assets/img/tn-wordmark-glossy.jpg" alt="Tennessee" width="620" height="150" decoding="async" loading="eager" />
+  </section>
 
   <main id="main" class="wrap">
     <section class="card">
-      <h2 class="h6">Submit a Listing</h2>
-      <form onsubmit="alert('Thanks! New entries are reviewed and not auto-approved.'); this.reset(); return false;">
-        <div class="grid">
-          <label>Category<select required><option value="">Choose…</option><option>Restaurant/Bar</option><option>Shop/Service</option><option>Event</option></select></label>
-          <label>Business/Name<input required placeholder="Checkerboard Tavern"></label>
-        </div>
-        <label>Location / Neighborhood<input placeholder="Old City • Downtown • UTK"></label>
-        <label>Details<textarea rows="4" placeholder="Describe the special or listing. Links welcome."></textarea></label>
-        <label class="check"><input type="checkbox" required> I agree to the Content Guidelines and Privacy notice.</label>
-        <button class="btn">Submit</button>
-      </form>
-      <p class="muted" style="margin-top:10px">Listings are community-submitted. Call ahead to confirm.</p>
+      <header class="card-hd">
+        <h2 class="card-ttl">Submit a Listing</h2>
+        <p class="muted">Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
+      </header>
+      <div class="card-bd">
+        <form id="submitForm">
+          <div class="grid">
+            <label class="field">
+              <span>Business / Event *</span>
+              <input required name="title" placeholder="Checkerboard Tavern" />
+            </label>
+            <label class="field">
+              <span>Area / Neighborhood</span>
+              <input name="area" placeholder="Old City, Fort, Downtown…" />
+            </label>
+            <label class="field">
+              <span>Time Window</span>
+              <input name="time" placeholder="Sat 9–11am / All weekend / Fri & Sat" />
+            </label>
+            <label class="field">
+              <span>Link (optional)</span>
+              <input name="link" type="url" placeholder="https://example.com/menu" />
+            </label>
+          </div>
+          <label class="field">
+            <span>Details</span>
+            <textarea name="details" rows="4" placeholder="Describe the special or listing."></textarea>
+          </label>
+          <label class="check">
+            <input required type="checkbox" /> I confirm I’m authorized to submit this, and I agree this may be published and edited for clarity.
+          </label>
+          <label class="check">
+            <input required type="checkbox" /> I’ve read the Content Guidelines and Privacy notice.
+          </label>
+          <button class="btn" type="submit">Submit</button>
+        </form>
+        <p class="muted" style="margin-top:12px">Data updated — <span data-last-updated>Loading…</span>.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <header class="card-hd"><h2 class="card-ttl">Content Guidelines</h2></header>
+      <div class="card-bd">
+        <ul class="list">
+          <li>No illegal sales, hate speech, harassment, hot takes, or adult content.</li>
+          <li>Listings must be generally available during listed times.</li>
+          <li>Bring receipt, IDs, or entries; see venue fine print.</li>
+          <li>Moderation at our sole discretion; we may edit for clarity/length.</li>
+        </ul>
+      </div>
     </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="schedule.html">Schedule</a></p>
+    <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
   </footer>
 
-  <!-- “extra script” so dates/ticker/utilities stay consistent site-wide -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-7"></script>
+  <!-- scripts (safe: the app guards if DOM pieces are missing) -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-8"></script>
 </body>
 </html>
+
 
