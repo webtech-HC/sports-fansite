@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2025-08-30T15:56:35.448Z",
+  "lastUpdated": "2025-08-30T16:09:42.669Z",
   "team": "Tennessee",
   "year": 2025,
   "game": {
-    "id": 401752676,
-    "week": 1,
-    "start": "2025-08-30T16:00:00.000Z",
+    "id": 401752692,
+    "week": 2,
+    "start": "2025-09-06T19:30:00.000Z",
     "home": "Tennessee",
-    "away": "Syracuse",
+    "away": "East Tennessee State",
     "venue": {
       "name": null,
       "city": null,
@@ -17,7 +17,7 @@
     },
     "tv": null,
     "status": null,
-    "neutralSite": true,
+    "neutralSite": false,
     "home_points": null,
     "away_points": null
   }
