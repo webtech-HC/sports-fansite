@@ -3,50 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Schedule • Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-2">
+  <title>Full Schedule — Tennessee</title>
+  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-3">
+  <script defer src="/sports-fansite/assets/js/app.js?v=2025-08-30-3"></script>
 </head>
 <body>
-<header class="site-header">
-  <a class="brand" href="index.html"><span class="brand-badge">TN</span><span class="brand-name">Tennessee</span></a>
-  <nav class="main-nav">
-    <a class="is-active" href="schedule.html">Schedule</a>
-    <a href="specials.html">Specials</a>
-    <a href="map.html">Map</a>
-    <a href="guide.html">Guide</a>
-  </nav>
-  <div class="countdown" id="countdown">
-    <span><b id="cd-days">00</b><em>days</em></span>
-    <span><b id="cd-hrs">00</b><em>hrs</em></span>
-    <span><b id="cd-min">00</b><em>mins</em></span>
-    <span><b id="cd-sec">00</b><em>secs</em></span>
+<header class="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/sports-fansite/"><span class="logo">TN</span><span class="brandText">Tennessee</span></a>
+    <nav class="primaryNav">
+      <a href="/sports-fansite/schedule.html">Schedule</a>
+      <a href="/sports-fansite/specials.html">Specials</a>
+      <a href="/sports-fansite/map.html">Map</a>
+      <a href="/sports-fansite/guide.html">Guide</a>
+    </nav>
+    <div id="countdown" class="countdown">
+      <span class="pill" id="cd-days">00</span>
+      <span class="pill" id="cd-hrs">00</span>
+      <span class="pill" id="cd-min">00</span>
+      <span class="pill" id="cd-sec">00</span>
+    </div>
+    <a class="btnPrimary" href="/sports-fansite/submit.html">Submit</a>
   </div>
-  <a class="btn btn-primary" href="submit.html">Submit</a>
 </header>
 
-<main class="wrap">
-  <section class="card">
-    <header class="card-h">
-      <h1>Full Schedule</h1>
-      <small id="dataStamp" class="muted">Loading…</small>
-    </header>
-    <div class="card-b">
-      <div class="table scroller">
-        <table class="table">
-          <thead>
-          <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
-          </thead>
-          <tbody id="sched" data-limit="all"></tbody>
-        </table>
-      </div>
-      <p class="muted">Times/TV subject to change. Check official sources day-of.</p>
-    </div>
-  </section>
+<main class="wrapMain">
+  <article class="card">
+    <h2>Full Schedule</h2>
+    <div class="muted" id="dataStamp">Loading…</div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr></thead>
+      <tbody id="schedFull"><tr><td colspan="5">Loading…</td></tr></tbody>
+    </table>
+  </article>
 </main>
 
-<footer class="site-foot">
-  <p class="muted">Unofficial notice: Independent, fan-operated site.</p>
-</footer>
-<script src="/sports-fansite/assets/js/app.js?v=2025-08-30-2"></script>
+<footer class="footer"><div class="inner">Unofficial notice.</div></footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const ROOT = '/sports-fansite';
+  async function getJSON(p, fb=null){ try{ const r=await fetch(ROOT+p,{cache:'no-store'}); if(!r.ok) throw 0; return await r.json(); }catch(e){ return fb; } }
+  const [sched, meta] = await Promise.all([
+    getJSON('/data/schedule.json', []),
+    getJSON('/data/meta.json', null)
+  ]);
+  const list = Array.isArray(sched) ? sched : (sched?.games || []);
+  const tb = document.querySelector('#schedFull'); tb.innerHTML='';
+  list.forEach(g=>{
+    const d = new Date(g.start);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})}</td>
+                    <td>${g.opponent||''}</td>
+                    <td>${g.isHome?'H':'A'}</td>
+                    <td>${g.tv||''}</td>
+                    <td>${g.result||'—'}</td>`;
+    tb.appendChild(tr);
+  });
+  const stamp = meta?.lastUpdated ? new Date(meta.lastUpdated) : null;
+  if(stamp) document.querySelector('#dataStamp').textContent = `Data updated — ${stamp.toLocaleString()}`;
+});
+</script>
 </body>
 </html>
+
