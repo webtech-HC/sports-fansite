@@ -4,179 +4,179 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tennessee — Gameday Guide</title>
-  <meta name="description" content="Everything you need for game day in Knoxville—before, during, and after kickoff." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2025-08-30" />
-  <link rel="icon" href="/assets/img/tn-badge.svg" />
+  <meta name="description" content="Everything you need for game day in Knoxville — before, during, and after kickoff." />
+  <link rel="icon" href="assets/img/tn-badge.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-30" />
 </head>
 <body class="page page-guide">
 
-  <!-- Header / Global Nav -->
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/index.html" aria-label="Tennessee home">
-        <span class="brand-badge">TN</span>
-        <span class="brand-wordmark">Tennessee</span>
+      <a class="brand" href="index.html" aria-label="Tennessee home">
+        <span class="brand-badge">TN</span><span class="brand-wordmark">Tennessee</span>
       </a>
-
       <nav class="top-nav" aria-label="Primary">
-        <a href="/schedule.html">Schedule</a>
-        <a href="/specials.html">Specials</a>
-        <a href="/map.html">Map</a>
-        <a aria-current="page" href="/guide.html">Guide</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="specials.html">Specials</a>
+        <a href="map.html">Map</a>
+        <a class="active" href="guide.html">Guide</a>
       </nav>
-
-      <!-- Countdown (always on top) -->
       <div id="countdown" class="countdown-header" aria-live="polite">
         <div class="pill"><b id="cd-days">00</b><span>days</span></div>
         <div class="pill"><b id="cd-hrs">00</b><span>hrs</span></div>
         <div class="pill"><b id="cd-min">00</b><span>mins</span></div>
         <div class="pill"><b id="cd-sec">00</b><span>secs</span></div>
       </div>
-
-      <a class="btn btn-small btn-accent" href="/submit.html">Submit</a>
+      <a class="btn btn-small btn-accent" href="submit.html">Submit</a>
     </div>
   </header>
 
   <main class="wrap main-grid">
-    <h1 class="page-title">Gameday Guide</h1>
-    <p class="page-kicker">Everything you need for game weekend in Knoxville—before, during, and after kickoff.</p>
-
-    <section class="actions-row">
-      <a class="btn" id="addNextToCal" href="#" rel="noopener">Add next game to Calendar</a>
-      <a class="btn btn-outline" id="printGuide" href="javascript:window.print()">Print guide</a>
-    </section>
-
     <div class="grid grid-rail">
-      <!-- MAIN COLUMN -->
       <div class="col-main flow">
 
-        <!-- PRE-GAME -->
         <section class="card">
-          <header class="card-h">
-            <h2>Pre-game</h2>
-            <p class="muted">Book early, plan early, and always keep a Plan B.</p>
+          <header class="card-header">
+            <h1 class="h3">Gameday Guide</h1>
+            <div class="chipset">
+              <a class="chip" href="#pre">Pre-game</a>
+              <a class="chip" href="#game">Game-time</a>
+              <a class="chip" href="#post">Post-game</a>
+            </div>
           </header>
-
-          <!-- PSA -->
-          <div class="callout callout-warn">
-            <strong>Book early.</strong> Football weekends sell out across Knoxville and surrounding counties.
-            Reserve <b>4–12+ weeks ahead</b> when you can and always keep a backup plan. If you have
-            friends/family nearby: ask early—rooms across bordering states can fill up on big weekends.
-            Watch for minimum-night policies, event rates, parking fees, and late check-in rules.
-          </div>
-
-          <!-- Lodging Tabs -->
-          <div class="tabs" id="lodgingTabs" data-active="hotels">
-            <div class="tab-bar" role="tablist" aria-label="Lodging options">
-              <button class="tab is-active" data-tab="hotels" role="tab" aria-selected="true">Hotels / Motels</button>
-              <button class="tab" data-tab="rentals" role="tab" aria-selected="false">Short-term rentals</button>
-              <button class="tab" data-tab="camping" role="tab" aria-selected="false">RV & Camping</button>
-            </div>
-
-            <div class="tab-panels">
-              <div id="tab-hotels" class="tab-panel is-active" role="tabpanel">
-                <ul id="hotelsList" class="media-list"></ul>
-              </div>
-
-              <div id="tab-rentals" class="tab-panel" role="tabpanel">
-                <div id="rentalsNotes" class="prose"></div>
-              </div>
-
-              <div id="tab-camping" class="tab-panel" role="tabpanel">
-                <ul id="campList" class="media-list"></ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- Plan B towns -->
-          <details class="details mt-4">
-            <summary><strong>Plan B towns (when Knoxville is sold out)</strong></summary>
-            <ul id="planBList" class="bullet-list mt-3"></ul>
-          </details>
-
-          <!-- Last-minute tactics -->
-          <details class="details mt-3">
-            <summary><strong>Last-minute tactics (day-of booking)</strong></summary>
-            <ul id="tacticsList" class="bullet-list mt-3"></ul>
-          </details>
-
-          <!-- Safety -->
-          <div class="callout callout-safe mt-3">
-            <strong>Safety first.</strong> Please don’t plan to sleep in a car—especially with kids or pets.
-            If you’re stuck late, head toward <b>staffed</b> airport-area hotels, ask to be added to a
-            cancellation list, and keep moving toward Plan B towns. For local assistance resources dial <b>211</b>.
-          </div>
-
-          <!-- Emergency travel bag -->
-          <h3 class="mt-5">Emergency travel bag</h3>
-          <div class="checkgrid" id="emergencyBag"></div>
-
-          <!-- Late-night & 24/7 eats -->
-          <h3 class="mt-5">Late-night & 24/7 eats</h3>
-          <p class="muted">Hours vary by location—tap to map search.</p>
-          <ul id="foodList" class="link-list"></ul>
         </section>
 
-        <!-- GAME-TIME -->
-        <section class="card">
-          <header class="card-h"><h2>Game-time</h2></header>
-          <div class="grid split-2">
-            <div>
-              <h4>All fans</h4>
-              <ul class="bullet-list">
-                <li>Mobile tickets: brightness up and open before the scanners.</li>
-                <li>Hydrate—hot days and night games can both get breezy/cold.</li>
-                <li>Check our <a href="/index.html#scorebox">Live Score Box</a> for quick updates.</li>
+        <!-- Pre-game -->
+        <section id="pre" class="card">
+          <header class="card-header"><h2 class="h4">Pre-game</h2></header>
+          <div class="card-body flow">
+            <p><strong>Book early, plan early.</strong> Knoxville and nearby cities sell out fast on home weekends. Always make a Plan B in surrounding towns.</p>
+
+            <details open>
+              <summary class="h6">Where to stay</summary>
+              <div class="stack-md">
+                <div>
+                  <h3 class="h6">Hotels & Motels</h3>
+                  <ul class="bullets">
+                    <li>Downtown & campus hotels fill first; expand search to West Knoxville, Oak Ridge, Farragut, Sevierville, Alcoa/Maryville.</li>
+                    <li>Expect 2-night minimums and higher rates for big opponents.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 class="h6">Vacation rentals</h3>
+                  <ul class="bullets">
+                    <li>Airbnb/VRBO go fast—book early and verify parking rules.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 class="h6">Campgrounds / RV</h3>
+                  <ul class="bullets">
+                    <li>Look outside Knoxville for availability; confirm hookups and game-day access windows.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 class="h6">Plan B towns</h3>
+                  <p class="muted">Oak Ridge • Sevierville • Pigeon Forge • Gatlinburg • Lenoir City • Loudon • Clinton • Morristown • Jefferson City • Dandridge • Newport • Greeneville • Bristol (tri-cities)</p>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary class="h6">Getting here & parking</summary>
+              <ul class="bullets">
+                <li>Arrive on campus <strong>3–4 hours pre-kick</strong> for big games.</li>
+                <li>Use the live traffic and “mini map” in the right rail to pick faster routes.</li>
+                <li>Rideshare: agree on pickup point away from closures before the game.</li>
               </ul>
-            </div>
-            <div>
-              <h4>Accessibility</h4>
-              <ul class="bullet-list">
-                <li>Use elevators and accessible routes as posted; staff can guide you.</li>
-                <li>Service animals typically permitted—follow venue guidance.</li>
+            </details>
+
+            <details>
+              <summary class="h6">Pack list (go-bag)</summary>
+              <ul class="bullets two-col">
+                <li>Mobile tickets (screen brightness up)</li><li>Clear bag or small clutch</li>
+                <li>Refillable water bottle (if allowed)</li><li>Portable phone charger</li>
+                <li>Rain layer / poncho</li><li>Hat / sunscreen</li>
+                <li>Ear protection for kids</li><li>Cashless payment ready</li>
+                <li>Printed directions as backup</li><li>Small first-aid kit & meds</li>
               </ul>
-            </div>
+            </details>
+
+            <details>
+              <summary class="h6">With kids</summary>
+              <ul class="bullets">
+                <li>Family restrooms and changing tables available—ask nearest staff.</li>
+                <li>Pack wipes and noise protection; halftime can be busy.</li>
+              </ul>
+            </details>
           </div>
         </section>
 
-        <!-- POST-GAME -->
-        <section class="card">
-          <header class="card-h"><h2>Post-game</h2></header>
-          <ul class="bullet-list">
-            <li>Wait <b>20–30 minutes</b> if you parked close—saves time overall.</li>
-            <li>Use side streets or river routes when open to beat the main flow.</li>
-            <li>Walk outside control points before calling rideshare.</li>
-          </ul>
+        <!-- Game-time -->
+        <section id="game" class="card">
+          <header class="card-header"><h2 class="h4">Game-time</h2></header>
+          <div class="card-body flow">
+            <ul class="bullets">
+              <li>Hydration: refill stations at main concourses.</li>
+              <li>Night games get breezy—bring a layer.</li>
+              <li>Mobile tickets: open before scanners to avoid bottlenecks.</li>
+              <li>Concessions: grab at end of quarter to beat lines.</li>
+            </ul>
+            <div class="note">
+              Check our Live Score Box on the home page for in-game updates.
+            </div>
+          </div>
+        </section>
+
+        <!-- Post-game -->
+        <section id="post" class="card">
+          <header class="card-header"><h2 class="h4">Post-game</h2></header>
+          <div class="card-body flow">
+            <ul class="bullets">
+              <li>Wait 20–30 minutes if parked close—saves time overall.</li>
+              <li>Use side streets or river route when open to beat main flow.</li>
+              <li>Walk outside control points before calling rideshare.</li>
+            </ul>
+            <h3 class="h6 mt-2">24/7 food options</h3>
+            <p class="muted">We’ll curate a late-night list; submit suggestions on the listings page.</p>
+          </div>
         </section>
 
       </div>
 
-      <!-- RIGHT RAIL -->
+      <!-- Right rail -->
       <aside class="col-rail flow">
         <section class="card">
-          <header class="card-h"><h3>Weather now</h3></header>
-          <div id="wxNow" class="prose small">Loading…</div>
-        </section>
-
-        <section class="card">
-          <header class="card-h"><h3>Traffic & Map</h3></header>
-          <div class="map-embed">
-            <iframe
-              title="Waze Live Map – Neyland Stadium"
-              src="https://embed.waze.com/iframe?zoom=14&lat=35.955&lon=-83.925&pin=1"
-              width="100%" height="240" allowfullscreen loading="lazy"></iframe>
+          <header class="card-header"><h2 class="h5">Weather now</h2></header>
+          <div id="wx-now" class="card-body">
+            <div class="wx-row"><b id="wx-temp">--</b> <span class="muted">Feels:</span> <span id="wx-feels">--</span></div>
+            <div class="muted small">Wind <span id="wx-wind">--</span> • <span id="wx-city">Knoxville</span></div>
+            <small class="muted">Stadium: <span id="wx-stadium-time">--</span></small>
           </div>
-          <p class="muted small">Pin centers near Neyland. Explore closures & backups.</p>
         </section>
 
         <section class="card">
-          <header class="card-h"><h3>Quick links</h3></header>
-          <ul class="link-list">
-            <li><a href="/schedule.html">Schedule</a></li>
-            <li><a href="/specials.html">Specials</a></li>
-            <li><a href="/map.html">Map</a></li>
-            <li><a href="/submit.html">Submit a listing</a></li>
+          <header class="card-header"><h2 class="h5">Traffic & Map</h2></header>
+          <div class="card-body">
+            <div class="embed-frame mb-2">
+              <iframe title="Waze live map"
+                src="https://embed.waze.com/iframe?zoom=14&lat=35.9549&lon=-83.9250&pin=1"
+                loading="lazy"></iframe>
+            </div>
+            <div class="embed-frame">
+              <iframe title="Campus mini map"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-83.940%2C35.944%2C-83.910%2C35.964&layer=mapnik&marker=35.955%2C-83.925"
+                loading="lazy"></iframe>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <header class="card-header"><h2 class="h5">Quick links</h2></header>
+          <ul class="card-list">
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="specials.html">Specials</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="submit.html">Submit a listing</a></li>
           </ul>
         </section>
       </aside>
@@ -185,175 +185,14 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p class="legal small">
-        Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.
-      </p>
-      <p class="links small">
-        <a href="/guide.html">Guide</a> · <a href="/specials.html">Specials</a> · <a href="/map.html">Map</a> ·
-        <a href="/schedule.html">Schedule</a> · <a href="/submit.html">Submit</a>
-      </p>
+      <p class="muted">Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+      <nav class="foot-nav">
+        <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> · <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
+      </nav>
     </div>
   </footer>
 
-  <script src="/assets/js/app.js?v=2025-08-30"></script>
-  <script>
-  // -------- Guide wiring (no placeholders) --------
-  (async () => {
-    // Add-to-calendar points to Google Calendar template for the next game (if available)
-    try {
-      const schedule = await fetch('/data/schedule.json', {cache:'no-store'}).then(r => r.json());
-      const games = Array.isArray(schedule) ? schedule : (schedule.games || []);
-      const next = games.find(g => new Date(g.start) > new Date());
-      const btn = document.getElementById('addNextToCal');
-      if (next && btn) {
-        const start = new Date(next.start);
-        const end = new Date(start.getTime() + 3*60*60*1000); // +3h default
-        const pad = n => String(n).padStart(2,'0');
-        const fmt = d =>
-          d.getUTCFullYear().toString() +
-          pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) + 'T' +
-          pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + '00Z';
-        const title = encodeURIComponent(`Tennessee vs ${next.opponent}`);
-        const details = encodeURIComponent('Unofficial fan hub — tennessee gameday guide');
-        const location = encodeURIComponent(next.isHome ? 'Neyland Stadium, Knoxville, TN' : 'Away');
-        const href = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&location=${location}&details=${details}`;
-        btn.href = href;
-        btn.target = '_blank';
-        btn.rel = 'noopener';
-      } else if (btn) {
-        btn.classList.add('is-disabled');
-        btn.setAttribute('aria-disabled', 'true');
-      }
-    } catch(e){ console.warn('calendar link', e); }
-
-    // Countdown (top header)
-    try {
-      const schedule = await fetch('/data/schedule.json', {cache:'no-store'}).then(r => r.json());
-      const games = Array.isArray(schedule) ? schedule : (schedule.games || []);
-      const next = games.find(g => new Date(g.start) > new Date());
-      if (next) {
-        const tgt = new Date(next.start);
-        const tick = () => {
-          const now = new Date();
-          const diff = Math.max(0, tgt - now);
-          const d = Math.floor(diff / 86400000);
-          const h = Math.floor((diff % 86400000)/3600000);
-          const m = Math.floor((diff % 3600000)/60000);
-          const s = Math.floor((diff % 60000)/1000);
-          document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
-          document.getElementById('cd-hrs').textContent = String(h).padStart(2,'0');
-          document.getElementById('cd-min').textContent = String(m).padStart(2,'0');
-          document.getElementById('cd-sec').textContent = String(s).padStart(2,'0');
-        };
-        tick(); setInterval(tick, 1000);
-      }
-    } catch(e){}
-
-    // Weather (simple, Knoxville fixed – can be swapped for API later)
-    try {
-      const wx = await fetch('/data/weather.json', {cache:'no-store'}).then(r=>r.json());
-      const n = document.getElementById('wxNow');
-      if (wx && n) {
-        n.innerHTML = `<div><b>${wx.tempF}°F</b> · Feels ${wx.feelsF}° · Wind ${wx.wind}</div>
-        <div class="muted small">Knoxville just now. ${wx.note||''}</div>`;
-      }
-    } catch(e){}
-
-    // Guide data
-    const data = await fetch('/data/guide.json', {cache:'no-store'}).then(r => r.json());
-
-    // Hotels
-    const hotelsList = document.getElementById('hotelsList');
-    (data.lodging.hotels || []).forEach(h => {
-      const li = document.createElement('li');
-      li.className = 'media';
-      li.innerHTML = `
-        <div class="media-bd">
-          <div class="media-title">${h.name} <span class="tag">${h.area||''}</span></div>
-          <div class="media-meta">
-            ${h.distance_mi?`<span>${h.distance_mi} mi</span>`:''}
-            ${h.drive_min?`<span>${h.drive_min} min</span>`:''}
-            ${h.phone?`<a href="tel:${h.phone.replace(/[^0-9]/g,'')}" class="link">Call</a>`:''}
-            ${h.url?`<a href="${h.url}" class="link" target="_blank" rel="noopener">Website</a>`:''}
-          </div>
-          ${h.notes?`<p class="muted small">${h.notes}</p>`:''}
-        </div>`;
-      hotelsList.appendChild(li);
-    });
-
-    // Rentals notes
-    const rentalsNotes = document.getElementById('rentalsNotes');
-    if (rentalsNotes && data.lodging.rentals) {
-      rentalsNotes.innerHTML = `
-        <p><b>Short-term rentals</b> book up quickly—verify parking, house rules, quiet hours, and cancellation terms. When in doubt, message the host about arrival time and gameday traffic.</p>
-        <ul class="bullet-list">
-          <li>Search radius: North Knoxville, South Knoxville, Fountain City, Bearden, Sequoyah Hills.</li>
-          <li>Check walkability; rideshare surge pricing can spike after the game.</li>
-          <li>Back-up plan: filter by “free cancellation.”</li>
-        </ul>`;
-    }
-
-    // Camping
-    const campList = document.getElementById('campList');
-    (data.lodging.camping || []).forEach(c => {
-      const li = document.createElement('li');
-      li.className = 'media';
-      li.innerHTML = `
-        <div class="media-bd">
-          <div class="media-title">${c.name} <span class="tag">${c.area||''}</span></div>
-          <div class="media-meta">
-            ${c.drive_min?`<span>${c.drive_min} min</span>`:''}
-            ${c.hookups?`<span>hookups</span>`:''}
-            ${c.url?`<a href="${c.url}" class="link" target="_blank" rel="noopener">Website</a>`:''}
-          </div>
-          ${c.notes?`<p class="muted small">${c.notes}</p>`:''}
-        </div>`;
-      campList.appendChild(li);
-    });
-
-    // Plan B towns
-    const planBList = document.getElementById('planBList');
-    (data.lodging.planB || []).forEach(p => {
-      const li = document.createElement('li');
-      li.innerHTML = `<b>${p.area}</b> — ${p.drive_range}${p.notes?` · <span class="muted">${p.notes}</span>`:''}`;
-      planBList.appendChild(li);
-    });
-
-    // Tactics
-    const tacticsList = document.getElementById('tacticsList');
-    (data.lodging.tactics || []).forEach(t => {
-      const li = document.createElement('li'); li.textContent = t; tacticsList.appendChild(li);
-    });
-
-    // Emergency bag
-    const bag = document.getElementById('emergencyBag');
-    (data.emergency_bag || []).forEach(group => {
-      const box = document.createElement('div');
-      box.className = 'checkgrid-box';
-      box.innerHTML = `<h5>${group.title}</h5>` +
-        group.items.map(i => `<label class="check"><input type="checkbox"> <span>${i}</span></label>`).join('');
-      bag.appendChild(box);
-    });
-
-    // Late-night & 24/7 eats
-    const foodList = document.getElementById('foodList');
-    (data.food_247 || []).forEach(f => {
-      const li = document.createElement('li');
-      li.innerHTML = `<a target="_blank" rel="noopener" href="${f.map}">${f.title}</a><span class="muted"> — ${f.note}</span>`;
-      foodList.appendChild(li);
-    });
-
-    // Tabs behavior
-    document.querySelectorAll('.tabs .tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.tab;
-        btn.closest('.tabs').querySelectorAll('.tab').forEach(b => b.classList.toggle('is-active', b===btn));
-        btn.closest('.tabs').querySelectorAll('.tab-panel').forEach(p => {
-          p.classList.toggle('is-active', p.id === 'tab-'+id);
-        });
-      });
-    });
-  })();
-  </script>
+  <script src="assets/js/app.js?v=2025-08-30"></script>
+  <script src="assets/js/live.js?v=2025-08-30"></script>
 </body>
 </html>
