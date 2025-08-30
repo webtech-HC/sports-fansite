@@ -1,25 +1,4 @@
-{
-  "team": "Tennessee",
-  "year": 2025,
-  "week": 1,
-  "fetchedAt": "2025-08-30T16:10:47.251Z",
-  "game": {
-    "id": 401752676,
-    "start": "2025-08-30T16:00:00.000Z",
-    "status": "scheduled",
-    "home": "Tennessee",
-    "away": "Syracuse",
-    "home_points": null,
-    "away_points": null,
-    "period": null,
-    "clock": null,
-    "tv": null,
-    "venue": {
-      "name": null,
-      "city": null,
-      "state": null,
-      "latitude": null,
-      "longitude": null
-    }
-  }
-}
+{"status":"none"}
+{"status":"pre","home":{"name":"Tennessee"},"away":{"name":"Syracuse"},"clock":"12:00"}
+{"status":"in_progress","home":{"name":"Tennessee","score":17},"away":{"name":"Syracuse","score":10},"clock":"Q3 08:21"}
+{"status":"final","home":{"name":"Tennessee","score":31},"away":{"name":"Syracuse","score":20}}
