@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tennessee — Gameday Hub</title>
-  <meta name="description" content="Unofficial Tennessee Vols gameday hub: schedule, live weather, TV info, specials, and more." />
+  <meta name="description" content="Unofficial Tennessee Vols gameday hub: schedule, live weather, traffic, TV info, specials, and more." />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -78,8 +78,34 @@
         </div>
       </article>
 
-      <!-- Rail -->
+      <!-- ===== Right Rail ===== -->
       <aside class="rail">
+
+        <!-- NEW: Live Traffic (Waze) -->
+        <article class="card">
+          <div class="card-head"><h3 class="card-title">Live Traffic (Neyland)</h3></div>
+          <div class="card-body traffic-embed">
+            <iframe
+              title="Waze Live Traffic — Neyland Stadium area"
+              src="https://embed.waze.com/iframe?zoom=14&lat=35.9540&lon=-83.9250&pin=1"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <div class="tiny meta">Data: Waze Live Map</div>
+          </div>
+        </article>
+
+        <!-- Mini Map (OSM) -->
+        <article class="card">
+          <div class="card-head"><h3 class="card-title">Mini Map</h3></div>
+          <div class="card-body mini-map">
+            <iframe title="Neyland Stadium Map"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.9300%2C35.9505%2C-83.9200%2C35.9575&layer=mapnik&marker=35.9540%2C-83.9250"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <a class="map-open" target="_blank" rel="noopener"
+               href="https://www.openstreetmap.org/?mlat=35.9540&mlon=-83.9250#map=16/35.9540/-83.9250">Open full map</a>
+          </div>
+        </article>
+
         <article class="card">
           <div class="card-head"><h3 class="card-title">Quick Links</h3></div>
           <div class="card-body small links">
@@ -88,18 +114,6 @@
             <a href="map.html">Map</a>
             <a href="schedule.html">Schedule</a>
             <a href="submit.html">Submit a listing</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head"><h3 class="card-title">Mini Map</h3></div>
-          <div class="card-body mini-map">
-            <!-- OpenStreetMap embed — centered on Neyland Stadium -->
-            <iframe title="Neyland Stadium Map"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.9300%2C35.9505%2C-83.9200%2C35.9575&layer=mapnik&marker=35.9540%2C-83.9250"
-              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <a class="map-open" target="_blank" rel="noopener"
-               href="https://www.openstreetmap.org/?mlat=35.9540&mlon=-83.9250#map=16/35.9540/-83.9250">Open full map</a>
           </div>
         </article>
       </aside>
