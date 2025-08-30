@@ -3,69 +3,89 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tennessee — Submit a Listing</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Submit a Listing</title>
+  <meta name="description" content="Share a restaurant/bar special, event, or tip with fans." />
+  <link rel="icon" href="assets/img/tn-badge.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-30" />
 </head>
-<body>
+<body class="page page-submit">
+
   <header class="site-header">
-    <div class="brand">
-      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
-    </div>
-    <div class="header-countdown">
-      <div id="countdown" class="countdown">
-        <span class="cd-pill">00</span><span class="cd-label">days</span>
-        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
-        <span class="cd-pill">00</span><span class="cd-label">mins</span>
-        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="Tennessee home">
+        <span class="brand-badge">TN</span><span class="brand-wordmark">Tennessee</span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="schedule.html">Schedule</a>
+        <a href="specials.html">Specials</a>
+        <a href="map.html">Map</a>
+        <a href="guide.html">Guide</a>
+      </nav>
+      <div id="countdown" class="countdown-header" aria-live="polite">
+        <div class="pill"><b id="cd-days">00</b><span>days</span></div>
+        <div class="pill"><b id="cd-hrs">00</b><span>hrs</span></div>
+        <div class="pill"><b id="cd-min">00</b><span>mins</span></div>
+        <div class="pill"><b id="cd-sec">00</b><span>secs</span></div>
       </div>
-      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+      <a class="btn btn-small btn-accent" href="submit.html" aria-current="page">Submit</a>
     </div>
-    <nav class="site-nav">
-      <a href="schedule.html">Schedule</a>
-      <a href="specials.html">Specials</a>
-      <a href="map.html">Map</a>
-      <a href="guide.html">Guide</a>
-      <a class="btn active" href="submit.html">Submit</a>
-    </nav>
   </header>
 
-  <main class="wrap">
-    <section class="grid grid-single">
-      <article class="card card-span2">
-        <div class="card-head"><h1 class="card-title">Submit a Listing</h1></div>
-        <div class="card-body">
-          <p class="small">This sends us an email with your details. We’ll review and publish.</p>
-          <form id="submitForm" class="form">
-            <div class="field">
-              <label>Business / Event Name</label>
-              <input id="fName" type="text" placeholder="Checkerboard Tavern" required />
-            </div>
-            <div class="field">
-              <label>Category</label>
-              <select id="fCat">
-                <option>Food &amp; Drink</option>
-                <option>Shop</option>
-                <option>Event</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Details</label>
-              <textarea id="fDetails" rows="5" placeholder="Happy hour 4–7pm, wings + pitchers…"></textarea>
-            </div>
-            <div class="actions">
-              <button type="submit" class="btn">Send</button>
-              <button type="reset" class="btn ghost">Reset</button>
-            </div>
-          </form>
-        </div>
-      </article>
-    </section>
+  <main class="wrap main-grid">
+    <div class="grid grid-rail">
+      <div class="col-main flow">
+        <section class="card">
+          <header class="card-header"><h1 class="h3">Submit a listing</h1></header>
+          <div class="card-body flow">
+            <p>Send us your game-week special, event, parking tip, or service that helps fans.</p>
+            <form class="stack-md" action="https://formspree.io/f/your-id" method="POST">
+              <div class="grid grid-2">
+                <label class="form-field">Name<input required name="name" type="text" /></label>
+                <label class="form-field">Email<input required name="email" type="email" /></label>
+              </div>
+              <label class="form-field">Listing title<input required name="title" type="text" /></label>
+              <label class="form-field">Details<textarea required name="details" rows="6"></textarea></label>
+              <div class="grid grid-2">
+                <label class="form-field">Category
+                  <select name="category">
+                    <option>Food/Drink special</option>
+                    <option>Event</option>
+                    <option>Parking/Travel</option>
+                    <option>Service</option>
+                  </select>
+                </label>
+                <label class="form-field">Website or link<input name="url" type="url" placeholder="https://…" /></label>
+              </div>
+              <button class="btn btn-accent" type="submit">Send</button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <aside class="col-rail flow">
+        <section class="card">
+          <header class="card-header"><h2 class="h5">Quick links</h2></header>
+          <ul class="card-list">
+            <li><a href="guide.html">Guide</a></li>
+            <li><a href="specials.html">Specials</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
   </main>
 
   <footer class="site-footer">
-    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
+    <div class="wrap">
+      <p class="muted">Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+      <nav class="foot-nav">
+        <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> · <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
+      </nav>
+    </div>
   </footer>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=2025-08-30"></script>
+  <script src="assets/js/live.js?v=2025-08-30"></script>
 </body>
 </html>
