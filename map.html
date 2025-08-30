@@ -3,63 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Map • Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-2">
+  <title>Interactive Map — Tennessee</title>
+  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-3">
+  <script defer src="/sports-fansite/assets/js/app.js?v=2025-08-30-3"></script>
 </head>
 <body>
-<header class="site-header">
-  <a class="brand" href="index.html"><span class="brand-badge">TN</span><span class="brand-name">Tennessee</span></a>
-  <nav class="main-nav">
-    <a href="schedule.html">Schedule</a>
-    <a href="specials.html">Specials</a>
-    <a class="is-active" href="map.html">Map</a>
-    <a href="guide.html">Guide</a>
-  </nav>
-  <div class="countdown" id="countdown">
-    <span><b id="cd-days">00</b><em>days</em></span>
-    <span><b id="cd-hrs">00</b><em>hrs</em></span>
-    <span><b id="cd-min">00</b><em>mins</em></span>
-    <span><b id="cd-sec">00</b><em>secs</em></span>
+<header class="siteHeader">
+  <div class="wrap">
+    <a class="brand" href="/sports-fansite/"><span class="logo">TN</span><span class="brandText">Tennessee</span></a>
+    <nav class="primaryNav">
+      <a href="/sports-fansite/schedule.html">Schedule</a>
+      <a href="/sports-fansite/specials.html">Specials</a>
+      <a href="/sports-fansite/map.html">Map</a>
+      <a href="/sports-fansite/guide.html">Guide</a>
+    </nav>
+    <div id="countdown" class="countdown">
+      <span class="pill" id="cd-days">00</span><span class="pill" id="cd-hrs">00</span><span class="pill" id="cd-min">00</span><span class="pill" id="cd-sec">00</span>
+    </div>
+    <a class="btnPrimary" href="/sports-fansite/submit.html">Submit</a>
   </div>
-  <a class="btn btn-primary" href="submit.html">Submit</a>
 </header>
 
-<main class="wrap grid grid--2col">
-  <section class="card">
-    <header class="card-h"><h1>Interactive map</h1></header>
-    <div class="card-b">
-      <iframe title="Knoxville map"
-        style="border:0;width:100%;height:260px;border-radius:10px;"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-83.995%2C35.90%2C-83.85%2C36.00&layer=mapnik&marker=35.955%2C-83.925"
-        loading="lazy"></iframe>
-      <p><a class="muted" href="https://www.openstreetmap.org/#map=13/35.955/-83.925" target="_blank" rel="noopener">Open full map</a></p>
-    </div>
+<main class="wrapMain pageGrid">
+  <section class="stack">
+    <article class="card">
+      <h2>Interactive map</h2>
+      <iframe title="Map" src="https://www.openstreetmap.org/export/embed.html?bbox=-83.98,35.92,-83.87,35.99&layer=mapnik"
+        width="100%" height="360" style="border:0; border-radius:12px;"></iframe>
+      <p><a class="muted" target="_blank" href="https://www.openstreetmap.org/#map=13/35.955/-83.925">Open full map</a></p>
+    </article>
   </section>
 
-  <aside class="card">
-    <header class="card-h"><h3>Quick links</h3></header>
-    <ul class="card-b list-links">
-      <li><a href="guide.html">Guide</a></li>
-      <li><a href="specials.html">Specials</a></li>
-      <li><a href="schedule.html">Schedule</a></li>
-      <li><a href="submit.html">Submit a listing</a></li>
-    </ul>
+  <aside class="rail">
+    <article class="card">
+      <h2>Quick links</h2>
+      <ul>
+        <li><a href="/sports-fansite/guide.html">Guide</a></li>
+        <li><a href="/sports-fansite/specials.html">Specials</a></li>
+        <li><a href="/sports-fansite/schedule.html">Schedule</a></li>
+        <li><a href="/sports-fansite/submit.html">Submit a listing</a></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h2>Live traffic (Waze)</h2>
+      <iframe title="Waze" src="https://embed.waze.com/iframe?zoom=14&lat=35.955&lon=-83.925&pin=1" width="100%" height="260" style="border:0; border-radius:12px;"></iframe>
+    </article>
   </aside>
-
-  <section class="card span-2">
-    <header class="card-h"><h2>Live traffic (Waze)</h2></header>
-    <div class="card-b">
-      <iframe title="Waze live"
-        style="border:0;width:100%;height:260px;border-radius:10px;"
-        src="https://embed.waze.com/iframe?zoom=14&lat=35.9549&lon=-83.9263&pin=1"
-        loading="lazy"></iframe>
-    </div>
-  </section>
 </main>
 
-<footer class="site-foot">
-  <p class="muted">Unofficial fan resource.</p>
-</footer>
-<script src="/sports-fansite/assets/js/app.js?v=2025-08-30-2"></script>
+<footer class="footer"><div class="inner">Unofficial fan resource.</div></footer>
 </body>
 </html>
