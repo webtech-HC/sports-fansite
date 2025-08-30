@@ -3,44 +3,75 @@ name: Update scoreboard.json (CFBD)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/1 * * * *"   # every minute
+    - cron: "*/5 * * * *"   # ~every 5 minutes
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: scoreboard
+  cancel-in-progress: true
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Fetch TN scoreboard from CFBD
         env:
-          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFBD_KEY: ${{ secrets.CFBD_KEY }}
         run: |
-          YEAR=$(date +%Y)
-          # Get today’s games and try to find Tennessee (home or away)
-          curl -s -H "Authorization: Bearer $CFBD_API_KEY" \
-            "https://api.collegefootballdata.com/scoreboard?year=$YEAR&classification=fbs" > sb_raw.json
+          set -euo pipefail
 
-          jq '(.games // []) | map(select((.homeTeam|ascii_downcase|test("tennessee")) or (.awayTeam|ascii_downcase|test("tennessee")))) | .[0]' sb_raw.json > sb_one.json
+          # 1) Primary: near-live scoreboard (filter by team)
+          curl -fsSL "https://api.collegefootballdata.com/scoreboard?classification=fbs&team=Tennessee" \
+            -H "Authorization: Bearer ${CFBD_KEY}" \
+            -o tmp-score.json
 
-          if [ "$(jq -r 'type' sb_one.json)" = "null" ] || [ "$(jq -r '.id' sb_one.json)" = "null" ]; then
-            echo '{"status":"none"}' > data/scoreboard.json
-          else
-            # Map CFBD fields into our simple shape
-            jq '{
-                status: (if .status == "final" then "final"
-                         elif .status == "in_progress" then "in_progress"
-                         elif .status == "scheduled" or .status == "pre" then "pre"
-                         else .status end),
-                clock: (.period + " " + (.clock // "") // ""),
-                home: { name: .homeTeam, score: (.homeScore // 0) },
-                away: { name: .awayTeam, score: (.awayScore // 0) }
-              }' sb_one.json > data/scoreboard.json
-          fi
+          node <<'NODE'
+          const fs = require('fs');
 
-      - name: Commit update
-        run: |
-          git config user.name "scorebot"
-          git config user.email "scorebot@users.noreply.github.com"
-          git add data/scoreboard.json
-          git commit -m "auto: scoreboard refresh" || echo "No changes"
-          git push
+          function mapStatus(s='') {
+            s = s.toLowerCase();
+            if (s.includes('in progress')) return 'in_progress';
+            if (s.includes('final'))        return 'final';
+            if (s.includes('scheduled') || s==='pre') return 'pre';
+            if (s.includes('postponed'))   return 'postponed';
+            if (s.includes('canceled'))    return 'canceled';
+            return 'none';
+          }
+
+          function normalizeFromScoreboard(arr) {
+            const isTN = s => (s||'').toLowerCase().includes('tennessee');
+            const g = (Array.isArray(arr)?arr:[]).find(x => isTN(x.home_team) || isTN(x.away_team));
+            if (!g) return null;
+            return {
+              status: mapStatus(g.status),
+              home: { name: g.home_team, score: g.home_points ?? '' },
+              away: { name: g.away_team, score: g.away_points ?? '' },
+              clock: g.period ? `Q${g.period} ${g.clock ?? ''}` : (g.clock ?? ''),
+              start: g.start_date || null
+            };
+          }
+
+          let arr = [];
+          try { arr = JSON.parse(fs.readFileSync('tmp-score.json','utf8')); } catch {}
+          let out = normalizeFromScoreboard(arr) || { status:'none' };
+
+          fs.mkdirSync('data', { recursive: true });
+          fs.writeFileSync('data/scoreboard.json', JSON.stringify(out, null, 2));
+          NODE
+
+      - name: Create/update PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: bots/scoreboard
+          title: "scoreboard: refresh"
+          commit-message: "scoreboard: refresh"
+          add-paths: |
+            data/scoreboard.json
+          delete-branch: true
