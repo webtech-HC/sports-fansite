@@ -5,57 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TENNESSEE — Gameday Hub (Unofficial)</title>
 
-  <meta name="build" content="v=2025-08-28-9" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-9" />
-  <meta name="description" content="Tennessee football gameday hub: schedule, odds, map, and more." />
-  <link rel="icon" href="assets/favicon.svg" />
+  <!-- theme -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=ab2-1" />
 
-  <!-- Minimal hero + wordmark without images -->
+  <!-- AB-2 layout helpers (tiny, scoped) -->
   <style>
-    :root{
-      --ut-orange:#FF8200;
-      --ink-900:#0b0e12;
-    }
-    .hero{
-      position:relative;
-      padding:clamp(28px,6vw,84px) 0;
+    :root { --gap: 16px; }
+
+    /* Compact hero strip (image-free) */
+    .compact-hero {
       background:
-        radial-gradient(120% 70% at 50% 0%, rgba(255,130,0,.18), transparent 60%),
+        radial-gradient(120% 70% at 50% 0%, rgba(255,130,0,.12), transparent 60%),
         linear-gradient(180deg, #0d1015 0%, #0b0e12 60%, #0a0c10 100%);
-      text-align:center;
-      overflow:hidden;
+      border: 1px solid var(--line-700);
+      border-radius: 14px;
+      padding: clamp(16px, 3.5vw, 28px);
+      margin: 16px 0 12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.35);
     }
-    .hero::before{
-      /* subtle field bands, purely decorative */
-      content:"";
-      position:absolute; inset:0;
-      background:
-        linear-gradient( to bottom,
-          rgba(255,255,255,.06) 0 2px,
-          transparent 2px 40px) repeat-y;
-      background-size:100% 42px;
-      opacity:.12;
-      pointer-events:none;
+    .compact-hero .brandline {
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
     }
-    .wordmark{
-      margin:0 auto;
-      font-size:clamp(40px, 11vw, 120px);
-      line-height:1;
-      letter-spacing:.02em;
-      font-weight:800;
-      color:var(--ut-orange);
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 14px 28px rgba(0,0,0,.5);
+    .compact-hero h1 {
+      margin: 0;
+      font: 800 clamp(20px, 6vw, 36px)/1.05 system-ui, sans-serif;
+      letter-spacing: .5px;
+      color: var(--ut-orange);
+      text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 10px 22px rgba(0,0,0,.45);
       -webkit-text-stroke: 1px rgba(0,0,0,.35);
     }
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+    .compact-hero p { margin: 2px 0 0; color: var(--fg-500); }
+    .compact-hero .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+    /* 12-col grid utilities */
+    .g12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+    .span-12{ grid-column: span 12 }
+    .span-9 { grid-column: span 9 }
+    .span-6 { grid-column: span 6 }
+    .span-4 { grid-column: span 4 }
+    .span-3 { grid-column: span 3 }
+    @media (max-width: 980px){ .span-9{grid-column:span 12} }
+    @media (max-width: 760px){ .span-6,.span-4,.span-3{grid-column:span 12} }
+
+    /* Sticky right rail */
+    .rail { position: sticky; top: 12px; }
+
+    /* Mini stat cards */
+    .ministat .card-bd { display: grid; gap: 6px; }
+    .score-mini { font: 900 clamp(18px, 4.5vw, 28px)/1 system-ui, sans-serif; letter-spacing:.5px; }
+
+    /* Table feature emphasis */
+    .feature { box-shadow: 0 10px 25px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.3); }
+
+    /* Simple placeholder lists */
+    .bullets { margin: 0; padding-left: 16px; color: var(--fg-300); }
+    .bullets li { margin: .25em 0; }
   </style>
 </head>
 <body>
-
   <a class="skip" href="#main">Skip to content</a>
 
+  <!-- Top bar -->
   <header class="topbar">
     <div class="brand">TN</div>
     <nav class="nav">
@@ -67,151 +77,190 @@
     </nav>
   </header>
 
-  <!-- HERO (no images) -->
-  <section class="hero" aria-label="Hero">
-    <h1 class="wordmark" aria-label="Tennessee">TENNESSEE</h1>
-  </section>
-
   <main id="main" class="wrap">
-    <p class="muted">Fan-run. Unofficial. Built by fans for fans.</p>
 
-    <!-- Live Score Box -->
-    <section class="card" id="livebox" aria-label="Live Score Box">
-      <header class="card-hd">
-        <h2 class="card-ttl">Live Score Box</h2>
-        <div class="card-meta"><span data-line="status">—</span></div>
-      </header>
-      <div class="card-bd">
-        <div class="row">
-          <div class="grow">
-            <strong data-line="match">Tennessee</strong>
-            <div class="muted">No game in progress.</div>
+    <!-- =============== COMPACT HERO STRIP (B style) =============== -->
+    <section class="compact-hero">
+      <div class="brandline">
+        <h1>TENNESSEE • Gameday Hub</h1>
+        <p class="muted">Fan-run. Unofficial. Built by fans for fans.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="schedule.html">View Schedule</a>
+        <a class="btn btn-small" href="specials.html" style="--bg:transparent;color:var(--fg-100);border:1px solid var(--line-700)">Find Specials</a>
+        <a class="btn btn-small" href="submit.html" style="--bg:transparent;color:var(--fg-100);border:1px solid var(--line-700)">Submit a Listing</a>
+      </div>
+    </section>
+
+    <!-- =============== 3-UP STATS STRIP (B style) =============== -->
+    <section class="g12">
+
+      <!-- Live Score (mini) — uses #livebox so app.js can populate -->
+      <article class="span-4 card ministat" id="livebox" aria-label="Live Score Box">
+        <header class="card-hd">
+          <h2 class="card-ttl">Live Score</h2>
+          <div class="card-meta"><span data-line="status">—</span></div>
+        </header>
+        <div class="card-bd">
+          <strong data-line="match">Tennessee</strong>
+          <div class="score-mini" data-line="score">—</div>
+          <p class="muted">Auto-updates when a game is live.</p>
+        </div>
+      </article>
+
+      <!-- Upcoming (mini) — uses #quick + addToCalendar button -->
+      <article class="span-4 card ministat" id="quickcard" aria-label="Upcoming Game">
+        <header class="card-hd"><h2 class="card-ttl">Upcoming</h2></header>
+        <div class="card-bd" id="quick">
+          <div class="h5" data-line="headline">Loading…</div>
+          <div class="muted" data-line="sub"></div>
+          <button class="btn btn-small" id="addToCalendar" disabled>Add to Calendar</button>
+        </div>
+      </article>
+
+      <!-- Weather (mini) — static shell for now -->
+      <article class="span-4 card ministat" aria-label="Weather">
+        <header class="card-hd"><h2 class="card-ttl">Weather (3-day)</h2></header>
+        <div class="card-bd">
+          <ul class="weather3">
+            <li>Fri — — —</li>
+            <li>Sat — — —</li>
+            <li>Sun — — —</li>
+          </ul>
+          <p class="muted">Forecasts change—check again closer to kickoff.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- =============== MAGAZINE GRID + RIGHT RAIL =============== -->
+    <section class="g12" style="margin-top: 16px">
+
+      <!-- LEFT: magazine content (span-9) -->
+      <div class="span-9">
+
+        <!-- Feature: Schedule (Primary) — uses #sched + [data-last-updated] -->
+        <section class="card feature" aria-label="Schedule & Results">
+          <header class="card-hd">
+            <h2 class="card-ttl">Schedule & Results</h2>
+            <small class="muted">Data updated — <span data-last-updated>Loading…</span>.</small>
+          </header>
+          <div class="card-bd">
+            <div class="table-wrap">
+              <table class="table" aria-describedby="snote">
+                <thead>
+                  <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
+                </thead>
+                <tbody id="sched"><tr><td colspan="5">Loading…</td></tr></tbody>
+              </table>
+            </div>
+            <p id="snote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
           </div>
-          <div class="score" data-line="score">—</div>
+        </section>
+
+        <!-- Two-up: Specials + Guide Highlights -->
+        <div class="g12">
+          <section class="span-6 card" aria-label="Featured Specials">
+            <header class="card-hd"><h2 class="card-ttl">Featured Specials</h2></header>
+            <div class="card-bd">
+              <p class="muted">Community-submitted; call ahead to confirm.</p>
+              <div id="specialsGrid"><!-- optional: fill later --></div>
+            </div>
+          </section>
+
+          <section class="span-6 card" aria-label="Gameday Guide Highlights">
+            <header class="card-hd"><h2 class="card-ttl">Gameday Guide — Highlights</h2></header>
+            <div class="card-bd">
+              <ul class="bullets">
+                <li>Arrive early; expect closures near campus.</li>
+                <li>Clear-bag policies common; verify venue rules.</li>
+                <li>Hydrate; many vendors are cashless.</li>
+                <li>Accessibility: shuttles, elevators, ADA seating.</li>
+              </ul>
+            </div>
+          </section>
         </div>
-      </div>
-    </section>
 
-    <!-- Upcoming game quick card -->
-    <section class="card" id="quickcard" aria-label="Upcoming Game">
-      <header class="card-hd"><h2 class="card-ttl">Upcoming Game</h2></header>
-      <div id="quick" class="card-bd">
-        <p class="h5" data-line="headline">Loading...</p>
-        <p class="muted" data-line="sub"></p>
-        <button class="btn btn-small" id="addToCalendar" disabled>Add to Calendar</button>
-      </div>
-    </section>
-
-    <!-- Weather shell -->
-    <section class="card" aria-label="Weather (3-day)">
-      <header class="card-hd"><h2 class="card-ttl">Weather (3-day)</h2></header>
-      <div class="card-bd">
-        <ul class="weather3">
-          <li>Fri — — —</li>
-          <li>Sat — — —</li>
-          <li>Sun — — —</li>
-        </ul>
-        <p class="muted">Forecasts change—check again closer to kickoff.</p>
-      </div>
-    </section>
-
-    <!-- This Week in Knoxville -->
-    <section class="card" aria-label="This Week in Knoxville">
-      <header class="card-hd"><h2 class="card-ttl">This Week in Knoxville</h2></header>
-      <div class="card-bd">
-        <ul class="list">
-          <li>Market Square Live Music</li>
-          <li>Old City Night Market</li>
-          <li>Downtown Brunch Crawl</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Schedule & Results (Tennessee only) -->
-    <section class="card" aria-label="Schedule & Results">
-      <header class="card-hd">
-        <h2 class="card-ttl">Schedule & Results</h2>
-        <small class="muted">Data updated — <span data-last-updated>Loading…</span>.</small>
-      </header>
-      <div class="card-bd">
-        <div class="table-wrap">
-          <table class="table" aria-describedby="snote">
-            <thead>
-              <tr>
-                <th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th>
-              </tr>
-            </thead>
-            <tbody id="sched"><tr><td colspan="5">Loading…</td></tr></tbody>
-          </table>
+        <!-- Four-up: Editorial tiles (placeholders you can replace) -->
+        <div class="g12">
+          <section class="span-3 card" aria-label="Dining Picks">
+            <header class="card-hd"><h2 class="card-ttl">Dining Picks</h2></header>
+            <div class="card-bd"><ul class="bullets"><li>Lorem ipsum dolor</li><li>Sit amet</li><li>Consectetur</li></ul></div>
+          </section>
+          <section class="span-3 card" aria-label="Pre-game">
+            <header class="card-hd"><h2 class="card-ttl">Pre-game</h2></header>
+            <div class="card-bd"><ul class="bullets"><li>Tailgate zones</li><li>Meetups</li><li>Parking tips</li></ul></div>
+          </section>
+          <section class="span-3 card" aria-label="Post-game">
+            <header class="card-hd"><h2 class="card-ttl">Post-game</h2></header>
+            <div class="card-bd"><ul class="bullets"><li>Open late</li><li>Live music</li><li>Safe rides</li></ul></div>
+          </section>
+          <section class="span-3 card" aria-label="Deals">
+            <header class="card-hd"><h2 class="card-ttl">Deals</h2></header>
+            <div class="card-bd"><ul class="bullets"><li>Weekend promos</li><li>Student IDs</li><li>Family specials</li></ul></div>
+          </section>
         </div>
-        <p id="snote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
+
+        <!-- Longform / This Week -->
+        <section class="card" aria-label="This Week in Knoxville">
+          <header class="card-hd"><h2 class="card-ttl">This Week in Knoxville</h2></header>
+          <div class="card-bd">
+            <p class="muted">Short editorial intro (2–3 sentences). Replace this with real copy or a feed.</p>
+            <ul class="bullets">
+              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+              <li>Integer posuere erat a ante venenatis dapibus posuere velit.</li>
+              <li>Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</li>
+            </ul>
+          </div>
+        </section>
       </div>
+
+      <!-- RIGHT: sticky rail (A style) -->
+      <aside class="span-3">
+        <div class="card rail" aria-label="Right Rail">
+          <header class="card-hd"><h2 class="card-ttl">Map (mini)</h2></header>
+          <div class="card-bd">
+            <p class="muted">Interactive map coming soon (pins + “Open now”).</p>
+            <div style="height:160px; border:1px dashed var(--line-700); border-radius:10px;"></div>
+          </div>
+
+          <div class="card-bd" style="border-top:1px solid var(--line-700)">
+            <h3 class="card-ttl" style="font-size:1rem">Submit a Listing</h3>
+            <p class="muted">Restaurant, bar, shop, or event with a gameday special?</p>
+            <a class="btn btn-small" href="submit.html">Open form</a>
+          </div>
+
+          <div class="card-bd" style="border-top:1px solid var(--line-700)">
+            <h3 class="card-ttl" style="font-size:1rem">Newsletter</h3>
+            <form class="nl" onsubmit="event.preventDefault(); alert('Thanks!');">
+              <input type="email" placeholder="you@example.com" required />
+              <button class="btn btn-small" type="submit">Subscribe</button>
+            </form>
+            <p class="muted" style="margin-top:6px">We don’t sell your data. Unsubscribe anytime.</p>
+          </div>
+
+          <div class="card-bd" style="border-top:1px solid var(--line-700)">
+            <h3 class="card-ttl" style="font-size:1rem">Quick Links</h3>
+            <ul class="bullets">
+              <li><a href="guide.html">Guide</a></li>
+              <li><a href="specials.html">Specials</a></li>
+              <li><a href="schedule.html">Full Schedule</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
     </section>
 
-    <!-- Featured Specials -->
-    <section class="card" aria-label="Featured Specials">
-      <header class="card-hd"><h2 class="card-ttl">Featured Specials</h2></header>
-      <div class="card-bd">
-        <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
-        <div id="specialsGrid"></div>
-      </div>
-    </section>
-
-    <!-- Gameday Guide -->
-    <section class="card" aria-label="Gameday Guide">
-      <header class="card-hd"><h2 class="card-ttl">Gameday Guide (Unofficial)</h2></header>
-      <div class="card-bd guide-grid">
-        <article>
-          <h3>Getting There</h3>
-          <ul class="list">
-            <li>Expect road closures near campus.</li>
-            <li>Plan 60–90 minutes for traffic and entry.</li>
-            <li>Pick a meetup spot in case phones die.</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Entry &amp; Bags</h3>
-          <ul class="list">
-            <li>Many venues have clear-bag rules/metal detectors.</li>
-            <li>Leave large items &amp; outside alcohol at home.</li>
-            <li>Verify with the official event page.</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Food &amp; Water</h3>
-          <ul class="list">
-            <li>Most vendors are cashless—bring a card/mobile pay.</li>
-            <li>Hydrate early; look for refill stations.</li>
-            <li>Consider ear protection for kids.</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Accessibility</h3>
-          <ul class="list">
-            <li>Check ADA parking, shuttles, elevators, seating.</li>
-            <li>Service animals typically permitted.</li>
-            <li>Contact accessibility office for assistance.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p>
-      <a href="guide.html">Guide</a> •
-      <a href="specials.html">Specials</a> •
-      <a href="map.html">Map</a> •
-      <a href="schedule.html">Schedule</a> •
-      <a href="submit.html">Submit</a>
-    </p>
     <p class="muted">© 2025 HC Web Labs. Content licensed under
       <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.
     </p>
   </footer>
 
-  <script type="module" src="assets/js/app.js?v=2025-08-28-9"></script>
-  <script type="module" src="assets/js/live.js?v=2025-08-28-9"></script>
+  <!-- scripts: app.js renders Live Score, Upcoming, Schedule -->
+  <script type="module" src="assets/js/app.js?v=ab2-1"></script>
+  <script type="module" src="assets/js/live.js?v=ab2-1"></script>
 </body>
 </html>
