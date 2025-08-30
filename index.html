@@ -64,7 +64,7 @@
         </div>
         <div class="card-body small" id="upcomingBox">
           <p id="upcomingLine">Loading…</p>
-          <button id="addToCal" class="btn pill" disabled>Add to Calendar</button>
+          <button id="addToCal" class="btn pill" disabled>Add to Google Calendar</button>
         </div>
       </article>
 
@@ -94,11 +94,12 @@
         <article class="card">
           <div class="card-head"><h3 class="card-title">Mini Map</h3></div>
           <div class="card-body mini-map">
-            <iframe title="Knoxville Map"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.992%2C35.930%2C-83.886%2C36.000&layer=mapnik&marker=35.9606%2C-83.9207"
-              loading="lazy"></iframe>
+            <!-- OpenStreetMap embed — centered on Neyland Stadium -->
+            <iframe title="Neyland Stadium Map"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.9300%2C35.9505%2C-83.9200%2C35.9575&layer=mapnik&marker=35.9540%2C-83.9250"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <a class="map-open" target="_blank" rel="noopener"
-               href="https://www.openstreetmap.org/?mlat=35.9606&mlon=-83.9207#map=13/35.9606/-83.9207">Open full map</a>
+               href="https://www.openstreetmap.org/?mlat=35.9540&mlon=-83.9250#map=16/35.9540/-83.9250">Open full map</a>
           </div>
         </article>
       </aside>
