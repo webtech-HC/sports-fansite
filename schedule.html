@@ -1,62 +1,52 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Schedule • Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script defer src="assets/js/app.js"></script>
+  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-2">
 </head>
-<body class="page schedule-page">
-  <header class="site-header">
-    <div class="bar container">
-      <a class="brand" href="index.html"><span class="logo">TN</span><span>Tennessee</span></a>
-      <div id="countdown">
-        <div class="cd-badge"><span id="cd-days">00</span><span class="cd-label">days</span></div>
-        <div class="cd-badge"><span id="cd-hrs">00</span><span class="cd-label">hrs</span></div>
-        <div class="cd-badge"><span id="cd-min">00</span><span class="cd-label">mins</span></div>
-        <div class="cd-badge"><span id="cd-sec">00</span><span class="cd-label">secs</span></div>
-      </div>
-      <nav class="site-nav">
-        <a href="schedule.html">Schedule</a><a href="specials.html">Specials</a><a href="map.html">Map</a><a href="guide.html">Guide</a>
-        <a class="btn" href="submit.html">Submit</a>
-      </nav>
-    </div>
-  </header>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="brand-badge">TN</span><span class="brand-name">Tennessee</span></a>
+  <nav class="main-nav">
+    <a class="is-active" href="schedule.html">Schedule</a>
+    <a href="specials.html">Specials</a>
+    <a href="map.html">Map</a>
+    <a href="guide.html">Guide</a>
+  </nav>
+  <div class="countdown" id="countdown">
+    <span><b id="cd-days">00</b><em>days</em></span>
+    <span><b id="cd-hrs">00</b><em>hrs</em></span>
+    <span><b id="cd-min">00</b><em>mins</em></span>
+    <span><b id="cd-sec">00</b><em>secs</em></span>
+  </div>
+  <a class="btn btn-primary" href="submit.html">Submit</a>
+</header>
 
-  <main class="container rail-layout">
-    <div class="content stack">
-      <section class="card">
-        <div class="kv">
-          <h2>Full Schedule</h2>
-          <span class="meta" id="data-updated">Data updated — Loading…</span>
-        </div>
-        <table class="table" id="sched">
-          <thead><tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr></thead>
-          <tbody id="sched-body"><tr><td colspan="5" class="meta">Loading…</td></tr></tbody>
+<main class="wrap">
+  <section class="card">
+    <header class="card-h">
+      <h1>Full Schedule</h1>
+      <small id="dataStamp" class="muted">Loading…</small>
+    </header>
+    <div class="card-b">
+      <div class="table scroller">
+        <table class="table">
+          <thead>
+          <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
+          </thead>
+          <tbody id="sched" data-limit="all"></tbody>
         </table>
-        <p class="meta">Times/TV subject to change. Check official sources day-of.</p>
-      </section>
+      </div>
+      <p class="muted">Times/TV subject to change. Check official sources day-of.</p>
     </div>
+  </section>
+</main>
 
-    <aside class="rail stack">
-      <section class="card">
-        <h2>Quick links</h2>
-        <ul class="meta" style="margin:0; padding-left:1rem">
-          <li><a href="guide.html">Guide</a></li>
-          <li><a href="specials.html">Specials</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="submit.html">Submit a listing</a></li>
-        </ul>
-      </section>
-      <section class="card">
-        <h2>Live traffic (Waze)</h2>
-        <iframe class="embed map" src="https://embed.waze.com/iframe?lat=35.9545&lon=-83.9250&zoom=14&pin=1"></iframe>
-      </section>
-    </aside>
-  </main>
-
-  <footer class="site-footer"><div class="container">
-    <p class="meta">Unofficial fan resource.</p>
-  </div></footer>
+<footer class="site-foot">
+  <p class="muted">Unofficial notice: Independent, fan-operated site.</p>
+</footer>
+<script src="/sports-fansite/assets/js/app.js?v=2025-08-30-2"></script>
 </body>
 </html>
