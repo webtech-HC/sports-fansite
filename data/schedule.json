@@ -1,5 +1,230 @@
 [
-  {"start":"2025-08-30T16:00:00-04:00","opponent":"Syracuse","isHome":true,"tv":"ESPN"},
-  {"start":"2025-09-06T16:00:00-04:00","opponent":"East Tennessee State","isHome":true},
-  {"start":"2025-09-13T16:00:00-04:00","opponent":"Georgia","isHome":true}
+  {
+    "id": 401752676,
+    "week": 1,
+    "start": "2025-08-30T16:00:00.000Z",
+    "home": "Tennessee",
+    "away": "Syracuse",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": true,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752692,
+    "week": 2,
+    "start": "2025-09-06T19:30:00.000Z",
+    "home": "Tennessee",
+    "away": "East Tennessee State",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752705,
+    "week": 3,
+    "start": "2025-09-13T19:30:00.000Z",
+    "home": "Tennessee",
+    "away": "Georgia",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752715,
+    "week": 4,
+    "start": "2025-09-20T16:45:00.000Z",
+    "home": "Tennessee",
+    "away": "UAB",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752720,
+    "week": 5,
+    "start": "2025-09-27T04:00:00.000Z",
+    "home": "Mississippi State",
+    "away": "Tennessee",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752735,
+    "week": 7,
+    "start": "2025-10-11T04:00:00.000Z",
+    "home": "Tennessee",
+    "away": "Arkansas",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752738,
+    "week": 8,
+    "start": "2025-10-18T04:00:00.000Z",
+    "home": "Alabama",
+    "away": "Tennessee",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752747,
+    "week": 9,
+    "start": "2025-10-25T04:00:00.000Z",
+    "home": "Kentucky",
+    "away": "Tennessee",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752757,
+    "week": 10,
+    "start": "2025-11-01T04:00:00.000Z",
+    "home": "Tennessee",
+    "away": "Oklahoma",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752771,
+    "week": 12,
+    "start": "2025-11-15T21:15:00.000Z",
+    "home": "Tennessee",
+    "away": "New Mexico State",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752775,
+    "week": 13,
+    "start": "2025-11-22T05:00:00.000Z",
+    "home": "Florida",
+    "away": "Tennessee",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  },
+  {
+    "id": 401752791,
+    "week": 14,
+    "start": "2025-11-29T05:00:00.000Z",
+    "home": "Tennessee",
+    "away": "Vanderbilt",
+    "venue": {
+      "name": null,
+      "city": null,
+      "state": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "tv": null,
+    "status": null,
+    "neutralSite": false,
+    "home_points": null,
+    "away_points": null
+  }
 ]
