@@ -4,29 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tennessee — Gameday Hub</title>
-  <meta name="description" content="Live score, schedule, weather, traffic and fan guide for Tennessee Volunteers football." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2025-08-30" />
-  <link rel="icon" href="/assets/img/tn-badge.svg" />
+  <meta name="description" content="Unofficial Tennessee Volunteers gameday hub: schedule, live score, weather, traffic, and fan tips." />
+  <link rel="icon" href="assets/img/tn-badge.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-30" />
 </head>
 <body class="page page-home">
 
   <!-- Header -->
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/index.html" aria-label="Tennessee home">
-        <span class="brand-badge">TN</span>
-        <span class="brand-wordmark">Tennessee</span>
+      <a class="brand" href="index.html" aria-label="Tennessee home">
+        <span class="brand-badge">TN</span><span class="brand-wordmark">Tennessee</span>
       </a>
 
       <nav class="top-nav" aria-label="Primary">
-        <a aria-current="page" href="/index.html">Schedule</a>
-        <a href="/specials.html">Specials</a>
-        <a href="/map.html">Map</a>
-        <a href="/guide.html">Guide</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="specials.html">Specials</a>
+        <a href="map.html">Map</a>
+        <a href="guide.html">Guide</a>
       </nav>
 
-      <!-- Countdown always on top -->
+      <!-- Countdown centered in header -->
       <div id="countdown" class="countdown-header" aria-live="polite">
         <div class="pill"><b id="cd-days">00</b><span>days</span></div>
         <div class="pill"><b id="cd-hrs">00</b><span>hrs</span></div>
@@ -34,144 +32,189 @@
         <div class="pill"><b id="cd-sec">00</b><span>secs</span></div>
       </div>
 
-      <a class="btn btn-small btn-accent" href="/submit.html">Submit</a>
+      <a class="btn btn-small btn-accent" href="submit.html">Submit</a>
     </div>
   </header>
 
+  <!-- Main -->
   <main class="wrap main-grid">
     <div class="grid grid-rail">
-      <!-- MAIN COLUMN -->
+
+      <!-- Main column -->
       <div class="col-main flow">
 
-        <!-- Live Score -->
-        <section id="scorebox" class="card">
-          <header class="card-h"><h2>Live Score Box</h2></header>
-          <div id="scoreBody" class="prose small">Tennessee<br /><span class="muted">No game in progress.</span></div>
+        <!-- Live Score Box -->
+        <section class="card" id="score-card">
+          <header class="card-header">
+            <h1 class="h3">Live Score Box</h1>
+            <div class="menu-dots" aria-hidden="true">•••</div>
+          </header>
+          <div id="scorebox" class="card-body">
+            <div class="score-row">
+              <div class="team">
+                <div class="team-name">Tennessee</div>
+              </div>
+              <div class="score-status">
+                <span class="muted">No game in progress.</span>
+              </div>
+            </div>
+            <div class="score-meta"><span class="muted">—</span></div>
+          </div>
         </section>
 
-        <!-- Upcoming -->
+        <!-- Upcoming game -->
         <section class="card">
-          <header class="card-h"><h2>Upcoming Game</h2></header>
-          <div class="grid split-2">
-            <div id="nextBody" class="prose small">—</div>
-            <div class="align-end">
-              <a id="addToCal" class="btn" href="#" rel="noopener">Add to Google Calendar</a>
-            </div>
+          <header class="card-header">
+            <h2 class="h4">Upcoming Game</h2>
+            <div class="menu-dots" aria-hidden="true">•••</div>
+          </header>
+          <div class="card-body">
+            <div id="next-game">Loading…</div>
+            <p class="mt-2">
+              <a id="btn-ical" class="btn btn-small" href="#" target="_blank" rel="noopener">Add to Google Calendar</a>
+            </p>
           </div>
         </section>
 
         <!-- Weather (3-day) -->
         <section class="card">
-          <header class="card-h"><h2>Weather (3-day)</h2></header>
-          <ul id="wx3" class="bullet-list">
-            <li>Fri — —° / —° — — mph</li>
-            <li>Sat — —° / —° — — mph</li>
-            <li>Sun — —° / —° — — mph</li>
-          </ul>
-          <p id="wxStamp" class="muted small">Neyland Stadium · Knoxville, TN</p>
-        </section>
-
-        <!-- Schedule & Results (3 rows by default) -->
-        <section class="card">
-          <header class="card-h"><h2>Schedule & Results</h2><span id="dataStamp" class="muted small"></span></header>
-
-          <div class="table-wrap">
-            <table class="table" aria-describedby="schedHelp">
-              <thead>
-                <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
-              </thead>
-              <tbody id="sched"></tbody>
-            </table>
+          <header class="card-header">
+            <h2 class="h4">Weather (3-day)</h2>
+            <div class="menu-dots" aria-hidden="true">•••</div>
+          </header>
+          <div class="card-body">
+            <ul id="wx-3day" class="wx-list">
+              <li>Fri — <span class="muted">—/—</span> — <span class="muted">— mph</span></li>
+              <li>Sat — <span class="muted">—/—</span> — <span class="muted">— mph</span></li>
+              <li>Sun — <span class="muted">—/—</span> — <span class="muted">— mph</span></li>
+            </ul>
+            <small id="wx-footnote" class="muted">Neyland Stadium. Source: Open-Meteo.</small>
           </div>
-
-          <p id="schedHelp" class="muted small">Times/TV subject to change. Check official sources day-of.</p>
-          <a class="btn btn-outline" href="/schedule.html">Show full schedule</a>
         </section>
 
-        <!-- Content blocks -->
+        <!-- Schedule & Results (shows 3 by default) -->
         <section class="card">
-          <header class="card-h"><h2>Featured Specials</h2></header>
-          <p class="muted small">See the <a class="link" href="/specials.html">specials</a> page for new listings.</p>
+          <header class="card-header">
+            <h2 class="h4">Schedule & Results</h2>
+            <small id="last-updated" class="muted">Data updated — loading…</small>
+          </header>
+          <div class="card-body">
+            <div class="table-scroll">
+              <table id="sched" class="table">
+                <thead>
+                  <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
+                </thead>
+                <tbody><!-- filled by app.js --></tbody>
+              </table>
+            </div>
+            <div class="mt-2">
+              <button id="toggle-full" class="btn btn-small">Show full schedule</button>
+            </div>
+            <p class="muted mt-2">Times/TV subject to change. Check official sources day-of.</p>
+          </div>
         </section>
 
+        <!-- Featured Specials -->
         <section class="card">
-          <header class="card-h"><h2>TV & Streams (This Week)</h2></header>
-          <p class="muted small">Updates closer to kickoff.</p>
+          <header class="card-header"><h2 class="h4">Featured Specials</h2></header>
+          <div class="card-body">
+            <p>See the <a href="specials.html">specials</a> page for new listings.</p>
+          </div>
         </section>
 
+        <!-- TV & Streams -->
         <section class="card">
-          <header class="card-h"><h2>Odds</h2></header>
-          <p class="muted small">For entertainment only. Check a licensed sportsbook for current numbers.</p>
+          <header class="card-header"><h2 class="h4">TV & Streams (This Week)</h2></header>
+          <div class="card-body">
+            <p>Updates closer to kickoff.</p>
+          </div>
         </section>
 
+        <!-- Odds -->
         <section class="card">
-          <header class="card-h"><h2>Rankings (AP Top 25)</h2></header>
-          <p class="muted small">AP poll updates weekly.</p>
+          <header class="card-header"><h2 class="h4">Odds</h2></header>
+          <div class="card-body">
+            <p class="muted">For entertainment only. Check a licensed sportsbook for current numbers.</p>
+          </div>
         </section>
 
+        <!-- Rankings -->
         <section class="card">
-          <header class="card-h"><h2>Quick Links</h2></header>
-          <ul class="link-list">
-            <li><a href="/guide.html">Guide</a></li>
-            <li><a href="/specials.html">Specials</a></li>
-            <li><a href="/map.html">Map</a></li>
-            <li><a href="/schedule.html">Schedule</a></li>
-            <li><a href="/submit.html">Submit a listing</a></li>
-          </ul>
+          <header class="card-header"><h2 class="h4">Rankings (AP Top 25)</h2></header>
+          <div id="ap-rankings" class="card-body">
+            <p class="muted">AP poll updates weekly.</p>
+          </div>
+        </section>
+
+        <!-- Quick links -->
+        <section class="card">
+          <header class="card-header"><h2 class="h4">Quick Links</h2></header>
+          <div class="card-body">
+            <p>
+              <a href="guide.html">Guide</a> ·
+              <a href="specials.html">Specials</a> ·
+              <a href="map.html">Map</a> ·
+              <a href="schedule.html">Schedule</a> ·
+              <a href="submit.html">Submit</a>
+            </p>
+          </div>
         </section>
 
       </div>
 
-      <!-- RIGHT RAIL -->
+      <!-- Right rail -->
       <aside class="col-rail flow">
+
         <section class="card">
-          <header class="card-h"><h3>Live Traffic (Neyland)</h3></header>
-          <div class="map-embed">
-            <iframe title="Waze Live Map – Neyland Stadium"
-              src="https://embed.waze.com/iframe?zoom=14&lat=35.955&lon=-83.925&pin=1"
-              width="100%" height="240" loading="lazy" allowfullscreen></iframe>
+          <header class="card-header"><h2 class="h5">Live Traffic (Neyland)</h2></header>
+          <div class="card-body">
+            <div class="embed-frame">
+              <iframe title="Waze live map"
+                src="https://embed.waze.com/iframe?zoom=14&lat=35.9549&lon=-83.9250&pin=1"
+                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <small class="muted">Data: Waze Live Map</small>
           </div>
-          <p class="muted small">Data: Waze Live Map</p>
         </section>
 
         <section class="card">
-          <header class="card-h"><h3>Mini Map</h3></header>
-          <div class="map-embed">
-            <iframe
-              title="OpenStreetMap – Neyland Stadium"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-83.936%2C35.948%2C-83.914%2C35.961&layer=mapnik&marker=35.9549%2C-83.9295"
-              width="100%" height="220" loading="lazy"></iframe>
+          <header class="card-header"><h2 class="h5">Mini Map</h2></header>
+          <div class="card-body">
+            <div class="embed-frame">
+              <iframe title="Campus mini map"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-83.940%2C35.944%2C-83.910%2C35.964&layer=mapnik&marker=35.955%2C-83.925"
+                loading="lazy"></iframe>
+            </div>
+            <small><a target="_blank" rel="noopener" href="https://www.openstreetmap.org/#map=15/35.955/-83.925">Open full map</a></small>
           </div>
-          <p class="muted small"><a class="link" target="_blank" rel="noopener"
-            href="https://www.openstreetmap.org/?mlat=35.9549&mlon=-83.9295#map=15/35.9549/-83.9295">Open full map</a></p>
         </section>
 
         <section class="card">
-          <header class="card-h"><h3>Quick Links</h3></header>
-          <ul class="link-list">
-            <li><a href="/guide.html">Guide</a></li>
-            <li><a href="/specials.html">Specials</a></li>
-            <li><a href="/map.html">Map</a></li>
-            <li><a href="/schedule.html">Schedule</a></li>
-            <li><a href="/submit.html">Submit a listing</a></li>
+          <header class="card-header"><h2 class="h5">Quick Links</h2></header>
+          <ul class="card-list">
+            <li><a href="guide.html">Guide</a></li>
+            <li><a href="specials.html">Specials</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="submit.html">Submit a listing</a></li>
           </ul>
         </section>
+
       </aside>
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="wrap">
-      <p class="legal small">
-        Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.
-      </p>
-      <p class="links small">
-        <a href="/guide.html">Guide</a> · <a href="/specials.html">Specials</a> · <a href="/map.html">Map</a> ·
-        <a href="/schedule.html">Schedule</a> · <a href="/submit.html">Submit</a>
-      </p>
+      <p class="muted">Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+      <nav class="foot-nav">
+        <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> · <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
+      </nav>
     </div>
   </footer>
 
-  <script src="/assets/js/app.js?v=2025-08-30"></script>
+  <!-- Scripts -->
+  <script src="assets/js/app.js?v=2025-08-30"></script>
+  <script src="assets/js/live.js?v=2025-08-30"></script>
 </body>
 </html>
