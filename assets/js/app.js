@@ -1,6 +1,6 @@
-/* Tennessee Fansite — shared JS (idempotent) */
+/* Tennessee Fansite — shared JS (idempotent + robust scoreboard) */
 (() => {
-  if (window.__TN_INIT__) return;  // guard
+  if (window.__TN_INIT__) return;
   window.__TN_INIT__ = true;
 
   const $ = (sel, root=document) => root.querySelector(sel);
@@ -8,15 +8,16 @@
   const safe = v => (v ?? '') + '';
 
   const DATA_SCHEDULE = 'data/schedule.json';
-  const DATA_META      = 'data/meta.json';
-  const DATA_SCORE     = 'data/scoreboard.json';
+  const DATA_META     = 'data/meta.json';
+  const DATA_SCORE    = 'data/scoreboard.json';
 
-  // Always bust caches (GitHub Pages/CDN + browser) for “live” reads.
+  const TEAM_RE = /tennessee/i;
+
+  /* ---------------- cache-busted fetch ---------------- */
   function withBust(path){
     const sep = path.includes('?') ? '&' : '?';
     return `${path}${sep}t=${Date.now()}`;
   }
-
   async function getJSON(path, fallback=null){
     try{
       const res = await fetch(withBust(path), { cache:'no-store' });
@@ -53,7 +54,6 @@
     }
     tick(); setInterval(tick, 1000);
 
-    // Google Calendar link for the “next game”
     const btn = $('#addToCal');
     if (btn){
       const start = new Date(next.start);
@@ -120,35 +120,102 @@
     });
   }
 
-  /* ---------------- scoreboard (lightweight) ------------------- */
+  /* ---------------- scoreboard (ultra-robust) ------------------ */
+  function normalizeStatus(s){
+    if(!s) return 'none';
+    const x = String(s).toLowerCase();
+    if (/(final|post)/.test(x)) return 'final';
+    if (/(in[-_ ]?progress|live|playing)/.test(x)) return 'in_progress';
+    if (/(pre|sched)/.test(x)) return 'pre';
+    return x; // fallback (e.g., 'none')
+  }
+  function pickGameFromContainer(container){
+    // Accept: {games:[…]}, […], or single object
+    if (!container) return null;
+    if (Array.isArray(container)){
+      return container.find(g =>
+        TEAM_RE.test(safe(g.homeTeam||g.home?.school||g.home?.name||g.home)) ||
+        TEAM_RE.test(safe(g.awayTeam||g.away?.school||g.away?.name||g.away))
+      ) || container[0] || null;
+    }
+    if (container.games && Array.isArray(container.games)){
+      return pickGameFromContainer(container.games);
+    }
+    // Assume already a single game object
+    return container;
+  }
+  function toSimpleShape(g){
+    if (!g) return null;
+
+    // Names (CFBD styles + our styles)
+    const homeName = g.homeTeam || g.home?.school || g.home?.name || g.home || '';
+    const awayName = g.awayTeam || g.away?.school || g.away?.name || g.away || '';
+
+    // Scores with many possible keys
+    const homeScore = g.homeScore ?? g.home_points ?? g.homePoints ?? g.home?.score ?? 0;
+    const awayScore = g.awayScore ?? g.away_points ?? g.awayPoints ?? g.away?.score ?? 0;
+
+    // Clock/period variations
+    const period  = g.period ?? g.currentPeriod ?? g.qtr ?? '';
+    const clock   = g.clock ?? g.currentClock ?? g.displayClock ?? '';
+    const clockStr = (period ? `Q${period} ` : '') + (clock || '').trim();
+
+    // Status variations
+    const status = normalizeStatus(g.status || g.gameStatus || g.state);
+
+    return {
+      status,
+      clock: clockStr.trim(),
+      home: { name: homeName, score: Number(homeScore)||0 },
+      away: { name: awayName, score: Number(awayScore)||0 }
+    };
+  }
+
   async function bootScore(){
-    const box = $('#scoreBox');
+    const body = $('#scoreBody');
+    const box  = $('#scoreBox');
     if(!box) return;
 
-    // normalize data from our JSON or CFBD mapping
-    function paint(data){
-      if(!data || data.status==='none'){
+    // add/ensure a tiny timestamp
+    let stamp = $('#scoreStamp');
+    if(!stamp){
+      stamp = document.createElement('div');
+      stamp.id = 'scoreStamp';
+      stamp.className = 'kicker';
+      stamp.style.marginTop = '6px';
+      body && body.appendChild(stamp);
+    }
+
+    function paintSimple(s){
+      if(!s || s.status==='none'){
         box.innerHTML = `<span class="muted">No game in progress.</span>`;
         return;
       }
-      if(data.status==='scheduled' || data.status==='pre'){
-        box.textContent = `${safe(data.home?.name||'Tennessee')} vs ${safe(data.away?.name||'Opponent')} • ${safe(data.clock||'TBA')}`;
+      if(s.status==='pre'){
+        box.textContent = `${safe(s.home?.name||'Tennessee')} vs ${safe(s.away?.name||'Opponent')} • ${safe(s.clock||'TBA')}`;
         return;
       }
-      if(data.status==='in_progress'){
-        box.textContent = `${safe(data.home?.name||'Tennessee')} ${safe(data.home?.score||0)} — ${safe(data.away?.name||'Opponent')} ${safe(data.away?.score||0)} • ${safe(data.clock||'Live')}`;
+      if(s.status==='in_progress'){
+        box.textContent = `${safe(s.home?.name||'Tennessee')} ${safe(s.home?.score||0)} — ${safe(s.away?.name||'Opponent')} ${safe(s.away?.score||0)} • ${safe(s.clock||'Live')}`;
         return;
       }
-      if(data.status==='final'){
-        box.textContent = `Final: ${safe(data.home?.name||'Tennessee')} ${safe(data.home?.score||0)} — ${safe(data.away?.name||'Opponent')} ${safe(data.away?.score||0)}`;
+      if(s.status==='final'){
+        box.textContent = `Final: ${safe(s.home?.name||'Tennessee')} ${safe(s.home?.score||0)} — ${safe(s.away?.name||'Opponent')} ${safe(s.away?.score||0)}`;
       }
     }
 
     async function tick(){
-      const j = await getJSON(DATA_SCORE, {status:'none'});
-      paint(j);
+      const raw = await getJSON(DATA_SCORE, {status:'none'});
+      // Accept many shapes
+      const game = pickGameFromContainer(raw);
+      const simple = toSimpleShape(game || raw);
+      paintSimple(simple || {status:'none'});
+      stamp.textContent = `Score updated ${new Date().toLocaleTimeString()}`;
+      // console.debug('scoreboard raw:', raw, 'simple:', simple); // uncomment for debugging
     }
-    tick(); setInterval(tick, 30000);
+
+    tick();
+    setInterval(tick, 15000); // 15s for snappier updates
   }
 
   /* ---------------- weather (3-day, Neyland) ------------------- */
@@ -157,7 +224,6 @@
     const nowEl= $('#weatherNow');
     if(!wrap && !nowEl) return;
 
-    // Neyland Stadium
     const lat = 35.955, lon = -83.925;
     const url =
       `https://api.open-meteo.com/v1/forecast` +
