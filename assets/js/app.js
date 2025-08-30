@@ -1,195 +1,149 @@
-/* assets/js/app.js
-   Tennessee Gameday Hub — front page helpers (image-free)
-*/
+/* =========================================================
+   App bootstrap (schedule paging + theme-safe helpers)
+   ========================================================= */
 
-(() => {
-  "use strict";
+const TEAM = "Tennessee";
 
-  const TEAM = "Tennessee";
-  const DATA_DIR = "/sports-fansite/data"; // works on GitHub Pages project path
-  const NOW = () => new Date();
+/* ---------- tiny DOM helpers ---------- */
+const $  = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
 
-  const $  = (sel, el = document) => el.querySelector(sel);
-  const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+/* ---------- date helpers ---------- */
+const isValidISO = (iso) => {
+  if (!iso) return false;
+  const d = new Date(iso);
+  return !isNaN(d.valueOf());
+};
 
-  const isValidISO = (iso) => {
-    if (!iso || typeof iso !== "string") return false;
-    const d = new Date(iso);
-    return !Number.isNaN(d.valueOf());
-  };
+const fmtDateOnly = (iso) => {
+  if (!isValidISO(iso)) return "TBA";
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    weekday: "short"
+  });
+};
 
-  const fmtTime = (iso) => {
-    if (!isValidISO(iso)) return "TBA";
-    const d = new Date(iso);
-    return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-  };
-
-  const fmtDateOnly = (iso) => {
-    if (!isValidISO(iso)) return "TBA";
-    const d = new Date(iso);
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", weekday: "short" });
-  };
-
-  // idempotent global helper so multiple pages can use it without re-def errors
-  if (!window.getJSON) {
-    window.getJSON = async function getJSON(path, fallback = null) {
-      try {
-        const res = await fetch(path, { cache: "no-store" });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return await res.json();
-      } catch (err) {
-        console.warn("getJSON fallback:", path, err.message);
-        return fallback;
-      }
-    };
-  }
-  const getJSON = window.getJSON;
-
-  function paintSchedule(list) {
-    const tbody = $("#sched");
-    if (!tbody) return;
-    const rows = (list || []).map((g) => {
-      const isHome   = g.home === TEAM;
-      const opponent = isHome ? g.away : g.home;
-      let result = "—";
-      if (typeof g.home_points === "number" && typeof g.away_points === "number") {
-        const my  = isHome ? g.home_points : g.away_points;
-        const opp = isHome ? g.away_points : g.home_points;
-        result = `${my}–${opp}`;
-      }
-      const tv   = g.tv ?? "TBD";
-      const when = isValidISO(g.start_date) ? `${fmtDateOnly(g.start_date)} ${fmtTime(g.start_date)}` : "TBA";
-      return `<tr>
-        <td>${when}</td><td>${opponent}</td><td>${isHome ? "H" : "A"}</td><td>${tv}</td><td>${result}</td>
-      </tr>`;
-    });
-    tbody.innerHTML = rows.join("") || `<tr><td colspan="5">No games to show.</td></tr>`;
-  }
-
-  function pickNextGame(list) {
-    const now = NOW();
-    return (list || [])
-      .filter(g => g && isValidISO(g.start_date))
-      .filter(g => g.home === TEAM || g.away === TEAM)
-      .sort((a,b) => new Date(a.start_date) - new Date(b.start_date))
-      .find(g => new Date(g.start_date) > now) || null;
-  }
-
-  function paintQuick(next) {
-    const card = $("#quick");
-    if (!card) return;
-
-    const hd  = card.querySelector("[data-line='headline']");
-    const sub = card.querySelector("[data-line='sub']");
-
-    if (!next) {
-      if (hd)  hd.textContent  = "Loading...";
-      if (sub) sub.textContent = "";
-      return;
-    }
-
-    const isHome   = next.home === TEAM;
-    const opponent = isHome ? next.away : next.home;
-    const when = isValidISO(next.start_date) ? `${fmtDateOnly(next.start_date)} • ${fmtTime(next.start_date)}` : "TBA";
-    const venue = next.venue && next.venue.city ? `${next.venue.city}, ${next.venue.state ?? ""}`.trim() : (isHome ? "Knoxville, TN" : "");
-
-    if (hd)  hd.textContent  = `${TEAM} vs ${opponent}`;
-    if (sub) sub.textContent = when + (venue ? ` — ${venue}` : "");
-
-    const btn = $("#addToCalendar");
-    if (btn) {
-      btn.disabled = !isValidISO(next.start_date);
-      btn.onclick = () => {
-        if (!isValidISO(next.start_date)) return;
-        const dtStart = new Date(next.start_date);
-        const dtEnd   = new Date(dtStart.getTime() + 3*3600*1000);
-        const pad = (n) => String(n).padStart(2,"0");
-        const fmt = (d) => d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) +
-                          "T" + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + "Z";
-        const ics = [
-          "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//HC Web Labs//Gameday//EN",
-          "BEGIN:VEVENT",
-          `UID:${Date.now()}@gameday`,
-          `DTSTAMP:${fmt(new Date())}`,
-          `DTSTART:${fmt(dtStart)}`,
-          `DTEND:${fmt(dtEnd)}`,
-          `SUMMARY:${TEAM} vs ${opponent}`,
-          `LOCATION:${venue || ""}`,
-          "END:VEVENT","END:VCALENDAR"
-        ].join("\r\n");
-        const blob = new Blob([ics], { type:"text/calendar" });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement("a");
-        a.href = url; a.download = `${TEAM}-vs-${opponent}`.replace(/\s+/g,"_") + ".ics";
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 800);
-      };
-    }
-  }
-
-  function setLastUpdated(meta) {
-    const el = $("[data-last-updated]");
-    if (!el) return;
-    const iso = meta?.lastUpdated || new Date().toISOString();
-    el.textContent = isValidISO(iso) ? new Date(iso).toLocaleString() : "—";
-  }
-
-  function paintLiveScore(score) {
-    const box = $("#livebox");
-    if (!box) return;
-
-    const home = score?.homeTeam;
-    const away = score?.awayTeam;
-    const status = score?.status;
-    const isTenn = (home === TEAM || away === TEAM);
-
-    const matchEl = box.querySelector("[data-line='match']");
-    const statusEl= box.querySelector("[data-line='status']");
-    const scoreEl = box.querySelector("[data-line='score']");
-
-    if (!isTenn) {
-      if (matchEl) matchEl.textContent = TEAM;
-      if (statusEl) statusEl.textContent = "No game in progress.";
-      if (scoreEl) scoreEl.textContent = "—";
-      return;
-    }
-
-    const usHome = home === TEAM;
-    const my  = usHome ? score.home_points : score.away_points;
-    const opp = usHome ? score.away_points : score.home_points;
-    const oppName = usHome ? away : home;
-
-    if (matchEl) matchEl.textContent = `${TEAM} vs ${oppName}`;
-    if (statusEl) statusEl.textContent = status || "In progress";
-    if (scoreEl) scoreEl.textContent =
-      (typeof my === "number" && typeof opp === "number") ? `${my}–${opp}` : "—";
-  }
-
-  async function boot() {
+/* ---------- idempotent JSON fetch with fallback ---------- */
+const getJSON =
+  window.getJSON ||
+  (window.getJSON = async function (path, fallback = null) {
     try {
-      const [schedule, meta, board] = await Promise.all([
-        getJSON(`${DATA_DIR}/schedule.json`, []),
-        getJSON(`${DATA_DIR}/meta.json`, { lastUpdated: null }),
-        getJSON(`${DATA_DIR}/scoreboard.json?t=${Date.now()}`, null)
-      ]);
-
-      const vols = (schedule || []).filter(g => g.home === TEAM || g.away === TEAM);
-
-      paintSchedule(vols);
-      paintQuick(pickNextGame(vols));
-      setLastUpdated(meta);
-      if (board) paintLiveScore(board);
-
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return await res.json();
     } catch (err) {
-      console.error("boot error", err);
-      const t = $(".ticker-inner");
-      if (t) t.textContent = "Live data unavailable right now.";
+      console.warn("getJSON fallback:", path, err.message);
+      return fallback;
     }
+  });
+
+/* ---------- schedule paging state ---------- */
+const PAGE_SIZE = 3;
+let SCHEDULE = [];
+let schedPage = 1;
+
+/* ---------- render: next game line (optional headline) ---------- */
+function pickNextGame(list = []) {
+  const now = Date.now();
+  return (list || [])
+    .filter(g => isValidISO(g.start))
+    .filter(g => new Date(g.start).getTime() >= now)
+    .sort((a,b) => new Date(a.start) - new Date(b.start))[0] || null;
+}
+
+function paintNextHeadline(list = []) {
+  const next = pickNextGame(list);
+  const el = $("#nextLine");
+  if (!el) return;
+  if (!next) { el.textContent = "No upcoming game found."; return; }
+  const isHome = next.home === TEAM;
+  const opponent = isHome ? next.away : next.home;
+  const when = fmtDateOnly(next.start);
+  el.innerHTML = `<strong>${TEAM} vs ${opponent}</strong><br><span class="muted">${when}</span>`;
+}
+
+/* ---------- render: schedule table with progressive reveal ---------- */
+function paintSchedule(list = [], page = 1) {
+  const tbody = $("#sched");
+  if (!tbody) return;
+
+  if (list && list.length && SCHEDULE.length === 0) SCHEDULE = list.slice();
+
+  const end   = PAGE_SIZE * page;
+  const slice = (list || []).slice(0, end);
+
+  const rows = slice.map((g) => {
+    const homeTeam = g.home;
+    const awayTeam = g.away;
+    const isHome = homeTeam === TEAM;
+    const opponent = isHome ? awayTeam : homeTeam;
+
+    let result = "—";
+    if (typeof g.home_points === "number" && typeof g.away_points === "number") {
+      const my  = isHome ? g.home_points : g.away_points;
+      const opp = isHome ? g.away_points : g.home_points;
+      result = `${my}–${opp}`;
+    }
+
+    const tv = g.tv || "—";
+    const date = fmtDateOnly(g.start);
+
+    return `
+      <tr>
+        <td>${date}</td>
+        <td>${opponent}</td>
+        <td>${isHome ? "H" : "A"}</td>
+        <td>${tv}</td>
+        <td>${result}</td>
+      </tr>`;
+  }).join("");
+
+  tbody.innerHTML = rows || "";
+
+  const moreBtn = $("#btnMoreSched");
+  if (moreBtn) {
+    const allShown = slice.length >= (list || []).length;
+    moreBtn.hidden = allShown;
+  }
+}
+
+/* ---------- boot ---------- */
+async function boot(){
+  // Wire the “show more” once
+  const moreBtn = $("#btnMoreSched");
+  if (moreBtn && !moreBtn.__wired) {
+    moreBtn.__wired = true;
+    moreBtn.addEventListener("click", () => {
+      schedPage += 1;
+      paintSchedule(SCHEDULE, schedPage);
+    });
   }
 
-  if (!window.__APP_BOOT_WIRED__) {
-    window.__APP_BOOT_WIRED__ = true;
-    document.addEventListener("DOMContentLoaded", boot, { once:true });
-  }
-})();
+  try {
+    const [schedule, meta] = await Promise.all([
+      getJSON("data/schedule.json", []),
+      getJSON("data/meta.json", { lastUpdated: null })
+    ]);
 
+    // Set meta stamp
+    const stamp = meta?.lastUpdated
+      ? new Date(meta.lastUpdated).toLocaleString()
+      : "—";
+    const lu = document.querySelectorAll("[data-last-updated]");
+    lu.forEach((n) => (n.textContent = stamp));
+
+    // Seed + paint
+    SCHEDULE = schedule || [];
+    schedPage = 1;
+    paintNextHeadline(SCHEDULE);
+    paintSchedule(SCHEDULE, schedPage);
+  } catch (err) {
+    console.error("boot error", err);
+    const t = $(".three-up .muted");
+    if (t) t.textContent = "Live data unavailable right now.";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", boot);
