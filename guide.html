@@ -2,71 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Guide • Tennessee Gameday Hub (Unofficial)</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tennessee — Gameday Guide</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
-    <nav class="nav">
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
+    </div>
+    <div class="header-countdown">
+      <div id="countdown" class="countdown">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+    <nav class="site-nav">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
-      <a href="guide.html" class="active">Guide</a>
-      <a class="btn btn-small" href="submit.html">Submit</a>
+      <a class="active" href="guide.html">Guide</a>
+      <a class="btn" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker"><div class="ticker-inner">Loading…</div></section>
+  <main class="wrap">
+    <section class="grid grid-single">
+      <article class="card card-span2">
+        <div class="card-head"><h1 class="card-title">Gameday Guide</h1></div>
+        <div class="card-body prose">
+          <h3>Getting There</h3>
+          <ul>
+            <li>Rideshare or public lots; expect road closures near campus.</li>
+            <li>Plan 60–90 minutes for traffic and entry queues.</li>
+            <li>Keep phone on silent; check your tickets in advance.</li>
+          </ul>
 
-  <main id="main" class="wrap">
-    <section class="card guide">
-      <div class="guide-head">
-        <h1 class="hd">Gameday Guide (Unofficial)</h1>
-        <div class="countdown" aria-live="polite">
-          <div class="blk"><span id="cdD">00</span><em>days</em></div>
-          <div class="blk"><span id="cdH">00</span><em>hrs</em></div>
-          <div class="blk"><span id="cdM">00</span><em>min</em></div>
-          <div class="blk"><span id="cdS">00</span><em>sec</em></div>
+          <h3>Entry &amp; Bags</h3>
+          <ul>
+            <li>Many venues have clear-bag rules and metal detectors.</li>
+            <li>Leave large items, outside alcohol, and prohibited items at home.</li>
+            <li>Always verify with the official event page before you go.</li>
+          </ul>
+
+          <h3>Food &amp; Water</h3>
+          <ul>
+            <li>Hydrate early. Family sections are great with kids.</li>
+            <li>Most vendors are cashless—bring a card or mobile pay.</li>
+          </ul>
         </div>
-      </div>
-
-      <div class="guide-grid">
-        <article><h3>Getting There</h3><ul>
-          <li>Rideshare or public lots; expect road closures near campus.</li>
-          <li>Plan 60–90 minutes for traffic and entry queues.</li>
-          <li>Pick a meetup spot in case phones die.</li>
-        </ul></article>
-        <article><h3>Entry & Bags</h3><ul>
-          <li>Many venues have clear-bag rules and metal detectors.</li>
-          <li>Leave large items, outside alcohol, and pointed umbrellas at home.</li>
-          <li>Always verify with the official event page before you go.</li>
-        </ul></article>
-        <article><h3>Food & Water</h3><ul>
-          <li>Many vendors are cashless—bring a card or mobile pay.</li>
-          <li>Hydrate early; find refill spots on concourses.</li>
-          <li>Family sections are great with kids; consider ear protection.</li>
-        </ul></article>
-        <article><h3>Accessibility</h3><ul>
-          <li>Check ADA parking, shuttle drop-offs, elevators, and seating.</li>
-          <li>Service animals typically permitted—follow venue guidance.</li>
-          <li>Contact accessibility office ahead for assistance.</li>
-        </ul></article>
-      </div>
-
-      <p class="muted">Independent fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
-      <p class="muted">Data updated — <span data-last-updated>—</span></p>
+      </article>
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="schedule.html">Schedule</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="submit.html">Submit</a></p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
   </footer>
 
-  <script type="module" src="assets/js/app.js?v=2025-08-28-4"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
