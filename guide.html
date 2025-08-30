@@ -1,98 +1,112 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Guide • Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script defer src="assets/js/app.js"></script>
+  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-2">
 </head>
-<body class="page guide-page">
-  <header class="site-header">
-    <div class="bar container">
-      <a class="brand" href="index.html"><span class="logo">TN</span><span>Tennessee</span></a>
-      <div id="countdown">
-        <div class="cd-badge"><span id="cd-days">00</span><span class="cd-label">days</span></div>
-        <div class="cd-badge"><span id="cd-hrs">00</span><span class="cd-label">hrs</span></div>
-        <div class="cd-badge"><span id="cd-min">00</span><span class="cd-label">mins</span></div>
-        <div class="cd-badge"><span id="cd-sec">00</span><span class="cd-label">secs</span></div>
-      </div>
-      <nav class="site-nav">
-        <a href="schedule.html">Schedule</a><a href="specials.html">Specials</a><a href="map.html">Map</a><a href="guide.html">Guide</a>
-        <a class="btn" href="submit.html">Submit</a>
-      </nav>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="brand-badge">TN</span><span class="brand-name">Tennessee</span></a>
+  <nav class="main-nav">
+    <a href="schedule.html">Schedule</a>
+    <a href="specials.html">Specials</a>
+    <a href="map.html">Map</a>
+    <a class="is-active" href="guide.html">Guide</a>
+  </nav>
+  <div class="countdown" id="countdown">
+    <span><b id="cd-days">00</b><em>days</em></span>
+    <span><b id="cd-hrs">00</b><em>hrs</em></span>
+    <span><b id="cd-min">00</b><em>mins</em></span>
+    <span><b id="cd-sec">00</b><em>secs</em></span>
+  </div>
+  <a class="btn btn-primary" href="submit.html">Submit</a>
+</header>
+
+<main class="wrap grid grid--rail">
+  <section class="card span-2">
+    <header class="card-h"><h1>Gameday Guide</h1></header>
+    <div class="card-b">
+      <p class="muted">Everything you need for game weekend in Knoxville—before, during, and after kickoff.</p>
     </div>
-  </header>
+  </section>
 
-  <main class="container rail-layout">
-    <div class="content stack">
-      <section class="card">
-        <h2>Gameday Guide</h2>
-        <p class="meta">Everything you need for game weekend in Knoxville—before, during, and after kickoff.</p>
-      </section>
-
-      <div class="grid cards-3">
-        <section class="card" id="pre">
-          <h3>Pre-game</h3>
-          <ul class="meta" style="margin:0; padding-left:1rem">
-            <li><b>Book early.</b> Hotels & rentals sell out. Make a Plan B in nearby towns.</li>
-            <li><b>Where to stay.</b> Downtown & campus first; also West Knoxville, Cedar Bluff, Farragut, Alcoa/Maryville.</li>
-            <li><b>Plan B towns.</b> Oak Ridge, Sevierville, Pigeon Forge, Lenoir City, Clinton, Maryville, Jefferson City, Dandridge, Newport.</li>
-            <li><b>Traffic.</b> Check the live map and Waze before you move.</li>
-            <li><b>Pack list.</b> IDs, mobile tickets, chargers, meds, water, ponchos, sunscreen, snacks.</li>
-          </ul>
-        </section>
-
-        <section class="card" id="game">
-          <h3>Game-time</h3>
-          <ul class="meta" style="margin:0; padding-left:1rem">
-            <li>Hydration: refill stations at main concourses.</li>
-            <li>Night games can get breezy—layer up.</li>
-            <li>Mobile tickets: open the wallet before the scanners to avoid bottlenecks.</li>
-            <li>Watch our Live Score Box on the home page for in-game updates.</li>
-          </ul>
-        </section>
-
-        <section class="card" id="post">
-          <h3>Post-game</h3>
-          <ul class="meta" style="margin:0; padding-left:1rem">
-            <li>Wait 20–30 minutes if parked close—saves time overall.</li>
-            <li>Use side streets or river route when open to beat main flow.</li>
-            <li>Walk outside control points before calling rideshare.</li>
-            <li>24/7 food: we’ll curate a list; submit spots on the listings page.</li>
-          </ul>
-        </section>
-      </div>
-
-      <section class="card">
-        <h3>Emergency & Visitor Info</h3>
-        <ul class="meta" style="margin:0; padding-left:1rem">
-          <li>Emergency: 911 — UT Police: (865) 974-3111 — City non-emergency: (865) 215-7450.</li>
-          <li>First-aid stations located on main concourses; look for posted signs.</li>
-          <li>Accessibility: elevators & accessible routes are signed; staff can guide you.</li>
-        </ul>
-      </section>
+  <section class="card">
+    <header class="card-h"><h2>Pre-game</h2></header>
+    <div class="card-b">
+      <ul class="bullets">
+        <li><b>Book early, plan early.</b> Hotels & rentals sell out. Make a Plan B in nearby towns.</li>
+        <li><b>Where to stay.</b> Downtown/campus first; also West Knoxville, Cedar Bluff, Farragut, Alcoa/Maryville.</li>
+        <li><b>Plan B towns.</b> Oak Ridge, Sevierville, Pigeon Forge, Lenoir City, Clinton, Maryville, Jefferson City, Dandridge, Newport.</li>
+        <li><b>Traffic.</b> Check the live map and Waze before you move.</li>
+        <li><b>Pack list.</b> IDs, mobile tickets/charger, meds, water, ponchos, sunscreen, snacks.</li>
+      </ul>
     </div>
+  </section>
 
-    <aside class="rail stack">
-      <section class="card"><h3>Weather now</h3><div id="wx-now" class="meta">—</div></section>
-      <section class="card">
-        <h3>Traffic & Map</h3>
-        <iframe class="embed map" src="https://embed.waze.com/iframe?lat=35.9545&lon=-83.9250&zoom=14&pin=1"></iframe>
-      </section>
-      <section class="card">
-        <h3>Quick links</h3>
-        <ul class="meta" style="margin:0; padding-left:1rem">
-          <li><a href="schedule.html">Schedule</a></li>
-          <li><a href="map.html">Map</a></li>
-          <li><a href="specials.html">Specials</a></li>
-          <li><a href="submit.html">Submit a listing</a></li>
-        </ul>
-      </section>
-    </aside>
-  </main>
+  <section class="card">
+    <header class="card-h"><h2>Game-time</h2></header>
+    <div class="card-b">
+      <ul class="bullets">
+        <li>Hydration: refill stations at main concourses.</li>
+        <li>Night games get breezy—layer up.</li>
+        <li>Mobile tickets: open wallet before the scanners to avoid bottlenecks.</li>
+        <li>Watch our Live Score Box on the home page for in-game updates.</li>
+      </ul>
+    </div>
+  </section>
 
-  <footer class="site-footer"><div class="container">
-    <p class="meta">Unofficial fan resource.</p>
-  </div></footer>
+  <section class="card">
+    <header class="card-h"><h2>Post-game</h2></header>
+    <div class="card-b">
+      <ul class="bullets">
+        <li>Wait 20–30 minutes if parked close—saves time overall.</li>
+        <li>Use side streets / river route when open to beat main flow.</li>
+        <li>Walk outside control points before calling rideshare.</li>
+        <li>24/7 food: we’ll curate a list; submit spots on the listings page.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card span-2">
+    <header class="card-h"><h2>Emergency & Visitor Info</h2></header>
+    <div class="card-b">
+      <ul class="bullets">
+        <li><b>Emergency:</b> 911 — <b>UT Police:</b> (865) 974-3111 — <b>City non-emergency:</b> (865) 215-7450.</li>
+        <li>First-aid stations located on main concourses; look for posted signs.</li>
+        <li>Accessibility: elevators & accessible routes are signed; staff can guide you.</li>
+      </ul>
+    </div>
+  </section>
+
+  <aside class="rail">
+    <section class="card">
+      <header class="card-h"><h3>Weather now</h3></header>
+      <div class="card-b" id="wxNow">—</div>
+    </section>
+
+    <section class="card">
+      <header class="card-h"><h3>Traffic & Map</h3></header>
+      <div class="card-b">
+        <iframe title="Waze" style="border:0;width:100%;height:200px;border-radius:10px;"
+          src="https://embed.waze.com/iframe?zoom=14&lat=35.9549&lon=-83.9263&pin=1" loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <section class="card">
+      <header class="card-h"><h3>Quick links</h3></header>
+      <ul class="card-b list-links">
+        <li><a href="schedule.html">Schedule</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li><a href="specials.html">Specials</a></li>
+        <li><a href="submit.html">Submit a listing</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+<footer class="site-foot"><p class="muted">Unofficial fan resource.</p></footer>
+<script src="/sports-fansite/assets/js/app.js?v=2025-08-30-2"></script>
 </body>
 </html>
