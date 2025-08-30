@@ -1,1 +1,26 @@
-{"tempF": 58, "feelsF": 56, "wind": "6 mph", "note": "Knoxville"}
+{
+  "days": [
+    {
+      "label": "Sat",
+      "hi": 30.4,
+      "lo": 13.8,
+      "precipPct": 1
+    },
+    {
+      "label": "Sun",
+      "hi": 30.3,
+      "lo": 15.3,
+      "precipPct": 10
+    },
+    {
+      "label": "Mon",
+      "hi": 29.2,
+      "lo": 14.8,
+      "precipPct": 23
+    }
+  ],
+  "source": "open-meteo",
+  "lat": 35.9606,
+  "lon": -83.9207,
+  "fetchedAt": "2025-08-30T13:28:21.552Z"
+}
