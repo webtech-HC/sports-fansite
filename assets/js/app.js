@@ -1,179 +1,184 @@
+<script>
 /* Tennessee Fansite — shared JS (safe / idempotent) */
 (() => {
-  if (window.__TN_APP_INIT__) return; window.__TN_APP_INIT__ = true;
+  if (window.__TN_APP_INIT__) return;
+  window.__TN_APP_INIT__ = true;
 
-  // ---------- tiny helpers ----------
+  /* ---------- tiny helpers ---------- */
   const $  = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-  const safe = (v) => (v == null ? '' : v);
+  const safe = (v, d='—') => (v === null || v === undefined || v === '' ? d : v);
 
+  // Normalize any path to project-relative (works on GH Pages project sites)
+  const normalize = (path) => {
+    let p = String(path).trim();
+    // strip protocol/host and any leading slash so it's repo-relative
+    p = p.replace(/^https?:\/\/[^/]+\/+/i, '').replace(/^\/+/, '');
+    return p;
+  };
+
+  // Project-safe JSON load with cache-bust + graceful fallback
   async function getJSON(path, fallback=null) {
-    try {
-      const res = await fetch(`${path}?t=${Date.now()}`, { cache: 'no-store' });
-      if(!res.ok) throw new Error(`getJSON: ${res.status} ${res.statusText}`);
-      return await res.json();
-    } catch (err) {
-      console.warn('getJSON fallback:', path, err.message);
-      return fallback;
+    const rel = normalize(path);
+    const url1 = rel.includes('data/') ? rel : `data/${rel}`;
+    const attempts = [`${url1}?t=${Date.now()}`, url1];
+
+    for (const u of attempts) {
+      try {
+        const res = await fetch(u, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch (err) {
+        // swallow and try next
+      }
     }
+    return fallback;
   }
 
-  // ---------- countdown for next game ----------
+  /* ---------- COUNTDOWN (from next scheduled game) ---------- */
   async function bootCountdown() {
-    const data = await getJSON('/data/schedule.json', []);
-    const list = Array.isArray(data) ? data : (data.games||[]);
-    const now  = new Date();
+    const data = await getJSON('schedule.json', { games: [] });
+    const list = Array.isArray(data) ? data : (data.games || []);
+    if (!list.length) return;
+
+    const now = new Date();
     const next = list.find(g => new Date(g.start) > now);
     if (!next) return;
 
-    const tick = () => {
-      const t0 = new Date(next.start), t1 = new Date();
-      const diff = Math.max(0, t0 - t1);
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      const p2 = n => String(n).padStart(2,'0');
-      $('#cd-days') && ($('#cd-days').textContent = p2(d));
-      $('#cd-hrs')  && ($('#cd-hrs').textContent  = p2(h));
-      $('#cd-min')  && ($('#cd-min').textContent  = p2(m));
-      $('#cd-sec')  && ($('#cd-sec').textContent  = p2(s));
-    };
+    const tEl = $('#cd-days') && $('#cd-hrs') && $('#cd-min') && $('#cd-sec')
+      ? { d: $('#cd-days'), h: $('#cd-hrs'), m: $('#cd-min'), s: $('#cd-sec') }
+      : null;
+    if (!tEl) return;
+
+    function tick() {
+      const diff = new Date(next.start) - new Date();
+      const s = Math.max(0, Math.floor(diff / 1000));
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const z = Math.floor(s % 60);
+
+      tEl.d.textContent = String(d).padStart(2, '0');
+      tEl.h.textContent = String(h).padStart(2, '0');
+      tEl.m.textContent = String(m).padStart(2, '0');
+      tEl.s.textContent = String(z).padStart(2, '0');
+    }
     tick();
     setInterval(tick, 1000);
 
-    // add-to-calendar link
+    // "Add to calendar" link
     const btn = $('#addToCal');
     if (btn) {
       const start = new Date(next.start);
-      const end   = new Date(start.getTime() + 3*60*60*1000);
-      const pad = n => String(n).padStart(2,'0');
-      const fmt = (d) => d.getUTCFullYear().toString() +
-        pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) + 'T' +
-        pad(d.getUTCHours())   + pad(d.getUTCMinutes()) + '00Z';
-      const title   = encodeURIComponent(`Tennessee vs ${next.opponent}`);
-      const loc     = encodeURIComponent(`Neyland Stadium, Knoxville, TN`);
-      const details = encodeURIComponent('Independent fan hub — Tennessee Gameday');
+      const end   = new Date(start.getTime() + 3*60*60*1000); // +3h
+      const pad = (n) => String(n).padStart(2,'0');
 
-      btn.href   =
-        `https://www.google.com/calendar/render?action=TEMPLATE` +
-        `&text=${title}&dates=${fmt(start)}/${fmt(end)}&location=${loc}&details=${details}`;
+      const fmt = (dt) =>
+        `${dt.getUTCFullYear()}${pad(dt.getUTCMonth()+1)}${pad(dt.getUTCDate())}T${pad(dt.getUTCHours())}${pad(dt.getUTCMinutes())}00Z`;
+
+      const title   = encodeURIComponent(`Tennessee vs ${next.opponent}`);
+      const details = encodeURIComponent('Unofficial fan hub — Tennessee Gameday');
+      const loc     = encodeURIComponent(`${next.isHome ? 'Neyland Stadium, Knoxville, TN' : 'Away'}`);
+
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&location=${loc}&details=${details}`;
+      btn.href = url;
       btn.target = '_blank';
-      btn.rel    = 'noopener';
+      btn.rel = 'noopener';
     }
   }
 
-  // ---------- schedule (3 rows default) ----------
+  /* ---------- SCHEDULE (3 rows) ---------- */
   async function bootSchedule() {
     const [sched, meta] = await Promise.all([
-      getJSON('/data/schedule.json', []),
-      getJSON('/data/meta.json', {lastUpdated:null})
+      getJSON('schedule.json', { games: [] }),
+      getJSON('meta.json', null)
     ]);
-    const list = Array.isArray(sched) ? sched : (sched.games||[]);
+    const list = Array.isArray(sched) ? sched : (sched.games || []);
     const tbody = $('#sched');
     if (!tbody) return;
 
     tbody.innerHTML = '';
-    list.slice(0,3).forEach(g => {
+    list.slice(0, 3).forEach(g => {
       const d = new Date(g.start);
       const tr = document.createElement('tr');
-      tr.innerHTML =
-        `<td>${d.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' })}</td>`+
-        `<td>${safe(g.opponent)}</td>`+
-        `<td>${g.isHome ? 'H' : 'A'}</td>`+
-        `<td>${safe(g.tv) || '—'}</td>`+
-        `<td>${safe(g.result) || '—'}</td>`;
+      tr.innerHTML = `
+        <td>${d.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric'})}</td>
+        <td>${safe(g.opponent)}</td>
+        <td>${g.isHome ? 'H' : 'A'}</td>
+        <td>${safe(g.tv)}</td>
+        <td>${safe(g.result, '—')}</td>
+      `;
       tbody.appendChild(tr);
     });
 
-    const stamp = meta.lastUpdated ? new Date(meta.lastUpdated) : null;
-    const ts = stamp ? stamp.toLocaleString() : '—';
-    $('#dataStamp') && ($('#dataStamp').textContent = `Data updated — ${ts}`);
+    const stamp = meta?.lastUpdated ? new Date(meta.lastUpdated) : null;
+    if ($('#dataStamp')) $('#dataStamp').textContent =
+      stamp ? `Data updated — ${stamp.toLocaleString()}` : 'Data updated — —';
   }
 
-  // ---------- live score box (robust to both schemas) ----------
-  async function bootScore() {
+  /* ---------- LIVE SCOREBOX (polls /data/scoreboard.json) ---------- */
+  let scoreTimer;
+  async function bootScorebox(initial=false) {
     const box = $('#scoreBody');
+    const stampEl = $('#scoreStamp');
     if (!box) return;
 
-    function mapStatus(s='') {
-      s = s.toLowerCase();
-      if (s.includes('in progress')) return 'in_progress';
-      if (s.includes('final'))        return 'final';
-      if (s.includes('scheduled') || s==='pre') return 'pre';
-      if (s.includes('postponed'))   return 'postponed';
-      if (s.includes('canceled'))    return 'canceled';
-      return 'none';
+    const sb = await getJSON('scoreboard.json', { status: 'none' });
+
+    const name = (t) => safe(t?.name, '');
+    const sc   = (t) => (t?.score ?? t?.points ?? null);
+
+    let html = '';
+    switch (sb.status) {
+      case 'pre':
+        html = `${name(sb.home)} vs ${name(sb.away)} <span class="muted">${safe(sb.clock, 'Pregame')}</span>`;
+        break;
+      case 'in_progress':
+        html = `
+          <strong>${name(sb.home)}</strong> ${safe(sc(sb.home),'0')}
+          &nbsp;—&nbsp;
+          <strong>${name(sb.away)}</strong> ${safe(sc(sb.away),'0')}
+          <span class="muted">${safe(sb.clock,'')}</span>`;
+        break;
+      case 'final':
+        html = `Final — ${name(sb.home)} ${safe(sc(sb.home),'0')} — ${name(sb.away)} ${safe(sc(sb.away),'0')}`;
+        break;
+      default:
+        html = `<span class="muted">No game in progress.</span>`;
+    }
+    box.innerHTML = html;
+
+    if (stampEl) {
+      const when = sb.fetchedAt || sb.fetched_at || sb.fetched || null;
+      stampEl.textContent = when ? new Date(when).toLocaleTimeString() : '';
     }
 
-    function normalize(d) {
-      if (!d) return { status:'none' };
-
-      // Already flat?
-      if (d.status && (d.home || d.away)) {
-        return {
-          status: mapStatus(d.status),
-          home: d.home || { name:'Tennessee', score:'' },
-          away: d.away || { name:'', score:'' },
-          clock: d.clock || '',
-          start: d.start || null
-        };
-      }
-
-      // Nested "game" shape (what you have now)
-      if (d.game) {
-        const g = d.game;
-        return {
-          status: mapStatus(g.status || ''),
-          home: { name: g.home || g.home_team || 'Tennessee', score: g.home_points ?? '' },
-          away: { name: g.away || g.away_team || '',          score: g.away_points ?? '' },
-          clock: g.period ? `Q${g.period} ${g.clock ?? ''}` : (g.clock ?? ''),
-          start: g.start || g.start_date || null
-        };
-      }
-
-      return { status:'none' };
+    if (initial) {
+      clearInterval(scoreTimer);
+      scoreTimer = setInterval(bootScorebox, 30_000);
     }
-
-    const data = await getJSON('/data/scoreboard.json', {status:'none'});
-    const s = normalize(data);
-
-    // Render
-    const line = (t) => `<span class="muted">${t}</span>`;
-    if (s.status === 'in_progress') {
-      box.innerHTML =
-        `<div class="score-row">`+
-          `<strong>${safe(s.away.name)}</strong> ${safe(s.away.score)} @ `+
-          `<strong>${safe(s.home.name)}</strong> ${safe(s.home.score)} `+
-        `</div>`+
-        (s.clock ? `<div>${line(s.clock)}</div>` : ``);
-      return;
-    }
-    if (s.status === 'final') {
-      box.innerHTML =
-        `<div class="score-row">FINAL — `+
-          `<strong>${safe(s.away.name)}</strong> ${safe(s.away.score)} @ `+
-          `<strong>${safe(s.home.name)}</strong> ${safe(s.home.score)}`+
-        `</div>`;
-      return;
-    }
-    if (s.status === 'pre') {
-      const when = s.start ? new Date(s.start).toLocaleString() : '';
-      const vs = (s.home?.name || '').toLowerCase().includes('tennessee') ? 'vs' : '@';
-      box.innerHTML =
-        `<div class="score-row">`+
-          `Tennessee ${vs} ${safe( (vs==='vs' ? s.away?.name : s.home?.name) || '' )}`+
-        `</div>`+
-        (when ? `<div>${line(when)}</div>` : ``);
-      return;
-    }
-
-    // Default
-    box.innerHTML = `<span class="muted">No game in progress.</span>`;
   }
 
-  // ---------- init ----------
-  bootCountdown();
-  bootSchedule();
-  bootScore();
+  /* ---------- WEATHER NOW (optional) ---------- */
+  let wxTimer;
+  async function bootWeather() {
+    const wx = await getJSON('weather.json', null);
+    const el = $('#wxNow');
+    if (!el || !wx) return;
+
+    const t = Math.round(wx?.current?.temperature ?? wx?.temp ?? NaN);
+    const w = Math.round(wx?.current?.windspeed ?? wx?.wind ?? NaN);
+    el.textContent = isNaN(t) ? '—' : `${t}° • Wind ${isNaN(w)?'—':w} mph`;
+  }
+
+  /* ---------- init all ---------- */
+  (async () => {
+    bootCountdown();
+    bootSchedule();
+    bootScorebox(true);
+    bootWeather();
+    clearInterval(wxTimer);
+    wxTimer = setInterval(bootWeather, 10 * 60 * 1000);
+  })();
+
 })();
+</script>
