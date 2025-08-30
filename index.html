@@ -3,110 +3,222 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TENNESSEE • Gameday Hub (Unofficial)</title>
-  <meta name="description" content="Unofficial Tennessee football gameday guide: schedule, TV/streams, map, and tips." />
-  <link rel="preload" as="image" href="assets/img/tn-wordmark-glossy.png" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-7" />
-  <meta name="theme-color" content="#0b0f14" />
-</head>
+  <title>TENNESSEE — Gameday Hub (Unofficial)</title>
 
+  <!-- cache-buster -->
+  <meta name="build" content="v=2025-08-28-8" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-8" />
+
+  <!-- Preload the glossy wordmark you actually uploaded (JPG) -->
+  <link rel="preload" as="image" href="assets/img/tn-wordmark-glossy.jpg" />
+
+  <!-- Inline override to fix the broken relative path coming from assets/css/styles.css.
+       We keep your existing CSS — this takes precedence and uses the correct URL base. -->
+  <style>
+    /* hero background, metal by default (you can flip to clay by swapping the URL) */
+    .hero {
+      background-image: url("assets/img/tn-hero-metal.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    /* optional: darker overlay for readability if your theme needs it */
+    .hero::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.55));
+      pointer-events:none;
+    }
+    .hero-wrap{ position:relative; }
+    .hero-wordmark{
+      display:block; margin:0 auto; height:auto; width:min(880px,90vw);
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,.45));
+    }
+    /* small nicety so the H1 alt text never shows up as a duplicate */
+    .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  </style>
+
+  <meta name="description" content="Tennessee football gameday hub: schedule, odds, map, and more." />
+  <link rel="icon" href="assets/img/favicon.svg" />
+  <meta property="og:title" content="TENNESSEE — Gameday Hub (Unofficial)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/img/tn-hero-metal.jpg" />
+</head>
 <body>
+
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
+    <div class="brand">TN</div>
     <nav class="nav">
-      <a class="brand-mini" href="index.html" aria-label="Tennessee Gameday Hub">TN</a>
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
       <a class="btn btn-small" href="submit.html">Submit</a>
     </nav>
-
-    <!-- Single hero wordmark (uses transparent PNG via CSS) -->
-    <h1 class="brand" aria-label="Tennessee">TENNESSEE</h1>
-    <p class="tagline">Fan-run. Unofficial. Built by fans for fans.</p>
   </header>
 
-  <main id="main" class="wrap" aria-label="Main content">
-    <!-- Score Box (live) -->
-    <section class="card">
-      <h2 class="h6">Live Score Box</h2>
-      <div id="scorebox" class="scorebox">
-        <div class="scorebox-row">
-          <span id="sbAwayName" class="team">Away team</span>
-          <span id="sbAwayScore" class="score">–</span>
+  <!-- HERO (dark field bg + glossy wordmark) -->
+  <section class="hero hero-wrap" aria-label="Hero">
+    <h1 class="sr-only">Tennessee</h1>
+    <img
+      class="hero-wordmark"
+      src="assets/img/tn-wordmark-glossy.jpg"
+      width="880"
+      height="200"
+      decoding="async"
+      loading="eager"
+      alt="Tennessee" />
+  </section>
+
+  <main id="main" class="wrap">
+    <p class="muted">Fan-run. Unofficial. Built by fans for fans.</p>
+
+    <!-- Live Score Box -->
+    <section class="card" id="livebox" aria-label="Live Score Box">
+      <header class="card-hd">
+        <h2 class="card-ttl">Live Score Box</h2>
+        <div class="card-meta">
+          <span data-line="status">—</span>
         </div>
-        <div class="scorebox-row">
-          <span id="sbHomeName" class="team">Home team</span>
-          <span id="sbHomeScore" class="score">–</span>
-        </div>
-        <div class="scorebox-meta">
-          <span id="sbStatus">No game in progress.</span>
-          <span id="sbClock" class="muted"></span>
+      </header>
+      <div class="card-bd">
+        <div class="row">
+          <div class="grow">
+            <strong data-line="match">Tennessee</strong>
+            <div class="muted">No game in progress.</div>
+          </div>
+          <div class="score" data-line="score">—</div>
         </div>
       </div>
     </section>
 
-    <!-- Upcoming Game -->
-    <section class="grid">
-      <article class="card">
-        <h2 class="h6">Upcoming Game</h2>
-        <div id="next">
-          <div id="nextMatch" class="strong">Loading…</div>
-          <div><time id="nextTime"></time></div>
-          <div id="nextVenue" class="muted"></div>
-          <button id="btnAddCal" class="btn btn-small" disabled>Add to Calendar</button>
-        </div>
-      </article>
+    <!-- Upcoming game quick card -->
+    <section class="card" id="quickcard" aria-label="Upcoming Game">
+      <header class="card-hd">
+        <h2 class="card-ttl">Upcoming Game</h2>
+      </header>
+      <div id="quick" class="card-bd">
+        <p class="h5" data-line="headline">Loading...</p>
+        <p class="muted" data-line="sub"></p>
+        <button class="btn btn-small" id="addToCalendar" disabled>Add to Calendar</button>
+      </div>
+    </section>
 
-      <!-- Weather (placeholder; your GH Action can still refresh /data/weather.json) -->
-      <article class="card">
-        <h2 class="h6">Weather (3-day)</h2>
-        <ul id="wx3" class="list-condensed">
-          <li>Fri — <span class="muted">—</span></li>
-          <li>Sat — <span class="muted">—</span></li>
-          <li>Sun — <span class="muted">—</span></li>
+    <!-- Weather (just a shell here; your weather script can slot in later) -->
+    <section class="card" aria-label="Weather (3-day)">
+      <header class="card-hd"><h2 class="card-ttl">Weather (3-day)</h2></header>
+      <div class="card-bd">
+        <ul class="weather3">
+          <li>Fri — — —</li>
+          <li>Sat — — —</li>
+          <li>Sun — — —</li>
         </ul>
         <p class="muted">Forecasts change—check again closer to kickoff.</p>
-      </article>
-
-      <article class="card">
-        <h2 class="h6">This Week in Knoxville</h2>
-        <ul class="list-condensed">
-          <li><a target="_blank" rel="noopener" href="#">Market Square Live Music</a></li>
-          <li><a target="_blank" rel="noopener" href="#">Old City Night Market</a></li>
-          <li><a target="_blank" rel="noopener" href="#">Downtown Brunch Crawl</a></li>
-        </ul>
-      </article>
+      </div>
     </section>
 
-    <!-- Schedule table -->
-    <section class="card" style="margin-top: 18px">
-      <div class="flex between center">
-        <h2 class="h6" style="margin:0">Schedule & Results</h2>
-        <small class="muted">Data updated — <span class="date-last-updated">loading…</span></small>
+    <!-- This Week in Knoxville -->
+    <section class="card" aria-label="This Week in Knoxville">
+      <header class="card-hd"><h2 class="card-ttl">This Week in Knoxville</h2></header>
+      <div class="card-bd">
+        <ul class="list">
+          <li>Market Square Live Music</li>
+          <li>Old City Night Market</li>
+          <li>Downtown Brunch Crawl</li>
+        </ul>
       </div>
-      <div class="table-wrap" style="margin-top:12px">
-        <table class="table" aria-describedby="schNote">
-          <thead>
-            <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
-          </thead>
-          <tbody id="sched"></tbody>
-        </table>
+    </section>
+
+    <!-- Schedule & Results table (Tennessee-only) -->
+    <section class="card" aria-label="Schedule & Results">
+      <header class="card-hd">
+        <h2 class="card-ttl">Schedule & Results</h2>
+        <small class="muted">Data updated — <span data-last-updated>Loading…</span>.</small>
+      </header>
+      <div class="card-bd">
+        <div class="table-wrap">
+          <table class="table" aria-describedby="snote">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th>H/A</th>
+                <th>TV</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody id="sched"><tr><td colspan="5">Loading…</td></tr></tbody>
+          </table>
+        </div>
+        <p id="snote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
       </div>
-      <p id="schNote" class="muted">Times/TV subject to change. Check official sources day-of.</p>
+    </section>
+
+    <!-- Featured Specials -->
+    <section class="card" aria-label="Featured Specials">
+      <header class="card-hd"><h2 class="card-ttl">Featured Specials</h2></header>
+      <div class="card-bd">
+        <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
+        <div id="specialsGrid"></div>
+      </div>
+    </section>
+
+    <!-- Gameday Guide (Unofficial) -->
+    <section class="card" aria-label="Gameday Guide">
+      <header class="card-hd"><h2 class="card-ttl">Gameday Guide (Unofficial)</h2></header>
+      <div class="card-bd guide-grid">
+        <article>
+          <h3>Getting There</h3>
+          <ul class="list">
+            <li>Rideshare or public lots: expect road closures near campus.</li>
+            <li>Plan 60–90 minutes for traffic and entry queues.</li>
+            <li>Pick a meetup spot in case phones die.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Entry &amp; Bags</h3>
+          <ul class="list">
+            <li>Many venues have clear-bag rules and metal detectors.</li>
+            <li>Leave large items, outside alcohol, and prohibited items at home.</li>
+            <li>Always verify with the official event page before you go.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Food &amp; Water</h3>
+          <ul class="list">
+            <li>Many vendors are cashless—bring a card or mobile pay.</li>
+            <li>Hydrate early; find refill spots on concourses.</li>
+            <li>Family sections are great with kids; consider ear protection.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Accessibility</h3>
+          <ul class="list">
+            <li>Check ADA parking, shuttle drop-offs, elevators, and seating.</li>
+            <li>Service animals typically permitted—follow venue guidance.</li>
+            <li>Contact accessibility office ahead for assistance.</li>
+          </ul>
+        </article>
+      </div>
     </section>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
+    <p>
+      <a href="guide.html">Guide</a> •
+      <a href="specials.html">Specials</a> •
+      <a href="map.html">Map</a> •
+      <a href="schedule.html">Schedule</a> •
+      <a href="submit.html">Submit</a>
+    </p>
     <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
   </footer>
 
-  <!-- scripts -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-7"></script>
-  <script type="module" src="assets/js/live.js?v=2025-08-28-7"></script>
+  <!-- JS (app + live) -->
+  <script type="module" src="assets/js/app.js?v=2025-08-28-8"></script>
+  <script type="module" src="assets/js/live.js?v=2025-08-28-8"></script>
 </body>
 </html>
