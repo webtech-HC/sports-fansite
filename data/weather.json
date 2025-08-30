@@ -8,19 +8,19 @@
     },
     {
       "label": "Sun",
-      "hi": 30.3,
-      "lo": 15.3,
+      "hi": 29.5,
+      "lo": 15.5,
       "precipPct": 10
     },
     {
       "label": "Mon",
       "hi": 29.2,
-      "lo": 14.8,
+      "lo": 15.9,
       "precipPct": 23
     }
   ],
   "source": "open-meteo",
   "lat": 35.9606,
   "lon": -83.9207,
-  "fetchedAt": "2025-08-30T13:35:41.506Z"
+  "fetchedAt": "2025-08-30T14:07:46.494Z"
 }
