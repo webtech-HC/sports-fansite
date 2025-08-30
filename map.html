@@ -3,111 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Map • Tennessee Gameday Hub (Unofficial)</title>
-
-  <meta name="asset-version" content="2025-08-28-5" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-5" />
-  <link rel="icon" href="assets/img/favicon.svg" />
-
-  <!-- Leaflet CSS (for the mini map on this page only) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha384-QM8u7cH9qZt2N8r9c1SBs7hMZs2mBvYg2z1UQXu5lQeQv4aB8nq9x6p1v2dQyT3g"
-    crossorigin="anonymous"
-  />
-  <style>
-    /* keep it local so the map feels good on mobile */
-    #map { height: 480px; border-radius: 10px; overflow: hidden; }
-  </style>
+  <title>Tennessee — Map</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
-    <nav class="nav">
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
+    </div>
+    <div class="header-countdown">
+      <div id="countdown" class="countdown">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+    <nav class="site-nav">
       <a href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a class="active" href="map.html">Map</a>
       <a href="guide.html">Guide</a>
-      <a class="btn btn-small" href="submit.html">Submit</a>
+      <a class="btn" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker">
-    <div class="ticker-inner" id="ticker">Loading…</div>
-  </section>
-
-  <main id="main" class="wrap" aria-label="Main content">
-    <section class="card">
-      <h1 class="h3">Game-day map</h1>
-      <p class="muted">Data updated — <span id="last-updated">--</span></p>
-      <div id="map" role="region" aria-label="Knoxville map"></div>
-      <p class="muted" style="margin-top:10px">
-        Tip: Zoom for more detail. We’ll add categories soon (food, watch, drinks, parking).
-      </p>
+  <main class="wrap">
+    <section class="grid grid-single">
+      <article class="card card-span2">
+        <div class="card-head"><h1 class="card-title">Interactive Map</h1></div>
+        <div class="card-body map-hero">
+          <iframe title="Knoxville Map (Full)"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-83.992%2C35.930%2C-83.886%2C36.000&layer=mapnik&marker=35.9606%2C-83.9207"
+            loading="lazy"></iframe>
+          <a class="map-open" target="_blank" rel="noopener"
+             href="https://www.openstreetmap.org/?mlat=35.9606&mlon=-83.9207#map=13/35.9606/-83.9207">Open in OSM</a>
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a class="active" href="map.html">Map</a> • <a href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
   </footer>
 
-  <!-- Core app (ticker, meta, etc.) -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-5"></script>
-
-  <!-- Leaflet JS + tiny guarded map boot -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha384-5g9y3Qq8G3p6u3k5zjV4oVx5/9xEwq3m8s0t4t6v2C4o3w3k0cP7T3m0DqJQ5F6u"
-    crossorigin="anonymous"
-  ></script>
-  <script>
-  (async () => {
-    // default center = Knoxville
-    const KNOX = { lat: 35.955, lng: -83.924, z: 13 };
-
-    const map = L.map('map', {
-      center: [KNOX.lat, KNOX.lng],
-      zoom: KNOX.z,
-      scrollWheelZoom: true
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    // Try to center near the next game’s venue if we have coordinates
-    try {
-      const next = await fetch('data/next.json', { cache: 'no-store' }).then(r => r.json());
-      const v = next && next.venue ? next.venue : {};
-      const lat = Number(v.latitude ?? v.lat ?? NaN);
-      const lng = Number(v.longitude ?? v.lon ?? NaN);
-      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
-        map.setView([lat, lng], 14);
-        L.marker([lat, lng]).addTo(map).bindPopup(`${v.name || 'Game venue'}`);
-      }
-    } catch (e) {
-      console.warn('No next-venue coordinates yet.');
-    }
-
-    // Optional: drop a pin for each scheduled home game with known coords
-    try {
-      const schedule = await fetch('data/schedule.json', { cache: 'no-store' }).then(r => r.json());
-      (schedule || []).forEach(g => {
-        const v = g && g.venue ? g.venue : {};
-        const lat = Number(v.latitude ?? NaN), lng = Number(v.longitude ?? NaN);
-        const isHome = (g.home || '').toLowerCase() === 'tennessee';
-        if (isHome && !Number.isNaN(lat) && !Number.isNaN(lng)) {
-          L.marker([lat, lng]).addTo(map)
-            .bindPopup(`${g.week ? 'Week ' + g.week + ': ' : ''}${g.away} @ ${g.home}<br>${new Date(g.start).toLocaleString()}`);
-        }
-      });
-    } catch { /* fine */ }
-  })();
-  </script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
