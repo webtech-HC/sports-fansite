@@ -4,24 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TENNESSEE — Gameday Hub</title>
-
-  <!-- App meta -->
   <meta name="description" content="Unofficial Tennessee Gameday Hub: schedule, TV/streams, odds, specials & map." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-
   <a class="skip" href="#main">Skip to content</a>
 
-  <!-- Compact hero strip -->
+  <!-- Compact hero -->
   <header class="hero">
     <div class="hero-inner">
       <div class="brand">
         <span class="brand-badge">TN</span>
         <strong>TENNESSEE</strong>
       </div>
-
       <nav class="nav">
         <a href="schedule.html">Schedule</a>
         <a href="specials.html">Specials</a>
@@ -30,19 +25,17 @@
         <a class="btn btn-small" href="submit.html">Submit</a>
       </nav>
     </div>
-
     <section class="ticker" aria-label="Gameday ticker">
       <div class="ticker-inner">Loading…</div>
     </section>
   </header>
 
-  <!-- Page grid -->
+  <!-- Grid -->
   <main id="main" class="page">
-
     <!-- Content column -->
     <section class="content">
 
-      <!-- 3-up stats row -->
+      <!-- 3-up stats -->
       <div class="stats3">
         <article class="card">
           <header class="card-h">
@@ -108,11 +101,10 @@
             <div class="table-wrap">
               <table class="table">
                 <thead>
-                  <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
+                <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
                 </thead>
                 <tbody id="sched"></tbody>
               </table>
-              <!-- gradient fade when truncated -->
               <div class="fade-mask" aria-hidden="true"></div>
             </div>
             <div class="table-actions">
@@ -122,7 +114,6 @@
           </div>
         </article>
 
-        <!-- Specials -->
         <article class="card">
           <header class="card-h"><h2 class="h">Featured Specials</h2></header>
           <div class="card-b">
@@ -131,21 +122,16 @@
           </div>
         </article>
 
-        <!-- Map -->
         <article class="card">
           <header class="card-h"><h2 class="h">Map</h2></header>
-          <div class="card-b">
-            <p>We’ll add an interactive map with categories and “Open now”.</p>
-          </div>
+          <div class="card-b"><p>Interactive map coming soon.</p></div>
         </article>
 
-        <!-- TV / Streams -->
         <article class="card">
           <header class="card-h"><h2 class="h">TV & Streams (This Week)</h2></header>
           <div class="card-b"><p>Updates closer to kickoff.</p></div>
         </article>
 
-        <!-- Odds -->
         <article class="card">
           <header class="card-h"><h2 class="h">Odds</h2></header>
           <div class="card-b">
@@ -153,7 +139,6 @@
           </div>
         </article>
 
-        <!-- Rankings -->
         <article class="card">
           <header class="card-h"><h2 class="h">Rankings (AP Top 25)</h2></header>
           <div class="card-b" id="rankings">Loading…</div>
@@ -162,9 +147,8 @@
       </div>
     </section>
 
-    <!-- Right rail (sticky) -->
+    <!-- Sticky right rail -->
     <aside class="rail" aria-label="Right rail">
-
       <article class="card">
         <header class="card-h"><h2 class="h">Countdown</h2></header>
         <div class="card-b">
@@ -187,43 +171,39 @@
           <a class="link" href="submit.html">Submit a listing</a>
         </div>
       </article>
-
     </aside>
   </main>
 
   <footer class="sitefoot">
     <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
     <p class="sitelinks">
-      <a href="guide.html">Guide</a> ·
-      <a href="specials.html">Specials</a> ·
-      <a href="map.html">Map</a> ·
-      <a href="schedule.html">Schedule</a> ·
-      <a href="submit.html">Submit</a>
+      <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> ·
+      <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
     </p>
-    <p class="license">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
+    <p class="license">© 2025 HC Web Labs. Content licensed under
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.
+    </p>
   </footer>
 
-  <!-- App scripts -->
+  <!-- App -->
   <script type="module" src="assets/js/app.js"></script>
 
-  <!-- Tiny, scoped enhancer: expand/collapse schedule (no globals) -->
+  <!-- Schedule toggle (scoped) -->
   <script>
     (() => {
-      const btn = document.querySelector('[data-toggle="sched"]');
-      const table = document.querySelector('#sched');
+      const btn  = document.querySelector('[data-toggle="sched"]');
+      const body = document.getElementById('sched');
       const fade = document.querySelector('#schedCard .fade-mask');
-      if (!btn || !table) return;
+      if (!btn || !body) return;
 
       const setState = (expanded) => {
-        table.dataset.expanded = expanded ? '1' : '0';
+        body.dataset.expanded = expanded ? '1' : '0';
         btn.textContent = expanded ? 'Show less' : 'Show full schedule';
         if (fade) fade.style.opacity = expanded ? '0' : '1';
       };
 
       setState(false);
-      btn.addEventListener('click', () => {
-        setState(table.dataset.expanded !== '1');
-      });
+      btn.addEventListener('click', () => setState(body.dataset.expanded !== '1'));
     })();
   </script>
 </body>
