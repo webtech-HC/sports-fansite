@@ -4,64 +4,231 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tennessee — Gameday Guide</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <meta name="description" content="Pre-game, game-time, and post-game guide for Tennessee Volunteers fans." />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-30" />
+
+  <!-- Fav + theme -->
+  <meta name="theme-color" content="#0e2218" />
 </head>
-<body>
+<body class="page page-guide">
+
+  <!-- ======= Header / Global Nav with centered countdown ======= -->
   <header class="site-header">
-    <div class="brand">
-      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
-    </div>
-    <div class="header-countdown">
-      <div id="countdown" class="countdown">
-        <span class="cd-pill">00</span><span class="cd-label">days</span>
-        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
-        <span class="cd-pill">00</span><span class="cd-label">mins</span>
-        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+    <nav class="topbar container">
+      <a class="brand" href="index.html" aria-label="Home">
+        <span class="brand-mark">TN</span>
+        <span class="brand-word">Tennessee</span>
+      </a>
+
+      <ul class="nav">
+        <li><a href="schedule.html">Schedule</a></li>
+        <li><a href="specials.html">Specials</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li class="is-active"><a href="guide.html" aria-current="page">Guide</a></li>
+        <li><a class="btn btn-small" href="submit.html">Submit</a></li>
+      </ul>
+
+      <!-- Centered countdown (populated by app.js) -->
+      <div class="header-countdown">
+        <div id="countdown" class="count flex" aria-live="polite">
+          <div class="box"><span class="num" id="cd-days">00</span><span class="lab">days</span></div>
+          <div class="box"><span class="num" id="cd-hrs">00</span><span class="lab">hrs</span></div>
+          <div class="box"><span class="num" id="cd-mins">00</span><span class="lab">mins</span></div>
+          <div class="box"><span class="num" id="cd-secs">00</span><span class="lab">secs</span></div>
+        </div>
       </div>
-      <div id="nextGameNote" class="next-note">Next game: TBA</div>
-    </div>
-    <nav class="site-nav">
-      <a href="schedule.html">Schedule</a>
-      <a href="specials.html">Specials</a>
-      <a href="map.html">Map</a>
-      <a class="active" href="guide.html">Guide</a>
-      <a class="btn" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <main class="wrap">
-    <section class="grid grid-single">
-      <article class="card card-span2">
-        <div class="card-head"><h1 class="card-title">Gameday Guide</h1></div>
-        <div class="card-body prose">
-          <h3>Getting There</h3>
-          <ul>
-            <li>Rideshare or public lots; expect road closures near campus.</li>
-            <li>Plan 60–90 minutes for traffic and entry queues.</li>
-            <li>Keep phone on silent; check your tickets in advance.</li>
+  <!-- ======= Page hero ======= -->
+  <section class="page-hero container">
+    <h1 class="page-title">Gameday Guide</h1>
+    <p class="lede">Everything you need for game day in Knoxville—before, during, and after kickoff.</p>
+    <button class="btn btn-accent js-ics">Add next game to Calendar</button>
+  </section>
+
+  <!-- ======= Main grid ======= -->
+  <main class="container grid grid-rail">
+    <!-- Left: content -->
+    <article class="col-main flow">
+
+      <!-- In-page TOC (mobile shows as horizontal chips; desktop sticks left) -->
+      <nav class="toc">
+        <a href="#pregame">Pre-game</a>
+        <a href="#gametime">Game-time</a>
+        <a href="#postgame">Post-game</a>
+        <a href="#families">Families</a>
+        <a href="#visitors">Visitors</a>
+      </nav>
+
+      <!-- ===== Pre-game ===== -->
+      <section id="pregame" class="card flow">
+        <header class="card-h">
+          <h2>Pre-game</h2>
+          <p class="muted">Arrive early, park smart, and soak in the atmosphere around Neyland.</p>
+        </header>
+
+        <div class="card-b flow">
+          <h3>Fans</h3>
+          <ul class="list">
+            <li><strong>Arrive 3–4 hours early</strong> for marquee opponents; garages and lots fill fast.</li>
+            <li>Check our <a href="schedule.html">Schedule &amp; Results</a> for TV time changes before you leave.</li>
+            <li>Tailgate zones near campus fill quickly—pack in/out and keep lanes clear.</li>
           </ul>
 
-          <h3>Entry &amp; Bags</h3>
-          <ul>
-            <li>Many venues have clear-bag rules and metal detectors.</li>
-            <li>Leave large items, outside alcohol, and prohibited items at home.</li>
-            <li>Always verify with the official event page before you go.</li>
+          <h3 id="families">Families</h3>
+          <ul class="list">
+            <li>Use restrooms/food <em>before</em> entering the busiest gates to avoid bottlenecks.</li>
+            <li>Bring ear protection for little ones; the stadium gets loud.</li>
+            <li>Hydration is key—sealed water bottles are typically allowed (check bag policy day-of).</li>
           </ul>
 
-          <h3>Food &amp; Water</h3>
-          <ul>
-            <li>Hydrate early. Family sections are great with kids.</li>
-            <li>Most vendors are cashless—bring a card or mobile pay.</li>
+          <h3 id="visitors">Visitors / Tourists</h3>
+          <ul class="list">
+            <li>First time to Neyland? Give yourself time to walk the riverfront and Vol Village.</li>
+            <li>Rideshare tends to surge post-game; pre-book a pickup point off major closures.</li>
+            <li><a href="map.html">See the map</a> for walking routes and campus landmarks.</li>
           </ul>
         </div>
-      </article>
-    </section>
+      </section>
+
+      <!-- ===== Game-time ===== -->
+      <section id="gametime" class="card flow">
+        <header class="card-h">
+          <h2>Game-time</h2>
+          <p class="muted">Inside the stadium: finding your seats, staying comfy, and keeping up.</p>
+        </header>
+
+        <div class="card-b flow">
+          <h3>All Fans</h3>
+          <ul class="list">
+            <li>Mobile tickets: brighten your screen and open them <em>before</em> the gate.</li>
+            <li>Water, sunscreen, hat—day games can be hot. Night games can get breezy by the river.</li>
+            <li>Keep an eye on our <strong>Live Score Box</strong> on the home page—updates post as we receive them.</li>
+          </ul>
+
+          <h3>Accessibility</h3>
+          <ul class="list">
+            <li>Use elevators and accessible seating areas as posted; ask any event staff for directions.</li>
+            <li>Service animals permitted; please follow venue guidance.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== Post-game ===== -->
+      <section id="postgame" class="card flow">
+        <header class="card-h">
+          <h2>Post-game</h2>
+          <p class="muted">Leaving smart and spots to wind down nearby.</p>
+        </header>
+
+        <div class="card-b flow">
+          <h3>Traffic Tips</h3>
+          <ul class="list">
+            <li><strong>Wait 20–30 minutes</strong> if you parked close—let the first wave clear.</li>
+            <li>Use the traffic map (right rail) to spot closures and heavy flow.</li>
+            <li>Rideshare: walk a few blocks away from hard closures before requesting.</li>
+          </ul>
+
+          <h3>Food &amp; Drink</h3>
+          <ul class="list">
+            <li>Check <a href="specials.html">Specials</a> for fan-friendly spots and hours.</li>
+            <li>Family sections and quieter eats are a short drive north of campus.</li>
+          </ul>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- Right: rail (sticky on large screens) -->
+    <aside class="col-rail flow">
+
+      <!-- Weather now (Open-Meteo; no key) -->
+      <section class="card">
+        <header class="card-h"><h3>Weather now</h3></header>
+        <div class="card-b" id="wx-now">
+          <div class="muted">Loading current conditions…</div>
+        </div>
+      </section>
+
+      <!-- Live traffic / map (Waze) -->
+      <section class="card">
+        <header class="card-h"><h3>Traffic &amp; Map</h3></header>
+        <div class="card-b">
+          <div class="map-embed">
+            <iframe
+              title="Waze live traffic — Neyland Stadium area"
+              src="https://embed.waze.com/iframe?zoom=14&lat=35.955&lon=-83.925&pin=1"
+              style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              width="100%" height="260"></iframe>
+          </div>
+          <p class="muted small">Pin centers on the stadium area. Use pinch/scroll to explore closures and backups.</p>
+        </div>
+      </section>
+
+      <!-- Quick links -->
+      <section class="card">
+        <header class="card-h"><h3>Quick links</h3></header>
+        <div class="card-b">
+          <ul class="link-list">
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="specials.html">Specials</a></li>
+            <li><a href="submit.html">Submit a listing</a></li>
+          </ul>
+        </div>
+      </section>
+    </aside>
   </main>
 
-  <footer class="site-footer">
-    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
+  <!-- ======= Footer ======= -->
+  <footer class="site-footer container">
+    <p class="disclaimer small">Unofficial fan resource. Not affiliated with any university, athletics program, conference, or governing body.</p>
+    <nav class="footer-links small">
+      <a href="guide.html">Guide</a> ·
+      <a href="specials.html">Specials</a> ·
+      <a href="map.html">Map</a> ·
+      <a href="schedule.html">Schedule</a> ·
+      <a href="submit.html">Submit</a>
+    </nav>
+    <p class="small">© 2025 HC Web Labs. Content licensed under CC BY-NC-ND 4.0.</p>
   </footer>
 
-  <script src="assets/js/app.js"></script>
+  <!-- App JS (same files you use on index) -->
+  <script src="assets/js/app.js?v=2025-08-30" defer></script>
+  <script src="assets/js/live.js?v=2025-08-30" defer></script>
+
+  <!-- Page-local JS: “Weather now” fetch (no API key) -->
+  <script>
+    (function weatherNow(){
+      const el = document.getElementById('wx-now');
+      if (!el) return;
+      // Neyland Stadium-ish
+      const lat = 35.955, lon = -83.925;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York`;
+      fetch(url)
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(d => {
+          const c = d.current || {};
+          const t = Math.round(c.temperature_2m);
+          const feels = Math.round(c.apparent_temperature);
+          const wind = Math.round(c.wind_speed_10m);
+          el.innerHTML = `
+            <div class="wx-now">
+              <div class="wx-row">
+                <div class="big">${t}°F</div>
+                <div class="meta">
+                  <div>Feels like <strong>${feels}°</strong></div>
+                  <div>Wind <strong>${wind} mph</strong></div>
+                </div>
+              </div>
+              <div class="muted small">Updated just now · Knoxville, TN</div>
+            </div>`;
+        })
+        .catch(() => { el.innerHTML = '<div class="muted">Weather temporarily unavailable.</div>'; });
+    })();
+  </script>
 </body>
 </html>
