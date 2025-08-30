@@ -4,7 +4,7 @@
       "label": "Sat",
       "hi": 30.6,
       "lo": 14,
-      "precipPct": 2
+      "precipPct": 1
     },
     {
       "label": "Sun",
@@ -22,5 +22,5 @@
   "source": "open-meteo",
   "lat": 35.9606,
   "lon": -83.9207,
-  "fetchedAt": "2025-08-30T06:42:06.341Z"
+  "fetchedAt": "2025-08-30T07:08:05.969Z"
 }
