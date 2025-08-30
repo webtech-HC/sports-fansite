@@ -1,46 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Specials • Tennessee Gameday Hub</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script defer src="assets/js/app.js"></script>
+  <link rel="stylesheet" href="/sports-fansite/assets/css/styles.css?v=2025-08-30-2">
 </head>
-<body class="page specials-page">
-  <header class="site-header">
-    <div class="bar container">
-      <a class="brand" href="index.html"><span class="logo">TN</span><span>Tennessee</span></a>
-      <div id="countdown">
-        <div class="cd-badge"><span id="cd-days">00</span><span class="cd-label">days</span></div>
-        <div class="cd-badge"><span id="cd-hrs">00</span><span class="cd-label">hrs</span></div>
-        <div class="cd-badge"><span id="cd-min">00</span><span class="cd-label">mins</span></div>
-        <div class="cd-badge"><span id="cd-sec">00</span><span class="cd-label">secs</span></div>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="brand-badge">TN</span><span class="brand-name">Tennessee</span></a>
+  <nav class="main-nav">
+    <a href="schedule.html">Schedule</a>
+    <a class="is-active" href="specials.html">Specials</a>
+    <a href="map.html">Map</a>
+    <a href="guide.html">Guide</a>
+  </nav>
+  <div class="countdown" id="countdown">
+    <span><b id="cd-days">00</b><em>days</em></span>
+    <span><b id="cd-hrs">00</b><em>hrs</em></span>
+    <span><b id="cd-min">00</b><em>mins</em></span>
+    <span><b id="cd-sec">00</b><em>secs</em></span>
+  </div>
+  <a class="btn btn-primary" href="submit.html">Submit</a>
+</header>
+
+<main class="wrap grid grid--2col">
+  <section class="card span-2">
+    <header class="card-h"><h1>Featured specials</h1></header>
+    <div class="card-b">
+      <div class="well">
+        <h3>Add your special</h3>
+        <p>Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
+        <a class="btn btn-primary" href="submit.html">Submit a listing</a>
       </div>
-      <nav class="site-nav">
-        <a href="schedule.html">Schedule</a><a href="specials.html">Specials</a><a href="map.html">Map</a><a href="guide.html">Guide</a>
-        <a class="btn" href="submit.html">Submit</a>
-      </nav>
+      <p class="muted">Listings are community-submitted. Call ahead to confirm.</p>
     </div>
-  </header>
+  </section>
 
-  <main class="container rail-layout">
-    <div class="content stack">
-      <section class="card">
-        <h2>Featured specials</h2>
-        <p class="meta">Restaurant, bar, shop, or event with a gameday special? Share it with fans.</p>
-        <a class="btn" href="submit.html">Submit a listing</a>
-      </section>
-    </div>
-    <aside class="rail stack">
-      <section class="card">
-        <h3>Quick links</h3>
-        <ul class="meta" style="margin:0; padding-left:1rem">
-          <li><a href="guide.html">Guide</a></li><li><a href="map.html">Map</a></li><li><a href="schedule.html">Schedule</a></li>
-        </ul>
-      </section>
-    </aside>
-  </main>
+  <aside class="card">
+    <header class="card-h"><h3>Quick links</h3></header>
+    <ul class="card-b list-links">
+      <li><a href="guide.html">Guide</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="submit.html">Submit a listing</a></li>
+    </ul>
+  </aside>
+</main>
 
-  <footer class="site-footer"><div class="container"><p class="meta">Unofficial fan resource.</p></div></footer>
+<footer class="site-foot">
+  <nav class="foot-nav">
+    <a href="guide.html">Guide</a> · <a href="specials.html">Specials</a> · <a href="map.html">Map</a> · <a href="schedule.html">Schedule</a> · <a href="submit.html">Submit</a>
+  </nav>
+</footer>
+<script src="/sports-fansite/assets/js/app.js?v=2025-08-30-2"></script>
 </body>
 </html>
