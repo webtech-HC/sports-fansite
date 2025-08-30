@@ -1,66 +1,96 @@
-/* Tennessee Fansite — shared theme + grid (uniform across pages) */
+/* Tennessee Fansite – global styles (shared by all pages) */
+
+/* Color tokens */
 :root{
-  --orange-500:#ff9a1a; --orange-600:#ff8a00; --orange-700:#cf6f00;
-  --green-900:#081a12; --green-800:#0d281b; --green-700:#0f2f21; --green-650:#123827;
-  --white:#f7f7f7; --muted:#a9b6ad;
-  --ring:0 0 0 3px rgba(255,154,26,.25);
-  --shadow-lg:0 12px 22px rgba(0,0,0,.35); --shadow-sm:0 6px 12px rgba(0,0,0,.25);
-  --radius:14px; --radius-sm:10px; --wrap:1200px;
+  --vols-500:#ff9100;
+  --vols-600:#ff7a00;
+  --vols-700:#e46c00;
+
+  --field-900:#0b2a22;
+  --field-800:#10352b;
+  --panel-800:#123a30;
+  --panel-700:#1a473c;
+
+  --text-100:#e7f0ea;
+  --text-300:#c7d7cf;
+  --muted-500:#9fb3ac;
+
+  --ring: rgba(255,145,0,.25);
+  --shadow: 0 6px 28px rgba(0,0,0,.35);
 }
-*{box-sizing:border-box} html,body{height:100%} html{scroll-behavior:smooth}
+
+/* Ensure the background never tiles/repeats */
+html, body { height: 100%; }
 body{
   margin:0;
-  background:
-    radial-gradient(1200px 400px at 50% -150px, rgba(255,154,26,.12), transparent 60%),
-    linear-gradient(#0a271a, #071711 40%, #071711);
-  /* stop “repeating”/banding and pin the gradient */
-  background-repeat:no-repeat, no-repeat;
-  background-attachment:fixed, fixed;
-  background-size:cover, auto;
-  color:var(--white);
-  font:16px/1.5 "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text-100);
+  background: radial-gradient(1200px 600px at 50% -200px, rgba(255,145,0,.10), transparent 60%),
+              radial-gradient(900px 450px at 50% 120%, rgba(16,53,43,.35), rgba(16,53,43,1));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
 }
-a{color:var(--orange-500); text-decoration:none} a:hover{color:var(--orange-600); text-decoration:underline}
-.muted{color:var(--muted)}
-/* Header */
-.site-header{position:sticky; top:0; z-index:50; background:linear-gradient(180deg,var(--green-800),rgba(13,40,27,.7)); backdrop-filter:blur(4px); border-bottom:1px solid rgba(255,255,255,.04)}
-.header-inner{max-width:var(--wrap); margin:0 auto; padding:10px 16px; display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center}
-.brand{display:inline-flex; align-items:center; gap:10px; color:var(--white); font-weight:700}
-.brand .badge{display:grid; place-items:center; width:28px; height:28px; font-weight:800; border-radius:8px; background:linear-gradient(180deg,var(--orange-600),var(--orange-700)); color:#1a1207; box-shadow:var(--shadow-sm)}
-.nav{display:flex; gap:16px; align-items:center; justify-self:center}
-.nav a{color:var(--white); opacity:.9} .nav a:hover{opacity:1}
-#countdown{display:flex; gap:8px; align-items:center; white-space:nowrap}
-.pill{display:inline-flex; align-items:center; justify-content:center; min-width:38px; height:28px; padding:0 10px; border-radius:999px; background:linear-gradient(180deg,var(--orange-600),var(--orange-700)); color:#1c1308; font-weight:800; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,.25)}
 
-/* Layout / cards */
-.wrap{max-width:var(--wrap); margin:22px auto; padding:0 16px}
-.layout{display:grid; gap:18px; grid-template-columns:minmax(0,1fr) 340px}
-.main{display:grid; gap:18px} .rail{display:grid; gap:18px}
-@media (max-width:980px){.layout{grid-template-columns:1fr}}
-.card{background:linear-gradient(180deg,var(--green-700),var(--green-650)); border:1px solid rgba(255,255,255,.05); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden}
-.card>.head{padding:14px 16px; font-weight:700; border-bottom:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg,rgba(255,255,255,.04),transparent)}
-.card>.body{padding:14px 16px}
-.card table{width:100%; border-collapse:collapse; font-size:.95rem}
-.card table th,.card table td{padding:10px 8px; border-bottom:1px dashed rgba(255,255,255,.07); text-align:left}
-.card table th{color:var(--muted); font-weight:600}
-.card .foot{padding:10px 16px; border-top:1px solid rgba(255,255,255,.06)}
-.kicker{color:var(--muted); font-size:.9rem}
+/* Layout shell */
+.page{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+/* Cards */
+.card{
+  background: linear-gradient(180deg, var(--panel-800), var(--panel-700));
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 16px;
+}
+
+/* Headings */
+h1,h2,h3{ margin:8px 0 12px; font-weight:700; }
+.muted{ color:var(--muted-500); }
+
+/* Grid for the homepage and shared pages */
+.grid{
+  display:grid;
+  gap:16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px){
+  .grid{
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+  }
+}
+
+/* Scorebox rows */
+.score-row{
+  display:flex; justify-content:space-between; align-items:center;
+  font-size: 1rem; line-height: 1.25rem; padding:4px 0;
+}
+.score-row .team{ color:var(--text-300); }
+.score-row .score{ font-weight:800; color:#fff; }
+.clock{ margin-top:6px; font-size:.875rem; color:var(--muted-500); }
+.badge{
+  display:inline-block; margin-top:6px; padding:2px 8px; border-radius:999px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#fff; font-size:.75rem;
+}
 
 /* Buttons */
-.btn{appearance:none; border:0; cursor:pointer; font-weight:700; background:linear-gradient(180deg,var(--orange-600),var(--orange-700)); color:#1b1309; padding:8px 12px; border-radius:10px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,.2)}
-.btn:hover{filter:brightness(1.03)} .btn:focus{outline:var(--ring)}
-
-/* Utils */
-.flex{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-.grid-2{display:grid; gap:18px; grid-template-columns:1fr 1fr}
-.grid-3{display:grid; gap:18px; grid-template-columns:repeat(3,1fr)}
-@media (max-width:760px){.grid-2,.grid-3{grid-template-columns:1fr}}
-.map-embed,.waze-embed{width:100%; height:190px; border:0; border-radius:10px; overflow:hidden; background:#0c2218}
-
-/* Footer */
-.site-footer{padding:40px 16px; color:var(--muted); font-size:.9rem}
-.site-footer .wrap{border-top:1px solid rgba(255,255,255,.06); padding-top:16px}
+.btn{
+  display:inline-block; padding:8px 12px; border-radius:10px; text-decoration:none;
+  background:linear-gradient(180deg, var(--vols-500), var(--vols-700));
+  color:#1a1306; font-weight:700; border:1px solid rgba(0,0,0,.25);
+  box-shadow: 0 4px 14px rgba(255,145,0,.25);
+}
+.btn:hover{ filter:brightness(1.05); }
 
 /* Tables */
-.table-compact td, .table-compact th{padding:8px 6px}
-.badge{display:inline-block; font-size:.75rem; padding:2px 6px; border-radius:6px; background:#193225; color:#9dd0a7}
+.table{ width:100%; border-collapse: collapse; }
+.table th, .table td{ padding:10px 12px; border-top:1px solid rgba(255,255,255,.06); }
+.table th{ text-align:left; color:var(--text-300); font-weight:600; }
+
+/* Footer */
+.footer{ margin-top:48px; color:var(--muted-500); font-size:.9rem; text-align:center; }
