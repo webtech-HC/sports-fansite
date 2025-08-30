@@ -1,14 +1,18 @@
-/* Tennessee Fansite — app.js (live)
+/* Tennessee Fansite — app.js (Neyland weather + Google Calendar)
    - Central countdown (from next scheduled game)
-   - Live weather via Open-Meteo (no key)
+   - Live weather via Open-Meteo (Neyland Stadium coords)
    - Schedule paint (3 rows + toggle on home; full list on schedule page)
    - Scoreboard polling from data/scoreboard.json (if present)
+   - Google Calendar link for "Add to Calendar"
    - Mailto submit on Submit page
 */
 
 (() => {
   if (window.__TN_APP_INIT__) return;
   window.__TN_APP_INIT__ = true;
+
+  // --- Site constants ---
+  const STADIUM = { lat: 35.9540, lon: -83.9250, name: "Neyland Stadium, Knoxville, TN" };
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $all = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
@@ -126,54 +130,81 @@
     el.textContent = `Data updated — ${stamp}`;
   }
 
-  function enableICS(nextGame) {
+  /* ---------------- Google Calendar link ---------------- */
+  function toGCalUTC(d){
+    const pad = (n)=> String(n).padStart(2,"0");
+    return (
+      d.getUTCFullYear().toString() +
+      pad(d.getUTCMonth()+1) +
+      pad(d.getUTCDate()) + "T" +
+      pad(d.getUTCHours()) +
+      pad(d.getUTCMinutes()) +
+      pad(d.getUTCSeconds()) + "Z"
+    );
+  }
+  function openGoogleCal(nextGame){
     const btn = $("#addToCal");
     if (!btn || !nextGame || !isValidISO(nextGame.start)) { if (btn) btn.disabled = true; return; }
     btn.disabled = false;
-    btn.onclick = () => {
-      const dt = new Date(nextGame.start);
-      const dtEnd = new Date(dt.getTime() + 3 * 3600_000);
-      const toICS = (d) => d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-      const ics = [
-        "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//HC Web Labs//TN Fansite//EN",
-        "BEGIN:VEVENT",
-        `DTSTART:${toICS(dt)}`, `DTEND:${toICS(dtEnd)}`,
-        `SUMMARY:Tennessee vs ${nextGame.opponent || "Opponent"}`,
-        "END:VEVENT","END:VCALENDAR"
-      ].join("\r\n");
-      const blob = new Blob([ics], { type:"text/calendar" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = "tennessee.ics";
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 800);
-    };
+    btn.addEventListener("click", () => {
+      const start = new Date(nextGame.start);
+      const end = new Date(start.getTime() + 3 * 3600_000); // +3h default
+      const dates = `${toGCalUTC(start)}/${toGCalUTC(end)}`;
+      const title = encodeURIComponent(`Tennessee vs ${nextGame.opponent || "Opponent"}`);
+      const details = encodeURIComponent("Unofficial Tennessee Fansite — HC Web Labs");
+      const location = encodeURIComponent(STADIUM.name);
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}&sf=true&output=xml`;
+      window.open(url, "_blank", "noopener");
+    });
   }
 
-  /* ---------------- Weather (Open-Meteo) ---------------- */
+  /* ---------------- Weather (Open-Meteo @ Neyland) ---------------- */
   async function paintWeather() {
     const ul = $("#weatherList");
     const meta = $("#weatherMeta");
     if (!ul) return;
+
     try {
-      const url = "https://api.open-meteo.com/v1/forecast?latitude=35.9606&longitude=-83.9207&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto";
+      const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${STADIUM.lat}` +
+        `&longitude=${STADIUM.lon}` +
+        `&current_weather=true` +
+        `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+        `&timezone=auto`;
+
       const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Weather HTTP ${res.status}`);
       const j = await res.json();
+
+      const cw = j.current_weather || {};
+      const nowTemp = cw.temperature;            // °C
+      const nowWindKmh = cw.windspeed;           // km/h
+      const nowWindMph = typeof nowWindKmh === "number" ? Math.round(nowWindKmh * 0.621371) : null;
+
       const days = j.daily?.time || [];
       const tmax = j.daily?.temperature_2m_max || [];
       const tmin = j.daily?.temperature_2m_min || [];
       const ppop = j.daily?.precipitation_probability_max || [];
-      const items = [];
-      for (let i = 0; i < Math.min(3, days.length); i++) {
-        const d = new Date(days[i]).toLocaleDateString(undefined,{weekday:"short"});
-        items.push(`<li><strong>${d}</strong> — ${Math.round(tmax[i])}° / ${Math.round(tmin[i])}°  ·  ${ppop[i] ?? 0}% rain</li>`);
+
+      const rows = [];
+      if (typeof nowTemp === "number") {
+        const nowF = Math.round(nowTemp * 9/5 + 32);
+        rows.push(`<li><strong>Now</strong> — ${nowF}°F${nowWindMph != null ? ` · wind ${nowWindMph} mph` : ""}</li>`);
       }
-      ul.innerHTML = items.join("") || "<li>No forecast.</li>";
-      if (meta) meta.textContent = `Source: Open-Meteo • ${new Date().toLocaleTimeString()}`;
+      for (let i = 0; i < Math.min(3, days.length); i++) {
+        const label = new Date(days[i]).toLocaleDateString(undefined,{weekday:"short"});
+        const hiF = typeof tmax[i] === "number" ? Math.round(tmax[i] * 9/5 + 32) : "—";
+        const loF = typeof tmin[i] === "number" ? Math.round(tmin[i] * 9/5 + 32) : "—";
+        const rain = ppop[i] ?? 0;
+        rows.push(`<li><strong>${label}</strong> — ${hiF}° / ${loF}° · ${rain}% rain</li>`);
+      }
+
+      ul.innerHTML = rows.join("") || "<li>No forecast.</li>";
+      if (meta) meta.textContent = `${STADIUM.name} • Source: Open-Meteo • ${new Date().toLocaleTimeString()}`;
     } catch (e) {
+      console.error("weather error", e);
       ul.innerHTML = "<li>Weather unavailable.</li>";
       if (meta) meta.textContent = "";
-      console.error(e);
     }
   }
 
@@ -186,8 +217,6 @@
     const state = $("#scoreState");
     if (!statusEl || !grid) return;
 
-    // Expect flexible shapes:
-    // { status:"in_progress|final|pre|none", home:{name,score}, away:{name,score}, clock:"Q3 08:21" }
     const s = (data && (data.status || data.game_status || data.state)) || "none";
     const home = data?.home || data?.home_team || { name:"Tennessee", score:null };
     const away = data?.away || data?.away_team || { name:"Opponent", score:null };
@@ -207,7 +236,6 @@
       statusEl.textContent = "No game in progress.";
     }
   }
-
   async function pollScoreboard() {
     const data = await getJSON("data/scoreboard.json", null);
     if (data) paintScoreboard(data);
@@ -280,26 +308,7 @@
         : "No upcoming game found.";
     }
 
-    (function enableICS(btnTarget){
-      const btn = $("#addToCal");
-      if (!btn || !next || !isValidISO(next.start)) { if (btn) btn.disabled = true; return; }
-      btn.disabled = false;
-      btn.addEventListener("click", () => {
-        const dt = new Date(next.start);
-        const dtEnd = new Date(dt.getTime() + 3 * 3600_000);
-        const toICS = (d)=> d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-        const ics = [
-          "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//HC Web Labs//TN Fansite//EN","BEGIN:VEVENT",
-          `DTSTART:${toICS(dt)}`,`DTEND:${toICS(dtEnd)}`,
-          `SUMMARY:Tennessee vs ${next.opponent || "Opponent"}`,"END:VEVENT","END:VCALENDAR"
-        ].join("\r\n");
-        const blob = new Blob([ics],{type:"text/calendar"});
-        const url = URL.createObjectURL(blob);
-        const a=document.createElement("a"); a.href=url; a.download="tennessee.ics"; document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(()=>URL.revokeObjectURL(url),800);
-      });
-    })();
-
+    openGoogleCal(next);
     startCountdown(next ? next.start : null);
   }
 
