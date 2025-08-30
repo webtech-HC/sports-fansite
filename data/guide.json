@@ -1,10 +1,104 @@
 {
-  "closures": [
-    "Riverfront Dr. eastbound closed 2 hrs before kickoff.",
-    "Lane reversal on Volunteer Blvd after the game."
+  "lodging": {
+    "hotels": [
+      {
+        "name": "Downtown Chain Hotel",
+        "area": "Downtown Knoxville",
+        "distance_mi": 1.0,
+        "drive_min": 6,
+        "phone": "865-555-0101",
+        "url": "https://example-hotel-dt.com",
+        "notes": "Walkable to Market Square. Expect event parking rates."
+      },
+      {
+        "name": "Airport Area Hotel",
+        "area": "Alcoa / Maryville (TYS)",
+        "distance_mi": 13.0,
+        "drive_min": 20,
+        "phone": "865-555-0102",
+        "url": "https://example-hotel-tys.com",
+        "notes": "Often has staffed desks 24/7; good for late arrivals."
+      },
+      {
+        "name": "Suburban Suites",
+        "area": "West Knoxville",
+        "distance_mi": 10.5,
+        "drive_min": 18,
+        "phone": "865-555-0103",
+        "url": "https://example-suites-west.com",
+        "notes": "Quieter area, quick interstate access."
+      }
+    ],
+    "rentals": {
+      "notes": "Book early; verify parking, house rules, quiet hours, and cancellation terms. Target neighborhoods: North & South Knoxville, Fountain City, Bearden, Sequoyah Hills."
+    },
+    "camping": [
+      {
+        "name": "Riverside Campground",
+        "area": "East of Knoxville",
+        "drive_min": 35,
+        "hookups": true,
+        "url": "https://example-camp-river.com",
+        "notes": "Reserve ahead; check gate hours and quiet hours."
+      },
+      {
+        "name": "State Park Campground",
+        "area": "Region",
+        "drive_min": 45,
+        "hookups": false,
+        "url": "https://example-state-park.com",
+        "notes": "Limited hookups; beautiful setting; verify dump station."
+      }
+    ],
+    "planB": [
+      { "area": "Alcoa / Maryville (Airport corridor)", "drive_range": "20–35 min", "notes": "Often has late-night desks; good last-minute option." },
+      { "area": "Oak Ridge / Clinton", "drive_range": "25–45 min" },
+      { "area": "Lenoir City / Farragut", "drive_range": "25–40 min" },
+      { "area": "Sevierville / Pigeon Forge / Kodak", "drive_range": "40–75+ min", "notes": "Tourism area—availability varies and rates can surge." },
+      { "area": "Jefferson City / Morristown", "drive_range": "45–75+ min" }
+    ],
+    "tactics": [
+      "Expand your search radius 30–90+ minutes along I-40/I-75.",
+      "Call properties directly for late cancellations after evening cutoffs.",
+      "Be flexible on room type and rate; confirm parking & late check-in.",
+      "Airport-area hotels (TYS) are often staffed 24/7 for late arrivals."
+    ]
+  },
+
+  "emergency_bag": [
+    {
+      "title": "Basics",
+      "items": ["Printed reservations + IDs", "Phone chargers + battery pack", "Cash & cards", "Snacks + water", "Medications"]
+    },
+    {
+      "title": "Comfort & Safety",
+      "items": ["Ponchos / small umbrella", "Sunscreen & lip balm", "Light jacket / hat", "Hand wipes / sanitizer", "Small first-aid kit"]
+    },
+    {
+      "title": "Driving",
+      "items": ["Paper map backup", "Flashlight", "Tire pressure gauge", "Emergency triangle / small reflector", "Blanket in cold months"]
+    },
+    {
+      "title": "With kids",
+      "items": ["Noise protection (ear muffs)", "Stroller tag/info card", "Extra layers", "Spare snacks & water", "Favorite comfort item"]
+    }
   ],
-  "tips": [
-    "For rideshare, set pickup two blocks north of the stadium.",
-    "Grab concessions mid-quarter to skip halftime lines."
+
+  "food_247": [
+    {
+      "title": "24-hour diners & breakfast",
+      "note": "Classic diner chains; reliable for groups.",
+      "map": "https://www.google.com/maps/search/24+hour+diner+Knoxville+TN"
+    },
+    {
+      "title": "24-hour fast food (varies by location)",
+      "note": "Look for Waffle House, IHOP, McDonald’s 24h, some Taco Bell/Cook Out late-night.",
+      "map": "https://www.google.com/maps/search/24+hour+restaurants+Knoxville+TN"
+    },
+    {
+      "title": "Travel centers & convenience (food & restrooms)",
+      "note": "Pilot / Flying J, Weigel’s—many have hot food, snacks, coffee 24/7.",
+      "map": "https://www.google.com/maps/search/Pilot+Flying+J+Weigel%27s+Knoxville+TN"
+    }
   ]
 }
