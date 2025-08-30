@@ -3,56 +3,56 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Schedule • Tennessee Gameday Hub (Unofficial)</title>
-
-  <meta name="asset-version" content="2025-08-28-5" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-5" />
-  <link rel="icon" href="assets/img/favicon.svg" />
+  <title>Tennessee — Schedule</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <div class="brand">TENNESSEE • <span>Gameday Hub</span></div>
-    <nav class="nav">
+  <header class="site-header">
+    <div class="brand">
+      <a class="logo-link" href="index.html"><span class="logo-badge">TN</span><span class="brand-name">Tennessee</span></a>
+    </div>
+    <div class="header-countdown">
+      <div id="countdown" class="countdown">
+        <span class="cd-pill">00</span><span class="cd-label">days</span>
+        <span class="cd-pill">00</span><span class="cd-label">hrs</span>
+        <span class="cd-pill">00</span><span class="cd-label">mins</span>
+        <span class="cd-pill">00</span><span class="cd-label">secs</span>
+      </div>
+      <div id="nextGameNote" class="next-note">Next game: TBA</div>
+    </div>
+    <nav class="site-nav">
       <a class="active" href="schedule.html">Schedule</a>
       <a href="specials.html">Specials</a>
       <a href="map.html">Map</a>
       <a href="guide.html">Guide</a>
-      <a class="btn btn-small" href="submit.html">Submit</a>
+      <a class="btn" href="submit.html">Submit</a>
     </nav>
   </header>
 
-  <section class="ticker" aria-label="Gameday ticker">
-    <div class="ticker-inner" id="ticker">Loading…</div>
-  </section>
-
-  <main id="main" class="wrap" aria-label="Main content">
-    <section class="card">
-      <div class="row align-center space-between">
-        <h1 class="h3">Schedule &amp; Results</h1>
-        <a id="addToCal" class="btn btn-small" href="#" aria-disabled="true">Add to Calendar</a>
-      </div>
-
-      <div class="table-wrap" style="margin-top:10px">
-        <table class="table" aria-describedby="note">
-          <thead>
-            <tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr>
-          </thead>
-          <tbody id="sched"></tbody>
-        </table>
-      </div>
-      <p id="note" class="muted">Times/TV subject to change. Check official sources day-of.</p>
-      <p class="muted">Data updated — <span id="last-updated">--</span></p>
+  <main class="wrap">
+    <section class="grid grid-single">
+      <article class="card card-span2">
+        <div class="card-head">
+          <h1 class="card-title">Full Schedule</h1>
+          <div class="subtle" id="metaUpdated">Data updated — Loading…</div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table class="table" id="schedPage">
+              <thead><tr><th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th></tr></thead>
+              <tbody id="schedPageBody"><tr><td colspan="5">Loading…</td></tr></tbody>
+            </table>
+          </div>
+          <p class="meta small">Times/TV subject to change. Check official sources day-of.</p>
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="sitefoot">
-    <p><strong>Unofficial notice:</strong> Independent, fan-operated site. Not affiliated with any university, athletics program, conference, or governing body.</p>
-    <p><a href="guide.html">Guide</a> • <a href="specials.html">Specials</a> • <a href="map.html">Map</a> • <a class="active" href="schedule.html">Schedule</a> • <a href="submit.html">Submit</a></p>
+  <footer class="site-footer">
+    <p class="small"><strong>Unofficial notice:</strong> Independent, fan-operated site.</p>
   </footer>
 
-  <!-- Core app handles painting schedule/ticker -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-5"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
