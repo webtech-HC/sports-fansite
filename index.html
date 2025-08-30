@@ -5,44 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TENNESSEE — Gameday Hub (Unofficial)</title>
 
-  <!-- cache-buster -->
-  <meta name="build" content="v=2025-08-28-8" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-8" />
+  <meta name="build" content="v=2025-08-28-9" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2025-08-28-9" />
+  <meta name="description" content="Tennessee football gameday hub: schedule, odds, map, and more." />
+  <link rel="icon" href="assets/favicon.svg" />
 
-  <!-- Preload the glossy wordmark you actually uploaded (JPG) -->
-  <link rel="preload" as="image" href="assets/img/tn-wordmark-glossy.jpg" />
-
-  <!-- Inline override to fix the broken relative path coming from assets/css/styles.css.
-       We keep your existing CSS — this takes precedence and uses the correct URL base. -->
+  <!-- Minimal hero + wordmark without images -->
   <style>
-    /* hero background, metal by default (you can flip to clay by swapping the URL) */
-    .hero {
-      background-image: url("assets/img/tn-hero-metal.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+    :root{
+      --ut-orange:#FF8200;
+      --ink-900:#0b0e12;
     }
-    /* optional: darker overlay for readability if your theme needs it */
-    .hero::after{
+    .hero{
+      position:relative;
+      padding:clamp(28px,6vw,84px) 0;
+      background:
+        radial-gradient(120% 70% at 50% 0%, rgba(255,130,0,.18), transparent 60%),
+        linear-gradient(180deg, #0d1015 0%, #0b0e12 60%, #0a0c10 100%);
+      text-align:center;
+      overflow:hidden;
+    }
+    .hero::before{
+      /* subtle field bands, purely decorative */
       content:"";
       position:absolute; inset:0;
-      background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.55));
+      background:
+        linear-gradient( to bottom,
+          rgba(255,255,255,.06) 0 2px,
+          transparent 2px 40px) repeat-y;
+      background-size:100% 42px;
+      opacity:.12;
       pointer-events:none;
     }
-    .hero-wrap{ position:relative; }
-    .hero-wordmark{
-      display:block; margin:0 auto; height:auto; width:min(880px,90vw);
-      filter: drop-shadow(0 12px 18px rgba(0,0,0,.45));
+    .wordmark{
+      margin:0 auto;
+      font-size:clamp(40px, 11vw, 120px);
+      line-height:1;
+      letter-spacing:.02em;
+      font-weight:800;
+      color:var(--ut-orange);
+      text-shadow:
+        0 2px 0 rgba(0,0,0,.35),
+        0 14px 28px rgba(0,0,0,.5);
+      -webkit-text-stroke: 1px rgba(0,0,0,.35);
     }
-    /* small nicety so the H1 alt text never shows up as a duplicate */
-    .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
   </style>
-
-  <meta name="description" content="Tennessee football gameday hub: schedule, odds, map, and more." />
-  <link rel="icon" href="assets/img/favicon.svg" />
-  <meta property="og:title" content="TENNESSEE — Gameday Hub (Unofficial)" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/img/tn-hero-metal.jpg" />
 </head>
 <body>
 
@@ -59,17 +67,9 @@
     </nav>
   </header>
 
-  <!-- HERO (dark field bg + glossy wordmark) -->
-  <section class="hero hero-wrap" aria-label="Hero">
-    <h1 class="sr-only">Tennessee</h1>
-    <img
-      class="hero-wordmark"
-      src="assets/img/tn-wordmark-glossy.jpg"
-      width="880"
-      height="200"
-      decoding="async"
-      loading="eager"
-      alt="Tennessee" />
+  <!-- HERO (no images) -->
+  <section class="hero" aria-label="Hero">
+    <h1 class="wordmark" aria-label="Tennessee">TENNESSEE</h1>
   </section>
 
   <main id="main" class="wrap">
@@ -79,9 +79,7 @@
     <section class="card" id="livebox" aria-label="Live Score Box">
       <header class="card-hd">
         <h2 class="card-ttl">Live Score Box</h2>
-        <div class="card-meta">
-          <span data-line="status">—</span>
-        </div>
+        <div class="card-meta"><span data-line="status">—</span></div>
       </header>
       <div class="card-bd">
         <div class="row">
@@ -96,9 +94,7 @@
 
     <!-- Upcoming game quick card -->
     <section class="card" id="quickcard" aria-label="Upcoming Game">
-      <header class="card-hd">
-        <h2 class="card-ttl">Upcoming Game</h2>
-      </header>
+      <header class="card-hd"><h2 class="card-ttl">Upcoming Game</h2></header>
       <div id="quick" class="card-bd">
         <p class="h5" data-line="headline">Loading...</p>
         <p class="muted" data-line="sub"></p>
@@ -106,7 +102,7 @@
       </div>
     </section>
 
-    <!-- Weather (just a shell here; your weather script can slot in later) -->
+    <!-- Weather shell -->
     <section class="card" aria-label="Weather (3-day)">
       <header class="card-hd"><h2 class="card-ttl">Weather (3-day)</h2></header>
       <div class="card-bd">
@@ -131,7 +127,7 @@
       </div>
     </section>
 
-    <!-- Schedule & Results table (Tennessee-only) -->
+    <!-- Schedule & Results (Tennessee only) -->
     <section class="card" aria-label="Schedule & Results">
       <header class="card-hd">
         <h2 class="card-ttl">Schedule & Results</h2>
@@ -142,11 +138,7 @@
           <table class="table" aria-describedby="snote">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Opponent</th>
-                <th>H/A</th>
-                <th>TV</th>
-                <th>Result</th>
+                <th>Date</th><th>Opponent</th><th>H/A</th><th>TV</th><th>Result</th>
               </tr>
             </thead>
             <tbody id="sched"><tr><td colspan="5">Loading…</td></tr></tbody>
@@ -165,40 +157,40 @@
       </div>
     </section>
 
-    <!-- Gameday Guide (Unofficial) -->
+    <!-- Gameday Guide -->
     <section class="card" aria-label="Gameday Guide">
       <header class="card-hd"><h2 class="card-ttl">Gameday Guide (Unofficial)</h2></header>
       <div class="card-bd guide-grid">
         <article>
           <h3>Getting There</h3>
           <ul class="list">
-            <li>Rideshare or public lots: expect road closures near campus.</li>
-            <li>Plan 60–90 minutes for traffic and entry queues.</li>
+            <li>Expect road closures near campus.</li>
+            <li>Plan 60–90 minutes for traffic and entry.</li>
             <li>Pick a meetup spot in case phones die.</li>
           </ul>
         </article>
         <article>
           <h3>Entry &amp; Bags</h3>
           <ul class="list">
-            <li>Many venues have clear-bag rules and metal detectors.</li>
-            <li>Leave large items, outside alcohol, and prohibited items at home.</li>
-            <li>Always verify with the official event page before you go.</li>
+            <li>Many venues have clear-bag rules/metal detectors.</li>
+            <li>Leave large items &amp; outside alcohol at home.</li>
+            <li>Verify with the official event page.</li>
           </ul>
         </article>
         <article>
           <h3>Food &amp; Water</h3>
           <ul class="list">
-            <li>Many vendors are cashless—bring a card or mobile pay.</li>
-            <li>Hydrate early; find refill spots on concourses.</li>
-            <li>Family sections are great with kids; consider ear protection.</li>
+            <li>Most vendors are cashless—bring a card/mobile pay.</li>
+            <li>Hydrate early; look for refill stations.</li>
+            <li>Consider ear protection for kids.</li>
           </ul>
         </article>
         <article>
           <h3>Accessibility</h3>
           <ul class="list">
-            <li>Check ADA parking, shuttle drop-offs, elevators, and seating.</li>
-            <li>Service animals typically permitted—follow venue guidance.</li>
-            <li>Contact accessibility office ahead for assistance.</li>
+            <li>Check ADA parking, shuttles, elevators, seating.</li>
+            <li>Service animals typically permitted.</li>
+            <li>Contact accessibility office for assistance.</li>
           </ul>
         </article>
       </div>
@@ -214,11 +206,12 @@
       <a href="schedule.html">Schedule</a> •
       <a href="submit.html">Submit</a>
     </p>
-    <p class="muted">© 2025 HC Web Labs. Content licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.</p>
+    <p class="muted">© 2025 HC Web Labs. Content licensed under
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>.
+    </p>
   </footer>
 
-  <!-- JS (app + live) -->
-  <script type="module" src="assets/js/app.js?v=2025-08-28-8"></script>
-  <script type="module" src="assets/js/live.js?v=2025-08-28-8"></script>
+  <script type="module" src="assets/js/app.js?v=2025-08-28-9"></script>
+  <script type="module" src="assets/js/live.js?v=2025-08-28-9"></script>
 </body>
 </html>
